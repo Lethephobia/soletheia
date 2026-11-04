@@ -1,0 +1,46 @@
+[graph]
+all-features = true
+
+[advisories]
+yanked = "deny"
+unmaintained = "all"
+unsound = "all"
+ignore = []
+
+[licenses]
+confidence-threshold = 0.95
+include-dev = true
+allow = [
+    "Apache-2.0",
+    "MIT",
+    "Unicode-3.0",
+    "Zlib",
+]
+
+# allo-isolate declares license-file instead of an SPDX expression.
+# Verified against the Apache-2.0 LICENSE shipped in this release.
+[[licenses.clarify]]
+name = "allo-isolate"
+version = "=0.1.27"
+expression = "Apache-2.0"
+license-files = [{ path = "LICENSE", hash = 0x0a6d4ed6 }]
+
+# This workspace is app-private; third-party dependencies are still checked.
+[licenses.private]
+ignore = true
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+
+# FRB macros require syn 2; delegate-attr and futures macros require syn 3.
+# Revisit when upstream dependencies converge; other duplicates still warn.
+[[bans.skip]]
+name = "syn"
+version = "=3.0.9"
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = []

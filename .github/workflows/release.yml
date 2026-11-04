@@ -1,0 +1,147 @@
+name: Apple Release Builds
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to build (vX.Y.Z)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: apple-release-${{ inputs.tag || github.event.release.tag_name }}
+  cancel-in-progress: false
+
+env:
+  FLUTTER_VERSION: '3.47.9'
+  RELEASE_TAG: ${{ inputs.tag || github.event.release.tag_name }}
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: Build ${{ matrix.platform }}
+    runs-on: macos-15
+    timeout-minutes: 90
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos, ios]
+    # Enable signing per platform only after configuring its certificate/profile secrets.
+    # Leaving these variables unset produces explicitly labeled unsigned/unnotarized assets.
+    env:
+      RELEASE_PLATFORM: ${{ matrix.platform }}
+      APPLE_SIGNING_ENABLED: ${{ (matrix.platform == 'macos' && vars.MACOS_SIGNING_ENABLED == 'true' || matrix.platform == 'ios' && vars.IOS_SIGNING_ENABLED == 'true') && 'true' || 'false' }}
+      APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
+      IOS_BUNDLE_ID: ${{ vars.IOS_BUNDLE_ID }}
+      MACOS_BUNDLE_ID: ${{ vars.MACOS_BUNDLE_ID }}
+      MACOS_SIGNING_IDENTITY: ${{ vars.MACOS_SIGNING_IDENTITY }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: apps/soletheia_app/app
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: refs/tags/${{ inputs.tag || github.event.release.tag_name }}
+          persist-credentials: false
+      - name: Validate release version
+        working-directory: .
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [[ ! "$RELEASE_TAG" =~ ^v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            echo '::error::Expected a release tag in vX.Y.Z format.'
+            exit 1
+          fi
+          version="${BASH_REMATCH[1]}"
+          test "$(cat version.txt)" = "$version"
+          app_version="$(ruby -ryaml -e 'puts YAML.load_file("apps/soletheia_app/app/pubspec.yaml").fetch("version").split("+").first')"
+          test "$app_version" = "$version"
+          gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" > /dev/null
+          echo "RELEASE_VERSION=$version" >> "$GITHUB_ENV"
+      - name: Prepare Apple signing
+        if: env.APPLE_SIGNING_ENABLED == 'true'
+        env:
+          MACOS_CERTIFICATE_BASE64: ${{ secrets.MACOS_CERTIFICATE_BASE64 }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          IOS_CERTIFICATE_BASE64: ${{ secrets.IOS_CERTIFICATE_BASE64 }}
+          IOS_CERTIFICATE_PASSWORD: ${{ secrets.IOS_CERTIFICATE_PASSWORD }}
+          IOS_PROFILE_BASE64: ${{ secrets.IOS_ADHOC_PROFILE_BASE64 }}
+          APPLE_NOTARY_KEY_BASE64: ${{ secrets.APPLE_NOTARY_KEY_BASE64 }}
+          APPLE_NOTARY_KEY_ID: ${{ secrets.APPLE_NOTARY_KEY_ID }}
+          APPLE_NOTARY_ISSUER_ID: ${{ secrets.APPLE_NOTARY_ISSUER_ID }}
+        run: bash "$GITHUB_WORKSPACE/.github/scripts/setup-apple-signing.sh"
+      - name: Cache Flutter SDK
+        uses: actions/cache@v6
+        with:
+          path: ${{ runner.temp }}/flutter-sdk
+          key: flutter-sdk-${{ runner.os }}-${{ runner.arch }}-${{ env.FLUTTER_VERSION }}
+      - name: Set up Flutter from official repository
+        run: bash "$GITHUB_WORKSPACE/.github/scripts/setup-flutter.sh"
+      - name: Cache Dart dependencies
+        uses: actions/cache@v6
+        with:
+          path: ~/.pub-cache
+          key: pub-${{ runner.os }}-${{ runner.arch }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('apps/soletheia_app/pubspec.lock') }}
+      - name: Set up Rust toolchain
+        working-directory: apps/soletheia_app/packages/infrastructure/rust
+        run: rustup show active-toolchain
+      - name: Cache Rust dependencies and build outputs
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            apps/soletheia_app/packages/infrastructure/rust/target
+          key: rust-${{ runner.os }}-${{ runner.arch }}-${{ github.workflow }}-${{ hashFiles('apps/soletheia_app/packages/infrastructure/rust/rust-toolchain.toml', 'apps/soletheia_app/packages/infrastructure/rust/**/Cargo.toml', 'apps/soletheia_app/packages/infrastructure/rust/Cargo.lock') }}
+      - name: Install Dart dependencies
+        working-directory: apps/soletheia_app
+        run: flutter pub get --enforce-lockfile
+      - name: Build macOS app
+        if: matrix.platform == 'macos' && env.APPLE_SIGNING_ENABLED != 'true'
+        run: >-
+          flutter build macos --release --no-pub
+          --build-name "$RELEASE_VERSION"
+          --build-number "$GITHUB_RUN_NUMBER"
+      - name: Archive and export signed macOS app
+        if: matrix.platform == 'macos' && env.APPLE_SIGNING_ENABLED == 'true'
+        run: |
+          flutter build macos --release --config-only --no-pub \
+            --build-name "$RELEASE_VERSION" --build-number "$GITHUB_RUN_NUMBER"
+          xcodebuild -workspace macos/Runner.xcworkspace -scheme Runner \
+            -configuration Release -destination 'generic/platform=macOS' \
+            -archivePath "$PWD/build/macos/archive/soletheia.xcarchive" archive
+          xcodebuild -exportArchive \
+            -archivePath "$PWD/build/macos/archive/soletheia.xcarchive" \
+            -exportOptionsPlist "$RUNNER_TEMP/apple-signing/ExportOptions.plist" \
+            -exportPath "$PWD/build/macos/export"
+      - name: Build unsigned iOS archive
+        if: matrix.platform == 'ios' && env.APPLE_SIGNING_ENABLED != 'true'
+        run: >-
+          flutter build ipa --release --no-codesign --no-pub
+          --build-name "$RELEASE_VERSION"
+          --build-number "$GITHUB_RUN_NUMBER"
+      - name: Build signed iOS Ad Hoc IPA
+        if: matrix.platform == 'ios' && env.APPLE_SIGNING_ENABLED == 'true'
+        run: >-
+          flutter build ipa --release --no-pub
+          --export-options-plist "$RUNNER_TEMP/apple-signing/ExportOptions.plist"
+          --build-name "$RELEASE_VERSION"
+          --build-number "$GITHUB_RUN_NUMBER"
+      - name: Package release asset
+        run: bash "$GITHUB_WORKSPACE/.github/scripts/package-apple-release.sh"
+      - name: Upload release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "$RELEASE_TAG" dist/* --repo "$GITHUB_REPOSITORY" --clobber
+      - name: Remove Apple signing credentials
+        if: always() && env.APPLE_SIGNING_ENABLED == 'true'
+        run: bash "$GITHUB_WORKSPACE/.github/scripts/cleanup-apple-signing.sh"

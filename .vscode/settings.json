@@ -1,0 +1,6 @@
+{
+  "rust-analyzer.linkedProjects": [
+    "apps/soletheia_app/packages/infrastructure/rust/Cargo.toml"
+  ],
+  "rust-analyzer.cargo.features": "all"
+}

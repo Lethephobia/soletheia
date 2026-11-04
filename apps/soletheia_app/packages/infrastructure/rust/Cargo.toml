@@ -1,0 +1,3 @@
+[workspace]
+members = ["flutter_bridge"]
+resolver = "2"

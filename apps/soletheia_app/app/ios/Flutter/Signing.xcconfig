@@ -1,0 +1,2 @@
+PRODUCT_BUNDLE_IDENTIFIER = com.example.soletheia
+#include? "Signing.generated.xcconfig"
