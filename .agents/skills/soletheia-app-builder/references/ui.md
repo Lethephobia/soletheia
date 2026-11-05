@@ -4,14 +4,14 @@ Use for developer-wallet screen design, layout ownership, themes, and responsive
 
 ### DO let each View own its AppBar and page scaffold
 
-MainLayout owns shared navigation and the content region. Views own page titles, actions, body,
+AppLayout owns shared navigation and the content region. Views own page titles, actions, body,
 and any page-specific FAB or scrolling app bar. An outer navigation Scaffold can remain; account
 for SafeArea and inset ownership instead of padding the same region twice.
 
 **Good**
 
 ```text
-MainLayout: NavigationRail / NavigationBar + child
+AppLayout: NavigationRail / NavigationBar + child
 AccountListView: Scaffold(appBar: account list title, body: account list)
 SettingsView: Scaffold(appBar: settings title, body: settings)
 ```
@@ -19,7 +19,7 @@ SettingsView: Scaffold(appBar: settings title, body: settings)
 **Bad**
 
 ```text
-MainLayout chooses every page's title/actions from selectedIndex.
+AppLayout chooses every page's title/actions from selectedIndex.
 Each View also adds a second AppBar below it.
 ```
 

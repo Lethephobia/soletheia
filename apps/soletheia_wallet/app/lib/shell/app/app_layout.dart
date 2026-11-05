@@ -3,8 +3,8 @@ import 'package:material_ui/material_ui.dart';
 import '../../l10n.dart';
 import '../../responsive.dart';
 
-class MainLayout extends StatelessWidget {
-  const MainLayout({
+class AppLayout extends StatelessWidget {
+  const AppLayout({
     super.key,
     required this.selectedIndex,
     required this.onDestinationSelected,

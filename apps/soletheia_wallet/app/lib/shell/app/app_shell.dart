@@ -1,15 +1,15 @@
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 
-import 'main_layout.dart';
+import 'app_layout.dart';
 
-class MainShell extends StatelessWidget {
-  const MainShell({super.key, required this.navigationShell});
+class AppShell extends StatelessWidget {
+  const AppShell({super.key, required this.navigationShell});
 
   final StatefulNavigationShell navigationShell;
 
   @override
-  Widget build(BuildContext context) => MainLayout(
+  Widget build(BuildContext context) => AppLayout(
     selectedIndex: navigationShell.currentIndex,
     onDestinationSelected: (index) => navigationShell.goBranch(index),
     child: navigationShell,

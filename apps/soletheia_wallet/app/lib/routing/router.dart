@@ -2,7 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'account.dart';
-import 'main.dart';
+import 'app.dart';
 
 part 'router.g.dart';
 
