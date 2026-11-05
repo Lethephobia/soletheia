@@ -91,7 +91,7 @@ void main() {
     expect(find.text('アカウントはありません'), findsOneWidget);
     expect(find.text('設定'), findsOneWidget);
     expect(
-      MaterialLocalizations.of(tester.element(find.byType(Scaffold)))
+      MaterialLocalizations.of(tester.element(find.byType(AccountListView)))
           .backButtonTooltip,
       '戻る',
     );
@@ -105,7 +105,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('No accounts'), findsOneWidget);
     expect(
-      Localizations.localeOf(tester.element(find.byType(Scaffold)))
+      Localizations.localeOf(tester.element(find.byType(AccountListView)))
           .languageCode,
       'en',
     );

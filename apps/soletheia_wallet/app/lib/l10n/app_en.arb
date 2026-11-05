@@ -1,7 +1,27 @@
 {
   "@@locale": "en",
   "appTitle": "Soletheia",
-  "accountsTitle": "Accounts",
+  "@appTitle": {
+    "description": "Application name. Keep the Soletheia brand name unchanged."
+  },
+  "navigationAccountLabel": "Accounts",
+  "@navigationAccountLabel": {
+    "description": "Navigation bar and navigation rail label for the accounts destination."
+  },
+  "navigationSettingsLabel": "Settings",
+  "@navigationSettingsLabel": {
+    "description": "Navigation bar and navigation rail label for the settings destination."
+  },
+  "accountListTitle": "Accounts",
+  "@accountListTitle": {
+    "description": "App bar title of the account list screen."
+  },
+  "accountListEmptyMessage": "No accounts",
+  "@accountListEmptyMessage": {
+    "description": "Message shown in the account list when no wallet accounts have been added."
+  },
   "settingsTitle": "Settings",
-  "accountsEmpty": "No accounts"
+  "@settingsTitle": {
+    "description": "App bar title of the settings screen."
+  }
 }

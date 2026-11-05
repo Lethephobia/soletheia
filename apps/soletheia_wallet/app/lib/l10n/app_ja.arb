@@ -1,7 +1,9 @@
 {
   "@@locale": "ja",
   "appTitle": "Soletheia",
-  "accountsTitle": "アカウント",
-  "settingsTitle": "設定",
-  "accountsEmpty": "アカウントはありません"
+  "navigationAccountLabel": "アカウント",
+  "navigationSettingsLabel": "設定",
+  "accountListTitle": "アカウント",
+  "accountListEmptyMessage": "アカウントはありません",
+  "settingsTitle": "設定"
 }

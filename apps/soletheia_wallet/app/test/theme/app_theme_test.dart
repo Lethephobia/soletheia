@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:soletheia/app.dart';
+import 'package:soletheia/view.dart';
 
 void main() {
   testWidgets('stays dark regardless of system brightness', (tester) async {
@@ -19,7 +20,7 @@ void main() {
     await tester.runAsync(() => GoogleFonts.pendingFonts());
     await tester.pumpAndSettle();
 
-    final theme = Theme.of(tester.element(find.byType(Scaffold)));
+    final theme = Theme.of(tester.element(find.byType(AccountListView)));
     expect(theme.textTheme.bodyMedium?.fontFamily, startsWith('NotoSansJP'));
     expect(
       theme.primaryTextTheme.bodyMedium?.fontFamily,
@@ -27,7 +28,7 @@ void main() {
     );
 
     Brightness brightness() =>
-        Theme.of(tester.element(find.byType(Scaffold))).brightness;
+        Theme.of(tester.element(find.byType(AccountListView))).brightness;
     expect(brightness(), Brightness.dark);
 
     dispatcher.platformBrightnessTestValue = Brightness.dark;
