@@ -331,8 +331,8 @@ dist
 .svelte-kit
 
 # Pin application dependencies for CI.
-!/apps/soletheia_app/pubspec.lock
-!/apps/soletheia_app/packages/infrastructure/rust/Cargo.lock
+!/apps/soletheia_wallet/pubspec.lock
+!/apps/soletheia_wallet/packages/infrastructure/rust/Cargo.lock
 
 # Local/CI Apple signing configuration.
 **/Signing.generated.xcconfig
@@ -362,25 +362,25 @@ dist
 *.dll
 
 # Flutter app local build artifacts.
-/apps/soletheia_app/app/**/.build/
+/apps/soletheia_wallet/app/**/.build/
 
 # iOS generated files not covered by the shared Flutter rules.
-/apps/soletheia_app/app/ios/**/ServiceDefinitions.json
-/apps/soletheia_app/app/ios/**/dgph
-/apps/soletheia_app/app/ios/**/.generated/
-/apps/soletheia_app/app/ios/Flutter/ephemeral/
+/apps/soletheia_wallet/app/ios/**/ServiceDefinitions.json
+/apps/soletheia_wallet/app/ios/**/dgph
+/apps/soletheia_wallet/app/ios/**/.generated/
+/apps/soletheia_wallet/app/ios/Flutter/ephemeral/
 
 # macOS generated files and local Xcode state.
-/apps/soletheia_app/app/macos/**/Flutter/ephemeral/
-/apps/soletheia_app/app/macos/**/Pods/
-/apps/soletheia_app/app/macos/**/dgph
-/apps/soletheia_app/app/macos/**/xcuserdata/
+/apps/soletheia_wallet/app/macos/**/Flutter/ephemeral/
+/apps/soletheia_wallet/app/macos/**/Pods/
+/apps/soletheia_wallet/app/macos/**/dgph
+/apps/soletheia_wallet/app/macos/**/xcuserdata/
 
 # Vendored Cargokit tooling; preserve its dependency lockfiles.
-/apps/soletheia_app/packages/infrastructure/cargokit/**/target
-/apps/soletheia_app/packages/infrastructure/cargokit/**/.dart_tool
-!/apps/soletheia_app/packages/infrastructure/cargokit/**/pubspec.lock
+/apps/soletheia_wallet/packages/infrastructure/cargokit/**/target
+/apps/soletheia_wallet/packages/infrastructure/cargokit/**/.dart_tool
+!/apps/soletheia_wallet/packages/infrastructure/cargokit/**/pubspec.lock
 
 # Generated Flutter localization sources.
-/apps/soletheia_app/app/lib/l10n/app_localizations.dart
-/apps/soletheia_app/app/lib/l10n/app_localizations_*.dart
+/apps/soletheia_wallet/app/lib/l10n/app_localizations.dart
+/apps/soletheia_wallet/app/lib/l10n/app_localizations_*.dart

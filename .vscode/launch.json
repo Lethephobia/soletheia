@@ -1,0 +1,30 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Flutter: macOS",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/apps/soletheia_wallet/app",
+      "program": "${workspaceFolder}/apps/soletheia_wallet/app/lib/main.dart",
+      "deviceId": "macos",
+      "flutterMode": "debug"
+    },
+    {
+      "name": "Flutter: iOS",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/apps/soletheia_wallet/app",
+      "program": "${workspaceFolder}/apps/soletheia_wallet/app/lib/main.dart",
+      "deviceId": "iphone",
+      "flutterMode": "debug"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Flutter: macOS + iOS",
+      "configurations": ["Flutter: macOS", "Flutter: iOS"],
+      "stopAll": true
+    }
+  ]
+}

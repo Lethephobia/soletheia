@@ -45,7 +45,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: apps/soletheia_app/app
+        working-directory: apps/soletheia_wallet/app
     steps:
       - uses: actions/checkout@v6
         with:
@@ -62,7 +62,7 @@ jobs:
           fi
           version="${BASH_REMATCH[1]}"
           test "$(cat version.txt)" = "$version"
-          app_version="$(ruby -ryaml -e 'puts YAML.load_file("apps/soletheia_app/app/pubspec.yaml").fetch("version").split("+").first')"
+          app_version="$(ruby -ryaml -e 'puts YAML.load_file("apps/soletheia_wallet/app/pubspec.yaml").fetch("version").split("+").first')"
           test "$app_version" = "$version"
           gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" > /dev/null
           echo "RELEASE_VERSION=$version" >> "$GITHUB_ENV"
@@ -89,9 +89,9 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ~/.pub-cache
-          key: pub-${{ runner.os }}-${{ runner.arch }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('apps/soletheia_app/pubspec.lock') }}
+          key: pub-${{ runner.os }}-${{ runner.arch }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('apps/soletheia_wallet/pubspec.lock') }}
       - name: Set up Rust toolchain
-        working-directory: apps/soletheia_app/packages/infrastructure/rust
+        working-directory: apps/soletheia_wallet/packages/infrastructure/rust
         run: rustup show active-toolchain
       - name: Cache Rust dependencies and build outputs
         uses: actions/cache@v6
@@ -100,13 +100,13 @@ jobs:
             ~/.cargo/registry/index
             ~/.cargo/registry/cache
             ~/.cargo/git/db
-            apps/soletheia_app/packages/infrastructure/rust/target
-          key: rust-${{ runner.os }}-${{ runner.arch }}-${{ github.workflow }}-${{ hashFiles('apps/soletheia_app/packages/infrastructure/rust/rust-toolchain.toml', 'apps/soletheia_app/packages/infrastructure/rust/**/Cargo.toml', 'apps/soletheia_app/packages/infrastructure/rust/Cargo.lock') }}
+            apps/soletheia_wallet/packages/infrastructure/rust/target
+          key: rust-${{ runner.os }}-${{ runner.arch }}-${{ github.workflow }}-${{ hashFiles('apps/soletheia_wallet/packages/infrastructure/rust/rust-toolchain.toml', 'apps/soletheia_wallet/packages/infrastructure/rust/**/Cargo.toml', 'apps/soletheia_wallet/packages/infrastructure/rust/Cargo.lock') }}
       - name: Install Dart dependencies
-        working-directory: apps/soletheia_app
+        working-directory: apps/soletheia_wallet
         run: flutter pub get --enforce-lockfile
       - name: Generate localizations
-        working-directory: apps/soletheia_app/app
+        working-directory: apps/soletheia_wallet/app
         run: flutter gen-l10n
       - name: Build macOS app
         if: matrix.platform == 'macos' && env.APPLE_SIGNING_ENABLED != 'true'

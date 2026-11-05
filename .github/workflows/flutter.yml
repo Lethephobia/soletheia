@@ -22,7 +22,7 @@ jobs:
     timeout-minutes: 30
     defaults:
       run:
-        working-directory: apps/soletheia_app
+        working-directory: apps/soletheia_wallet
     steps:
       - uses: actions/checkout@v6
       - name: Cache Flutter SDK
@@ -36,9 +36,9 @@ jobs:
         uses: actions/cache@v6
         with:
           path: ~/.pub-cache
-          key: pub-${{ runner.os }}-${{ runner.arch }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('apps/soletheia_app/pubspec.lock') }}
+          key: pub-${{ runner.os }}-${{ runner.arch }}-${{ env.FLUTTER_VERSION }}-${{ hashFiles('apps/soletheia_wallet/pubspec.lock') }}
       - name: Set up Rust toolchain
-        working-directory: apps/soletheia_app/packages/infrastructure/rust
+        working-directory: apps/soletheia_wallet/packages/infrastructure/rust
         run: rustup show active-toolchain
       - name: Cache Rust dependencies and build outputs
         uses: actions/cache@v6
@@ -47,12 +47,12 @@ jobs:
             ~/.cargo/registry/index
             ~/.cargo/registry/cache
             ~/.cargo/git/db
-            apps/soletheia_app/packages/infrastructure/rust/target
-          key: rust-${{ runner.os }}-${{ runner.arch }}-${{ github.workflow }}-${{ hashFiles('apps/soletheia_app/packages/infrastructure/rust/rust-toolchain.toml', 'apps/soletheia_app/packages/infrastructure/rust/**/Cargo.toml', 'apps/soletheia_app/packages/infrastructure/rust/Cargo.lock') }}
+            apps/soletheia_wallet/packages/infrastructure/rust/target
+          key: rust-${{ runner.os }}-${{ runner.arch }}-${{ github.workflow }}-${{ hashFiles('apps/soletheia_wallet/packages/infrastructure/rust/rust-toolchain.toml', 'apps/soletheia_wallet/packages/infrastructure/rust/**/Cargo.toml', 'apps/soletheia_wallet/packages/infrastructure/rust/Cargo.lock') }}
       - name: Install Dart dependencies
         run: flutter pub get --enforce-lockfile
       - name: Generate localizations
-        working-directory: apps/soletheia_app/app
+        working-directory: apps/soletheia_wallet/app
         run: flutter gen-l10n
       - name: Check formatting
         run: >-
@@ -63,21 +63,21 @@ jobs:
       - name: Analyze
         run: flutter analyze --no-pub --fatal-infos
       - name: Test app
-        working-directory: apps/soletheia_app/app
+        working-directory: apps/soletheia_wallet/app
         run: flutter test --no-pub
       - name: Test application package
-        working-directory: apps/soletheia_app/packages/application
+        working-directory: apps/soletheia_wallet/packages/application
         run: flutter test --no-pub
       - name: Build Rust bridge for tests
-        working-directory: apps/soletheia_app/packages/infrastructure/rust
+        working-directory: apps/soletheia_wallet/packages/infrastructure/rust
         run: cargo build --workspace --locked
       - name: Test Rust bridge
         env:
-          FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR: ${{ github.workspace }}/apps/soletheia_app/packages/infrastructure/rust/target/debug
+          FRB_DART_LOAD_EXTERNAL_LIBRARY_NATIVE_LIB_DIR: ${{ github.workspace }}/apps/soletheia_wallet/packages/infrastructure/rust/target/debug
         run: dart test packages/infrastructure/test
       - name: Build macOS app
-        working-directory: apps/soletheia_app/app
+        working-directory: apps/soletheia_wallet/app
         run: flutter build macos --release --no-pub
       - name: Build unsigned iOS app
-        working-directory: apps/soletheia_app/app
+        working-directory: apps/soletheia_wallet/app
         run: flutter build ios --release --no-codesign --no-pub

@@ -8,7 +8,7 @@
       "extra-files": [
         {
           "type": "generic",
-          "path": "apps/soletheia_app/app/pubspec.yaml"
+          "path": "apps/soletheia_wallet/app/pubspec.yaml"
         }
       ],
       "initial-version": "0.1.0",

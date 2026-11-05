@@ -13,7 +13,7 @@ updates:
       include: scope
 
   - package-ecosystem: pub
-    directory: /apps/soletheia_app
+    directory: /apps/soletheia_wallet
     schedule:
       interval: weekly
       day: monday
@@ -24,7 +24,7 @@ updates:
       include: scope
 
   - package-ecosystem: cargo
-    directory: /apps/soletheia_app/packages/infrastructure/rust
+    directory: /apps/soletheia_wallet/packages/infrastructure/rust
     schedule:
       interval: weekly
       day: monday
