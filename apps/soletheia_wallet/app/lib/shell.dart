@@ -1,1 +1,1 @@
-export 'shell/app_shell.dart';
+export 'shell/main.dart';

@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_ui/material_ui.dart';
@@ -14,7 +15,7 @@ void main() {
     addTearDown(dispatcher.clearPlatformBrightnessTestValue);
     dispatcher.platformBrightnessTestValue = Brightness.light;
 
-    await tester.pumpWidget(const App());
+    await tester.pumpWidget(const ProviderScope(child: App()));
     await tester.runAsync(() => GoogleFonts.pendingFonts());
     await tester.pumpAndSettle();
 

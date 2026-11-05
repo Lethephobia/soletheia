@@ -1,1 +1,4 @@
-export 'routing/app_routes.dart';
+export 'routing/account.dart';
+export 'routing/main.dart';
+export 'routing/router.dart';
+export 'routing/settings.dart';

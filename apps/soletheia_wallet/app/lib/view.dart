@@ -1,1 +1,2 @@
-export 'view/home_view.dart';
+export 'view/account.dart';
+export 'view/settings.dart';
