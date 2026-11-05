@@ -105,6 +105,9 @@ jobs:
       - name: Install Dart dependencies
         working-directory: apps/soletheia_app
         run: flutter pub get --enforce-lockfile
+      - name: Generate localizations
+        working-directory: apps/soletheia_app/app
+        run: flutter gen-l10n
       - name: Build macOS app
         if: matrix.platform == 'macos' && env.APPLE_SIGNING_ENABLED != 'true'
         run: >-

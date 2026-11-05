@@ -51,6 +51,9 @@ jobs:
           key: rust-${{ runner.os }}-${{ runner.arch }}-${{ github.workflow }}-${{ hashFiles('apps/soletheia_app/packages/infrastructure/rust/rust-toolchain.toml', 'apps/soletheia_app/packages/infrastructure/rust/**/Cargo.toml', 'apps/soletheia_app/packages/infrastructure/rust/Cargo.lock') }}
       - name: Install Dart dependencies
         run: flutter pub get --enforce-lockfile
+      - name: Generate localizations
+        working-directory: apps/soletheia_app/app
+        run: flutter gen-l10n
       - name: Check formatting
         run: >-
           dart format --output=none --set-exit-if-changed

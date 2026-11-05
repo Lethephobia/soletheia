@@ -1,0 +1,19 @@
+{
+  "@@locale": "en",
+  "appTitle": "Soletheia",
+  "@appTitle": {
+    "description": "Application title"
+  },
+  "homeTitle": "Home",
+  "@homeTitle": {
+    "description": "Home screen title"
+  },
+  "counterDescription": "You have pushed the button this many times:",
+  "@counterDescription": {
+    "description": "Description above the sample counter"
+  },
+  "incrementTooltip": "Increment",
+  "@incrementTooltip": {
+    "description": "Tooltip for the counter increment button"
+  }
+}

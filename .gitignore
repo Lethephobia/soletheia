@@ -380,3 +380,7 @@ dist
 /apps/soletheia_app/packages/infrastructure/cargokit/**/target
 /apps/soletheia_app/packages/infrastructure/cargokit/**/.dart_tool
 !/apps/soletheia_app/packages/infrastructure/cargokit/**/pubspec.lock
+
+# Generated Flutter localization sources.
+/apps/soletheia_app/app/lib/l10n/app_localizations.dart
+/apps/soletheia_app/app/lib/l10n/app_localizations_*.dart
