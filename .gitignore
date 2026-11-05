@@ -376,11 +376,6 @@ dist
 /apps/soletheia_wallet/app/macos/**/dgph
 /apps/soletheia_wallet/app/macos/**/xcuserdata/
 
-# Vendored Cargokit tooling; preserve its dependency lockfiles.
-/apps/soletheia_wallet/packages/infrastructure/cargokit/**/target
-/apps/soletheia_wallet/packages/infrastructure/cargokit/**/.dart_tool
-!/apps/soletheia_wallet/packages/infrastructure/cargokit/**/pubspec.lock
-
 # Generated Flutter localization sources.
 /apps/soletheia_wallet/app/lib/l10n/app_localizations.dart
 /apps/soletheia_wallet/app/lib/l10n/app_localizations_*.dart

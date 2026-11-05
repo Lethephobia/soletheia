@@ -16,6 +16,6 @@ Future<void> main() async {
     );
     yield LicenseEntryWithLineBreaks(['Noto Sans JP'], license);
   });
-  await RustLib.init();
+  await initializeRust();
   runApp(const ProviderScope(child: App()));
 }

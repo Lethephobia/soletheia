@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 void main() {
   test('initializes and disposes the Rust bridge', () async {
-    await RustLib.init();
+    await initializeRust();
     RustLib.dispose();
   });
 }
