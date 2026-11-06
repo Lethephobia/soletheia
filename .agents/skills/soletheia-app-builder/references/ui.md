@@ -53,6 +53,72 @@ Treat loading as zero accounts and briefly show onboarding to an existing user.
 Build bespoke animated buttons solely to imitate an unsupported Expressive demo.
 ```
 
+### DO verify designs against current official Material 3 guidance
+
+For both mockups and implementation, read the relevant component's current guidelines, specs,
+and accessibility guidance on [Material Design 3](https://m3.material.io/). Check applicable
+Expressive updates before choosing a component or pattern. Do not base new designs on archived
+Material 2 examples or use patterns the current official guidance deprecates or advises against.
+Verify usage, anatomy, interaction states, color, typography, shape, spacing, and adaptive behavior;
+rounded corners alone do not establish Material 3 conformity.
+
+Use the [cards guidelines](https://m3.material.io/components/cards/guidelines) when designing cards.
+Keep each card focused on one subject and its related actions. Do not force content into cards when
+spacing or another simpler hierarchy is sufficient. Choose elevated, filled, or outlined cards
+deliberately; all three remain documented variants. Only the container is required, so do not add
+images or supporting copy merely to imitate a sample. On compact screens, cards may become lists
+while preserving their actions; on wide screens, use suitable columns rather than stretching them.
+Consult the corresponding component guidance for lists rather than assuming card rules apply.
+
+Distinguish an official deprecation from a design preference or an implementation limitation.
+Do not declare an existing M3 component deprecated merely because it has no Expressive-specific
+replacement. Check the installed Flutter package separately: API availability does not prove design
+conformity. If official guidance cannot be read or a required feature is unavailable, state the gap
+and use a verified supported M3 option instead of silently falling back to M2 or inventing an
+Expressive substitute.
+
+**Good**
+
+```text
+Check Cards guidelines, Specs, and Accessibility before proposing a card layout.
+Preserve the same actions when wide-screen cards become compact-screen list rows.
+Identify the official replacement when avoiding a deprecated component.
+```
+
+**Bad**
+
+```text
+Copy an M2 example and label it Expressive after increasing its corner radius.
+Treat every M3 component without an Expressive update as deprecated.
+Add explanatory copy solely because a sample card includes supporting text.
+```
+
+### DO keep onboarding choices concise and responsive
+
+The selected onboarding design offers three actions: generate a seed phrase, import a seed phrase,
+or import a private key. Present these as one grouped vertical list on both mobile and desktop,
+with a constrained, centered width on desktop. Preserve their order and meaning across layouts. Do not
+ask for an account name in this initial choice screen or add a logo, setup caption, progress caption,
+or decorative explanatory copy. Keep accessible labels even when visual text is minimal.
+Use [domain terminology](localization.md) for action labels and concise technical supporting text:
+BIP-39 mnemonic for the phrase flows and Ed25519 private key for key import. Keypair JSON loading
+belongs inside private-key import, not a fourth entry. The entry screen is implemented; its three
+callbacks remain disconnected and disabled until the corresponding flows are implemented.
+
+**Good**
+
+```text
+Compact: three grouped rows with operation labels and technical supporting text
+Wide: the same list, centered with a constrained width
+```
+
+**Bad**
+
+```text
+Ask for an account name before letting the user choose key material.
+Add "Setup", "Preview", and "Get started" captions around the choice controls.
+```
+
 ### DO centralize theme and breakpoint decisions
 
 The current product is dark-only. Keep Google Fonts configuration and license registration in

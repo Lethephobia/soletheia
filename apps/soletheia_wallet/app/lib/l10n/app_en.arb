@@ -32,12 +32,28 @@
   "@navigationCollapseLabel": {
     "description": "Tooltip for collapsing the navigation rail."
   },
-  "onboardingTitle": "Create your first account",
-  "@onboardingTitle": {
-    "description": "Heading of the first-account setup flow."
+  "onboardingGenerateSeedPhraseLabel": "Generate seed phrase",
+  "@onboardingGenerateSeedPhraseLabel": {
+    "description": "Label of the onboarding action for generating a new seed phrase."
   },
-  "onboardingPlaceholderMessage": "Account setup is not available yet.",
-  "@onboardingPlaceholderMessage": {
-    "description": "Temporary message while the account setup flow is not implemented."
+  "onboardingGenerateSeedPhraseDescription": "BIP-39 mnemonic",
+  "@onboardingGenerateSeedPhraseDescription": {
+    "description": "Mnemonic standard for the planned seed phrase generation flow."
+  },
+  "onboardingImportSeedPhraseLabel": "Import seed phrase",
+  "@onboardingImportSeedPhraseLabel": {
+    "description": "Label of the onboarding action for importing an existing seed phrase."
+  },
+  "onboardingImportSeedPhraseDescription": "BIP-39 mnemonic",
+  "@onboardingImportSeedPhraseDescription": {
+    "description": "Mnemonic standard for the planned seed phrase import flow."
+  },
+  "onboardingImportPrivateKeyLabel": "Import private key",
+  "@onboardingImportPrivateKeyLabel": {
+    "description": "Label of the onboarding action for importing a private key, including a keypair JSON file."
+  },
+  "onboardingImportPrivateKeyDescription": "Ed25519 private key",
+  "@onboardingImportPrivateKeyDescription": {
+    "description": "Key type for the planned private key import flow."
   }
 }

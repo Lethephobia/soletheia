@@ -17,7 +17,24 @@ void main() {
     expect(find.byType(AccountShell), findsNothing);
     expect(find.byType(NavigationBar), findsNothing);
     expect(find.byType(NavigationRail), findsNothing);
-    expect(find.text('Account setup is not available yet.'), findsOneWidget);
+    expect(find.text('Generate seed phrase'), findsOneWidget);
+    expect(find.text('Import seed phrase'), findsOneWidget);
+    expect(find.text('Import private key'), findsOneWidget);
+    expect(find.text('BIP-39 mnemonic'), findsNWidgets(2));
+    expect(find.text('Ed25519 private key'), findsOneWidget);
+    expect(
+      tester
+          .widgetList<ListTile>(find.byType(ListTile))
+          .every((tile) => !tile.enabled && tile.onTap == null),
+      isTrue,
+    );
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(320, 240);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Import private key'));
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('account shell preserves branches and toggles the rail', (
@@ -63,19 +80,26 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('follows system language and falls back to English', (
-    tester,
-  ) async {
+  testWidgets('uses English for all system languages', (tester) async {
     final dispatcher = tester.binding.platformDispatcher;
     addTearDown(dispatcher.clearLocalesTestValue);
     dispatcher.localesTestValue = [const Locale('ja', 'JP')];
     await tester.pumpWidget(const ProviderScope(child: App()));
     await tester.pumpAndSettle();
-    expect(find.text('最初のアカウントを作成'), findsOneWidget);
+    expect(find.text('Generate seed phrase'), findsOneWidget);
+    expect(
+      Localizations.localeOf(tester.element(find.byType(AccountSetupView))),
+      const Locale('en'),
+    );
+    expect(
+      MaterialLocalizations.of(tester.element(find.byType(AccountSetupView)))
+          .backButtonTooltip,
+      'Back',
+    );
     for (final locale in [const Locale('en', 'US'), const Locale('fr', 'FR')]) {
       dispatcher.localesTestValue = [locale];
       await tester.pumpAndSettle();
-      expect(find.text('Create your first account'), findsOneWidget);
+      expect(find.text('Generate seed phrase'), findsOneWidget);
     }
   });
 }

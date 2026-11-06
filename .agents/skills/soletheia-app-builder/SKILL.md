@@ -31,7 +31,7 @@ a one-time cleanup, an omitted feature, or a temporary platform limitation into 
 
 - [Structure](references/structure.md): module layout, barrels, naming, and Riverpod generation.
 - [Routing](references/routing.md): typed routes, branches, and shell ownership.
-- [UI](references/ui.md): View/Layout boundaries, Material components, theme, and responsiveness.
+- [UI](references/ui.md): View/Layout boundaries, current official M3/Expressive guidance, components, theme, and responsiveness.
 - [Localization](references/localization.md): ARB keys, translator context, reuse, and messages.
 - [Rust](references/rust.md): application-specific Rust, the FFI facade, and generated integration.
 - [Skill Authoring](references/skills.md): skill scope, reference organization, paired examples, and preserving design decisions during updates.
