@@ -23,5 +23,21 @@
   "settingsTitle": "Settings",
   "@settingsTitle": {
     "description": "App bar title of the settings screen."
+  },
+  "navigationExpandLabel": "Expand navigation",
+  "@navigationExpandLabel": {
+    "description": "Tooltip for expanding the navigation rail."
+  },
+  "navigationCollapseLabel": "Collapse navigation",
+  "@navigationCollapseLabel": {
+    "description": "Tooltip for collapsing the navigation rail."
+  },
+  "onboardingTitle": "Create your first account",
+  "@onboardingTitle": {
+    "description": "Heading of the first-account setup flow."
+  },
+  "onboardingPlaceholderMessage": "Account setup is not available yet.",
+  "@onboardingPlaceholderMessage": {
+    "description": "Temporary message while the account setup flow is not implemented."
   }
 }

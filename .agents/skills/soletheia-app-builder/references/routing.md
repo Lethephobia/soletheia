@@ -1,47 +1,51 @@
 # Routing
 
-Use for typed navigation, branch placement, and shell integration.
+Use for the onboarding flow and normal account navigation.
 
-### DO keep feature routes and branches in their feature module
+### DO separate onboarding from the normal account shell
 
-Use go_router_builder typed routes and StatefulShellRoute for the existing account/settings
-navigation. The app route composes branches; each feature owns its branch and routes. URL paths
-may be plural even when the module is singular.
+OnboardingShellRoute is a typed ShellRoute with AccountSetupRoute at /onboarding.
+AccountShellRoute is a typed StatefulShellRoute; current scaffold branches are the existing
+account list (/accounts) and settings (/settings). Each feature owns its branch and page routes.
+Each shell route owns its generated route list; router.dart composes the lists with import prefixes.
+
+The skeleton starts at /onboarding. Account persistence, creation, loading, and route guards are
+not implemented. When connecting them, distinguish loading from zero accounts; redirect zero
+accounts to onboarding and existing accounts to the normal shell. Completing setup must replace
+onboarding rather than leave it in the back stack. Do not treat the initial route as an account guard.
 
 **Good**
 
 ```text
-routing/account/account_branch.dart -> AccountBranch
-routing/account/account_list_route.dart -> AccountListRoute, /accounts
-routing/settings/settings_branch.dart -> SettingsBranch
-routing/app/app_shell_route.dart -> composes the branches
-Navigation to settings: const SettingsRoute().go(context)
+OnboardingShellRoute -> AccountSetupRoute
+AccountShellRoute -> AccountBranch / SettingsBranch
+Future: resolved account state -> redirect; setup completion -> normal shell
 ```
 
 **Bad**
 
 ```text
-routing/app/account_branch.dart -> account-specific definition owned by app
-Account view: context.go('/settings') -> duplicates a typed route's path
+Hard-code zero accounts in a fake repository and claim automatic gating works.
+A setup completion button navigates without creating or persisting an account.
 ```
 
-### DO keep router mechanics in the shell and presentation in the layout
+### DO keep router mechanics in Shell and presentation in Layout
 
-AppShell adapts StatefulNavigationShell to AppLayout's selected index, selection callback,
-and content. Switch branches with goBranch and preserve their state when the responsive navigation
-changes. Keep the content's parent structure stable across breakpoints.
+Use goBranch to preserve branch locations. Keep content mounted across responsive changes.
+Shell can supply a branch-specific action to Layout; Layout must not inspect child View types.
+Keep generated route parts with their shell definition and import the generated mixins in page
+routes. Regenerate bindings rather than editing generated files.
 
 **Good**
 
 ```text
-AppShell: navigationShell.goBranch(index)
-AppLayout: selectedIndex + onDestinationSelected + child
-Resize: same content subtree, NavigationBar switches to NavigationRail
+AccountShell: currentIndex, goBranch, current branch action
+AccountLayout: navigation presentation, rail expansion, responsive action placement
 ```
 
 **Bad**
 
 ```text
-AppLayout directly constructs GoRouter and pushes a new route for each tab click.
-Resize replaces the entire branch subtree with a new navigation stack.
+AccountLayout reads a child's runtimeType to choose a route or callback.
+Resizing reconstructs a new navigation stack and loses the selected branch state.
 ```

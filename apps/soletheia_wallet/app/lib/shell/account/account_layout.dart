@@ -3,17 +3,26 @@ import 'package:material_ui/material_ui.dart';
 import '../../l10n.dart';
 import '../../responsive.dart';
 
-class AppLayout extends StatelessWidget {
-  const AppLayout({
+class AccountLayout extends StatefulWidget {
+  const AccountLayout({
     super.key,
     required this.selectedIndex,
     required this.onDestinationSelected,
     required this.child,
+    this.primaryAction,
   });
 
   final int selectedIndex;
   final ValueChanged<int> onDestinationSelected;
   final Widget child;
+  final Widget? primaryAction;
+
+  @override
+  State<AccountLayout> createState() => _AccountLayoutState();
+}
+
+class _AccountLayoutState extends State<AccountLayout> {
+  bool _extended = false;
 
   @override
   Widget build(BuildContext context) {
@@ -22,12 +31,26 @@ class AppLayout extends StatelessWidget {
     return Scaffold(
       body: Row(
         children: [
-          if (useRail) ...[
+          if (useRail)
             SafeArea(
               child: NavigationRail(
-                selectedIndex: selectedIndex,
-                onDestinationSelected: onDestinationSelected,
-                labelType: NavigationRailLabelType.all,
+                extended: _extended,
+                labelType: NavigationRailLabelType.none,
+                selectedIndex: widget.selectedIndex,
+                onDestinationSelected: widget.onDestinationSelected,
+                leading: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      tooltip: _extended
+                          ? l10n.navigationCollapseLabel
+                          : l10n.navigationExpandLabel,
+                      onPressed: () => setState(() => _extended = !_extended),
+                      icon: Icon(_extended ? Icons.menu_open : Icons.menu),
+                    ),
+                    if (widget.primaryAction != null) widget.primaryAction!,
+                  ],
+                ),
                 destinations: [
                   NavigationRailDestination(
                     icon: const Icon(Icons.account_circle_outlined),
@@ -42,15 +65,15 @@ class AppLayout extends StatelessWidget {
                 ],
               ),
             ),
-          ],
-          Expanded(key: const ValueKey('main-content'), child: child),
+          Expanded(key: const ValueKey('account-content'), child: widget.child),
         ],
       ),
+      floatingActionButton: useRail ? null : widget.primaryAction,
       bottomNavigationBar: useRail
           ? null
           : NavigationBar(
-              selectedIndex: selectedIndex,
-              onDestinationSelected: onDestinationSelected,
+              selectedIndex: widget.selectedIndex,
+              onDestinationSelected: widget.onDestinationSelected,
               destinations: [
                 NavigationDestination(
                   icon: const Icon(Icons.account_circle_outlined),

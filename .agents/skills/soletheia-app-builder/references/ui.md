@@ -4,23 +4,28 @@ Use for developer-wallet screen design, layout ownership, themes, and responsive
 
 ### DO let each View own its AppBar and page scaffold
 
-AppLayout owns shared navigation and the content region. Views own page titles, actions, body,
-and any page-specific FAB or scrolling app bar. An outer navigation Scaffold can remain; account
-for SafeArea and inset ownership instead of padding the same region twice.
+OnboardingShell/OnboardingLayout host the first-account creation flow without branch navigation.
+AccountShell/AccountLayout host normal account functionality with responsive NavigationBar/Rail
+and a menu button to expand the rail. Page-specific AppBars remain in Views inside that shell.
+Nested Scaffolds are allowed for this separation; verify insets and overlay ownership.
+The shell supplies the current branch's primaryAction; the layout places it as a floating action
+on compact screens or in the rail on wider screens. A branch without an implemented action has
+no FAB. Do not make the layout inspect concrete View types or local View state.
 
 **Good**
 
 ```text
-AppLayout: NavigationRail / NavigationBar + child
-AccountListView: Scaffold(appBar: account list title, body: account list)
-SettingsView: Scaffold(appBar: settings title, body: settings)
+OnboardingLayout: safe, constrained content region for setup steps
+AccountShell: branch selection and branch-specific action
+AccountLayout: navigation, rail expansion, placement of the supplied action
+AccountListView: page AppBar and body
 ```
 
 **Bad**
 
 ```text
-AppLayout chooses every page's title/actions from selectedIndex.
-Each View also adds a second AppBar below it.
+AccountLayout checks child is AccountListView to invent an action.
+A disabled or no-op FAB pretends an unimplemented workflow exists.
 ```
 
 ### PREFER official Material components for developer workflows
@@ -30,20 +35,21 @@ Expressive in mind, using hierarchy, spacing, color, and supported component opt
 installed API and current official support before relying on Expressive features. Use custom
 widgets when they have a concrete purpose, not to recreate standard controls.
 
-An empty account list is still the account list screen. Do not replace it with mandatory onboarding
-or invent portfolio balances and charts merely because this is a wallet.
+The agreed product flow sends users with zero accounts through creation of their first account.
+Existing accounts lead to AccountShell. Keep loading distinct from an empty result. The current
+skeleton starts at onboarding; persistence and automatic redirects are not implemented yet.
 
 **Good**
 
 ```text
-Account list: normal navigation, page title, localized empty-state message.
+Onboarding: localized first-account setup content; normal shell after creation.
 Add an account action when that workflow is requested, using a Material control.
 ```
 
 **Bad**
 
 ```text
-No accounts -> hide navigation behind mandatory creation.
+Treat loading as zero accounts and briefly show onboarding to an existing user.
 Build bespoke animated buttons solely to imitate an unsupported Expressive demo.
 ```
 

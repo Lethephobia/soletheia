@@ -5,5 +5,9 @@
   "navigationSettingsLabel": "設定",
   "accountListTitle": "アカウント",
   "accountListEmptyMessage": "アカウントはありません",
-  "settingsTitle": "設定"
+  "settingsTitle": "設定",
+  "navigationExpandLabel": "ナビゲーションを展開",
+  "navigationCollapseLabel": "ナビゲーションを折りたたむ",
+  "onboardingTitle": "最初のアカウントを作成",
+  "onboardingPlaceholderMessage": "アカウント作成機能は準備中です。"
 }

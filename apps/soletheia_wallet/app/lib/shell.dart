@@ -1,1 +1,2 @@
-export 'shell/app.dart';
+export 'shell/account.dart';
+export 'shell/onboarding.dart';
