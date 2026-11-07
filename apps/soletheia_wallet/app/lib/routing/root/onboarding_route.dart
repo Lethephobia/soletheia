@@ -14,11 +14,6 @@ class OnboardingRoute extends GoRouteData with $OnboardingRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return OnboardingView(
-      onLicenses: () => const LicensesRoute().goRelative(context),
-      onGenerateSeedPhrase: () {
-        const SeedPhraseGenerationRoute().goRelative(context);
-      },
-    );
+    return const OnboardingView();
   }
 }

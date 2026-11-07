@@ -5,8 +5,6 @@ class SettingsRoute extends GoRouteData with $SettingsRoute {
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return SettingsView(
-      onLicenses: () => const LicensesRoute().goRelative(context),
-    );
+    return const SettingsView();
   }
 }

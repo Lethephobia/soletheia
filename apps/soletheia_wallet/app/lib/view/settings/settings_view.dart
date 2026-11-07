@@ -1,11 +1,10 @@
 import 'package:material_ui/material_ui.dart';
 
 import '../../l10n.dart';
+import '../../routing/root.dart';
 
 class SettingsView extends StatelessWidget {
-  const SettingsView({super.key, required this.onLicenses});
-
-  final VoidCallback onLicenses;
+  const SettingsView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +15,7 @@ class SettingsView extends StatelessWidget {
           children: [
             ListTile(
               title: Text(MaterialLocalizations.of(context).licensesPageTitle),
-              onTap: onLicenses,
+              onTap: () => const LicensesRoute().goRelative(context),
             ),
           ],
         ),

@@ -1,18 +1,13 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../l10n.dart';
 import '../../responsive.dart';
+import 'seed_phrase_generation_view_model.dart';
 
-class SeedPhraseGenerationView extends StatefulWidget {
+class SeedPhraseGenerationView extends ConsumerWidget {
   const SeedPhraseGenerationView({super.key});
 
-  @override
-  State<SeedPhraseGenerationView> createState() {
-    return _SeedPhraseGenerationViewState();
-  }
-}
-
-class _SeedPhraseGenerationViewState extends State<SeedPhraseGenerationView> {
   static const double _maxContentWidth = 560;
   static const double _contentPadding = 24;
   static const double _wideTopPadding = 48;
@@ -20,23 +15,10 @@ class _SeedPhraseGenerationViewState extends State<SeedPhraseGenerationView> {
   static const double _sectionSpacing = 24;
   static const double _wordCountWidth = 128;
   static const int _entropyLines = 3;
-  static const _wordCounts = [12, 15, 18, 21, 24];
-
-  final _entropyController = TextEditingController();
-  int _wordCount = 12;
-  bool _customEntropy = false;
-
-  int get _entropyBits => _wordCount ~/ 3 * 32;
-  int get _hexLength => _entropyBits ~/ 4;
-
   @override
-  void dispose() {
-    _entropyController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final form = ref.watch(seedPhraseGenerationViewModelProvider);
+    final viewModel = ref.read(seedPhraseGenerationViewModelProvider.notifier);
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.seedGenerationTitle)),
@@ -65,7 +47,8 @@ class _SeedPhraseGenerationViewState extends State<SeedPhraseGenerationView> {
                       children: [
                         Expanded(
                           child: DropdownMenuFormField<String>(
-                            initialSelection: 'en',
+                            initialSelection: form.wordlist,
+                            onSelected: viewModel.selectWordlist,
                             expandedInsets: EdgeInsets.zero,
                             selectOnly: true,
                             label: Text(l10n.seedGenerationWordlistLabel),
@@ -116,36 +99,32 @@ class _SeedPhraseGenerationViewState extends State<SeedPhraseGenerationView> {
                         SizedBox(
                           width: _wordCountWidth,
                           child: DropdownMenuFormField<int>(
-                            initialSelection: _wordCount,
+                            initialSelection: form.wordCount,
                             expandedInsets: EdgeInsets.zero,
                             selectOnly: true,
                             label: Text(l10n.seedGenerationWordCountLabel),
                             dropdownMenuEntries: [
-                              for (final count in _wordCounts)
+                              for (final count
+                                  in SeedPhraseGenerationViewModel.wordCounts)
                                 DropdownMenuEntry(
                                   value: count,
                                   label: '$count',
                                 ),
                             ],
-                            onSelected: (value) {
-                              if (value != null) {
-                                setState(() => _wordCount = value);
-                              }
-                            },
+                            onSelected: viewModel.selectWordCount,
                           ),
                         ),
                       ],
                     ),
                     SwitchListTile(
                       title: Text(l10n.seedGenerationCustomEntropyLabel),
-                      value: _customEntropy,
-                      onChanged: (value) {
-                        setState(() => _customEntropy = value);
-                      },
+                      value: form.customEntropy,
+                      onChanged: viewModel.setCustomEntropy,
                     ),
-                    if (_customEntropy)
+                    if (form.customEntropy)
                       TextFormField(
-                        controller: _entropyController,
+                        initialValue: form.entropy,
+                        onChanged: viewModel.setEntropy,
                         minLines: _entropyLines,
                         maxLines: _entropyLines,
                         autocorrect: false,
@@ -157,15 +136,15 @@ class _SeedPhraseGenerationViewState extends State<SeedPhraseGenerationView> {
                           border: const OutlineInputBorder(),
                           labelText: l10n.seedGenerationEntropyLabel,
                           helperText: l10n.seedGenerationEntropyHint(
-                            _entropyBits,
-                            _hexLength,
+                            form.entropyBits,
+                            form.hexLength,
                           ),
                         ),
                         validator: (value) {
-                          final hex = value?.trim() ?? '';
-                          if (hex.length != _hexLength ||
-                              !RegExp(r'^[0-9a-fA-F]+$').hasMatch(hex)) {
-                            return l10n.seedGenerationEntropyError(_hexLength);
+                          if (!form.isValidEntropy(value)) {
+                            return l10n.seedGenerationEntropyError(
+                              form.hexLength,
+                            );
                           }
                           return null;
                         },
