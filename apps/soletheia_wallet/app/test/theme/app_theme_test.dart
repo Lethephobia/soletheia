@@ -20,15 +20,17 @@ void main() {
     await tester.runAsync(() => GoogleFonts.pendingFonts());
     await tester.pumpAndSettle();
 
-    final theme = Theme.of(tester.element(find.byType(AccountSetupView)));
+    final theme = Theme.of(tester.element(find.byType(OnboardingView)));
     expect(theme.textTheme.bodyMedium?.fontFamily, startsWith('NotoSansJP'));
     expect(
       theme.primaryTextTheme.bodyMedium?.fontFamily,
       startsWith('NotoSansJP'),
     );
 
-    Brightness brightness() =>
-        Theme.of(tester.element(find.byType(AccountSetupView))).brightness;
+    Brightness brightness() {
+      return Theme.of(tester.element(find.byType(OnboardingView))).brightness;
+    }
+
     expect(brightness(), Brightness.dark);
 
     dispatcher.platformBrightnessTestValue = Brightness.dark;

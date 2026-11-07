@@ -1,20 +1,26 @@
-import 'package:go_router/go_router.dart';
-import 'package:material_ui/material_ui.dart';
-
-import '../../shell/account.dart';
-import 'account_branch.dart';
-import 'account_list_route.dart';
-import '../settings/settings_branch.dart';
-import '../settings/settings_route.dart';
-part 'account_shell_route.g.dart';
+part of '../router.dart';
 
 @TypedStatefulShellRoute<AccountShellRoute>(
   branches: [
     TypedStatefulShellBranch<AccountBranch>(
-      routes: [TypedGoRoute<AccountListRoute>(path: '/accounts')],
+      routes: [
+        TypedGoRoute<AccountListRoute>(
+          path: '/accounts',
+          routes: [
+            TypedRelativeGoRoute<SeedPhraseGenerationRoute>(
+              path: 'generate-seed-phrase',
+            ),
+          ],
+        ),
+      ],
     ),
     TypedStatefulShellBranch<SettingsBranch>(
-      routes: [TypedGoRoute<SettingsRoute>(path: '/settings')],
+      routes: [
+        TypedGoRoute<SettingsRoute>(
+          path: '/settings',
+          routes: [TypedRelativeGoRoute<LicensesRoute>(path: 'licenses')],
+        ),
+      ],
     ),
   ],
 )
@@ -25,5 +31,12 @@ class AccountShellRoute extends StatefulShellRouteData {
     BuildContext context,
     GoRouterState state,
     StatefulNavigationShell navigationShell,
-  ) => AccountShell(navigationShell: navigationShell);
+  ) {
+    return AccountShell(
+      navigationShell: navigationShell,
+      onAddAccount: state.uri.path == const AccountListRoute().location
+          ? () => const SeedPhraseGenerationRoute().goRelative(context)
+          : null,
+    );
+  }
 }

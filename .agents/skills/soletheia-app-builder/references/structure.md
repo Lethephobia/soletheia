@@ -50,3 +50,31 @@ GoRouter router(Ref ref) {
 // A second, manually maintained provider for the same generated router.
 final routerProvider = Provider((ref) => GoRouter(routes: $appRoutes));
 ```
+
+### DO use block bodies for multiline Dart functions
+
+In hand-written Dart, reserve `=>` for functions that fit on one line after formatting.
+Use a block for multiline methods, factories, getters, and callbacks. Return the value
+explicitly when the function produces one.
+
+**Good**
+
+```dart
+bool isAtLeast(Bp other) => minWidth >= other.minWidth;
+
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(title: Text(title)),
+    body: content,
+  );
+}
+```
+
+**Bad**
+
+```dart
+Widget build(BuildContext context) => Scaffold(
+  appBar: AppBar(title: Text(title)),
+  body: content,
+);
+```

@@ -23,14 +23,17 @@ enum Bp {
     return values.lastWhere((bp) => width >= bp.minWidth);
   }
 
-  factory Bp.fromConstraints(BoxConstraints constraints) =>
-      Bp.fromWidth(constraints.maxWidth);
+  factory Bp.fromConstraints(BoxConstraints constraints) {
+    return Bp.fromWidth(constraints.maxWidth);
+  }
 
-  factory Bp.fromMediaQuery(MediaQueryData mediaQuery) =>
-      Bp.fromWidth(mediaQuery.size.width);
+  factory Bp.fromMediaQuery(MediaQueryData mediaQuery) {
+    return Bp.fromWidth(mediaQuery.size.width);
+  }
 
-  static Bp of(BuildContext context) =>
-      Bp.fromWidth(MediaQuery.sizeOf(context).width);
+  static Bp of(BuildContext context) {
+    return Bp.fromWidth(MediaQuery.sizeOf(context).width);
+  }
 
   bool isLargerThan(Bp other) => minWidth > other.minWidth;
 

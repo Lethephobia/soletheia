@@ -12,6 +12,8 @@
   "@navigationSettingsLabel": {
     "description": "Navigation bar and navigation rail label for the settings destination."
   },
+  "accountAddLabel": "Add account",
+  "@accountAddLabel": {"description": "Tooltip for the accounts branch action that opens account setup."},
   "accountListTitle": "Accounts",
   "@accountListTitle": {
     "description": "App bar title of the account list screen."
@@ -55,5 +57,90 @@
   "onboardingImportPrivateKeyDescription": "Ed25519 private key",
   "@onboardingImportPrivateKeyDescription": {
     "description": "Key type for the planned private key import flow."
+  },
+  "seedGenerationTitle": "Generate seed phrase",
+  "@seedGenerationTitle": {
+    "description": "App bar title of the seed phrase generation screen."
+  },
+  "seedGenerationWordlistLabel": "Wordlist",
+  "@seedGenerationWordlistLabel": {
+    "description": "Label for the BIP-39 wordlist language selector."
+  },
+  "seedGenerationWordCountLabel": "Word count",
+  "@seedGenerationWordCountLabel": {
+    "description": "Label for the BIP-39 mnemonic length selector."
+  },
+  "seedGenerationCustomEntropyLabel": "Custom entropy",
+  "@seedGenerationCustomEntropyLabel": {
+    "description": "Switch to supply hexadecimal entropy instead of random entropy."
+  },
+  "seedGenerationEntropyLabel": "Entropy · hex",
+  "@seedGenerationEntropyLabel": {
+    "description": "Label for the custom BIP-39 entropy hexadecimal input."
+  },
+  "seedGenerationGenerateLabel": "Generate",
+  "@seedGenerationGenerateLabel": {
+    "description": "Button to generate a seed phrase; disabled until generation is connected."
+  },
+  "seedWordlistEnglish": "English",
+  "@seedWordlistEnglish": {
+    "description": "Name of the English BIP-39 wordlist, independent of the app locale."
+  },
+  "seedWordlistJapanese": "Japanese",
+  "@seedWordlistJapanese": {
+    "description": "Name of the Japanese BIP-39 wordlist, independent of the app locale."
+  },
+  "seedWordlistKorean": "Korean",
+  "@seedWordlistKorean": {
+    "description": "Name of the Korean BIP-39 wordlist, independent of the app locale."
+  },
+  "seedWordlistSimplifiedChinese": "Simplified Chinese",
+  "@seedWordlistSimplifiedChinese": {
+    "description": "Name of the Simplified Chinese BIP-39 wordlist, independent of the app locale."
+  },
+  "seedWordlistTraditionalChinese": "Traditional Chinese",
+  "@seedWordlistTraditionalChinese": {
+    "description": "Name of the Traditional Chinese BIP-39 wordlist, independent of the app locale."
+  },
+  "seedWordlistFrench": "French",
+  "@seedWordlistFrench": {
+    "description": "Name of the French BIP-39 wordlist, independent of the app locale."
+  },
+  "seedWordlistItalian": "Italian",
+  "@seedWordlistItalian": {
+    "description": "Name of the Italian BIP-39 wordlist, independent of the app locale."
+  },
+  "seedWordlistSpanish": "Spanish",
+  "@seedWordlistSpanish": {
+    "description": "Name of the Spanish BIP-39 wordlist, independent of the app locale."
+  },
+  "seedWordlistCzech": "Czech",
+  "@seedWordlistCzech": {
+    "description": "Name of the Czech BIP-39 wordlist, independent of the app locale."
+  },
+  "seedWordlistPortuguese": "Portuguese",
+  "@seedWordlistPortuguese": {
+    "description": "Name of the Portuguese BIP-39 wordlist, independent of the app locale."
+  },
+  "seedGenerationEntropyHint": "{bits} bits · {length} hex characters",
+  "@seedGenerationEntropyHint": {
+    "description": "Required entropy size for the selected mnemonic length.",
+    "placeholders": {
+      "bits": {
+        "type": "int"
+      },
+      "length": {
+        "type": "int"
+      }
+    }
+  },
+  "seedGenerationEntropyError": "Enter exactly {length} hexadecimal characters.",
+  "@seedGenerationEntropyError": {
+    "description": "Validation error for custom entropy of incorrect length or format.",
+    "placeholders": {
+      "length": {
+        "type": "int"
+      }
+    }
   }
 }
