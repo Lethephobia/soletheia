@@ -23,6 +23,56 @@ class _Generator implements MnemonicGenerator {
 }
 
 void main() {
+  testWidgets('reopening the generation screen resets its form', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const ProviderScope(child: App()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Generate mnemonic'));
+    await tester.pumpAndSettle();
+    final toggle = find.byType(SwitchListTile);
+    await tester.tap(toggle);
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField).last, 'abcd');
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Generate mnemonic'));
+    await tester.pumpAndSettle();
+    expect(tester.widget<SwitchListTile>(toggle).value, isFalse);
+    await tester.tap(toggle);
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<TextField>(find.byType(TextField).last).controller!.text,
+      isEmpty,
+    );
+  });
+
+  testWidgets('closing a generating screen discards its pending result', (
+    tester,
+  ) async {
+    final generator = _Generator();
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [mnemonicGeneratorProvider.overrideWithValue(generator)],
+        child: const App(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Generate mnemonic'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Generate'));
+    await tester.pump();
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Generate mnemonic'));
+    await tester.pumpAndSettle();
+    generator.response.complete(Mnemonic([const MnemonicWord('discarded')]));
+    await tester.pumpAndSettle();
+    expect(find.text('discarded'), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets(
     'Generate uses the selected options and displays returned words',
     (tester) async {
