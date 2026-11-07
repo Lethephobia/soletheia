@@ -1,12 +1,14 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../l10n.dart';
 import '../../responsive.dart';
-import 'custom_entropy_field.dart';
-import 'word_count_field.dart';
-import 'wordlist_field.dart';
+import 'mnemonic_custom_entropy_field.dart';
+import 'mnemonic_generation_view_model.dart';
+import 'mnemonic_word_count_field.dart';
+import 'mnemonic_wordlist_field.dart';
 
-class MnemonicGenerationView extends StatelessWidget {
+class MnemonicGenerationView extends ConsumerWidget {
   const MnemonicGenerationView({super.key});
 
   static const double _maxContentWidth = 560;
@@ -17,7 +19,8 @@ class MnemonicGenerationView extends StatelessWidget {
   static const double _wordCountWidth = 128;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final form = ref.watch(mnemonicGenerationViewModelProvider);
     final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.mnemonicGenerationTitle)),
@@ -44,21 +47,34 @@ class MnemonicGenerationView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       spacing: _fieldSpacing,
                       children: [
-                        Expanded(child: WordlistField()),
+                        Expanded(child: MnemonicWordlistField()),
                         SizedBox(
                           width: _wordCountWidth,
-                          child: WordCountField(),
+                          child: MnemonicWordCountField(),
                         ),
                       ],
                     ),
-                    const CustomEntropyField(),
+                    const MnemonicCustomEntropyField(),
                     Align(
                       alignment: Alignment.centerRight,
                       child: FilledButton(
-                        onPressed: null,
+                        onPressed: form.canGenerate
+                            ? ref
+                                  .read(
+                                    mnemonicGenerationViewModelProvider
+                                        .notifier,
+                                  )
+                                  .generate
+                            : null,
                         child: Text(l10n.mnemonicGenerationGenerateLabel),
                       ),
                     ),
+                    if (form.generation case AsyncLoading())
+                      const LinearProgressIndicator(),
+                    if (form.generation case AsyncError())
+                      Text(l10n.mnemonicGenerationFailure),
+                    if (form.generation case AsyncData(:final value))
+                      Text(value.words.map((word) => word.value).join(' ')),
                   ],
                 ),
               ),

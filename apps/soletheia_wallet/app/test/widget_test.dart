@@ -1,3 +1,4 @@
+import 'package:application/mnemonic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -62,8 +63,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(MnemonicGenerationView), findsOneWidget);
     expect(tester.getSize(find.byType(AppBar)).width, 390);
-    final wordlist = find.byType(DropdownMenuFormField<String>);
-    final count = find.byType(DropdownMenuFormField<int>);
+    final wordlist = find.byType(DropdownMenuFormField<MnemonicWordlist>);
+    final count = find.byType(DropdownMenuFormField<MnemonicWordCount>);
     expect(tester.getTopLeft(wordlist).dy, tester.getTopLeft(count).dy);
     await tester.tap(find.byType(SwitchListTile));
     await tester.pumpAndSettle();

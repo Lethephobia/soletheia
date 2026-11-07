@@ -4,8 +4,8 @@ import 'package:material_ui/material_ui.dart';
 import '../../l10n.dart';
 import 'mnemonic_generation_view_model.dart';
 
-class CustomEntropyField extends ConsumerWidget {
-  const CustomEntropyField({super.key});
+class MnemonicCustomEntropyField extends ConsumerWidget {
+  const MnemonicCustomEntropyField({super.key});
 
   static const double _fieldSpacing = 24;
   static const int _entropyLines = 3;

@@ -80,7 +80,11 @@
   },
   "mnemonicGenerationGenerateLabel": "Generate",
   "@mnemonicGenerationGenerateLabel": {
-    "description": "Button to generate a mnemonic; disabled until generation is connected."
+    "description": "Button to generate a mnemonic using the selected options."
+  },
+  "mnemonicGenerationFailure": "Could not generate the mnemonic. Try again.",
+  "@mnemonicGenerationFailure": {
+    "description": "Error displayed when mnemonic generation fails."
   },
   "mnemonicWordlistEnglish": "English",
   "@mnemonicWordlistEnglish": {

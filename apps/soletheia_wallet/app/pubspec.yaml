@@ -33,6 +33,8 @@ dependencies:
   flutter:
     sdk: flutter
 
+  application:
+    path: ../packages/application
   infrastructure:
     path: ../packages/infrastructure
   material_ui: ^1.10.0
