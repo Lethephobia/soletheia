@@ -10,13 +10,12 @@ class MnemonicWordCountField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final wordCount = ref.watch(
-      mnemonicGenerationViewModelProvider.select((state) => state.wordCount),
-    );
+    final form = ref.watch(mnemonicGenerationViewModelProvider);
     final viewModel = ref.read(mnemonicGenerationViewModelProvider.notifier);
     final l10n = AppLocalizations.of(context);
     return DropdownMenuFormField<MnemonicWordCount>(
-      initialSelection: wordCount,
+      initialSelection: form.wordCount,
+      enabled: !form.isGenerating,
       expandedInsets: EdgeInsets.zero,
       selectOnly: true,
       label: Text(l10n.mnemonicGenerationWordCountLabel),

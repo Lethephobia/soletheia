@@ -19,9 +19,11 @@ abstract class MnemonicGenerationViewState with _$MnemonicGenerationViewState {
   int get entropyBits => wordCount.entropyBytes * 8;
   int get hexLength => entropyBits ~/ 4;
 
-  bool get canGenerate =>
-      generation?.isLoading != true &&
-      (!customEntropy || isValidEntropy(entropy));
+  bool get isGenerating => generation?.isLoading == true;
+
+  bool get canGenerate {
+    return !isGenerating && (!customEntropy || isValidEntropy(entropy));
+  }
 
   bool isValidEntropy(String? value) {
     final hex = value?.trim() ?? '';

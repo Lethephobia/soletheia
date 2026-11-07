@@ -112,6 +112,24 @@ void main() {
       await tester.ensureVisible(generate);
       await tester.tap(generate);
       await tester.pump();
+      void expectFormEnabled(bool enabled) {
+        final menus = tester.widgetList<DropdownMenu<dynamic>>(
+          find.byWidgetPredicate((widget) => widget is DropdownMenu<dynamic>),
+        );
+        expect(menus.map((menu) => menu.enabled), [enabled, enabled]);
+        final toggle = tester.widget<SwitchListTile>(
+          find.byType(SwitchListTile),
+        );
+        expect(toggle.onChanged != null, enabled);
+        final entropy = tester.widget<TextField>(find.byType(TextField).last);
+        expect(entropy.enabled, enabled);
+        expect(
+          tester.widget<FilledButton>(generate).onPressed != null,
+          enabled,
+        );
+      }
+
+      expectFormEnabled(false);
       final source = generator.calls.last.$2 as EntropyMnemonicGenerationSource;
       expect(source.entropy.bytes, List.generate(16, (i) => i + 1));
       generator.response.complete(
@@ -119,6 +137,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.text('first second'), findsOneWidget);
+      expectFormEnabled(true);
     },
   );
 }

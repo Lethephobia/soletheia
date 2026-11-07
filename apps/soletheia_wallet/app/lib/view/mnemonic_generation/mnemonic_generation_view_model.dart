@@ -45,7 +45,7 @@ class MnemonicGenerationViewModel extends _$MnemonicGenerationViewModel {
           .read(mnemonicGeneratorProvider)
           .generate(wordlist: pending.wordlist, source: source);
     });
-    if (ref.mounted && identical(state, pending)) {
+    if (ref.mounted) {
       state = pending.copyWith(generation: result);
     }
   }

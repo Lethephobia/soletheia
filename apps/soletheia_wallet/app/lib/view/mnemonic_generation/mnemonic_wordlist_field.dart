@@ -10,13 +10,12 @@ class MnemonicWordlistField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final wordlist = ref.watch(
-      mnemonicGenerationViewModelProvider.select((state) => state.wordlist),
-    );
+    final form = ref.watch(mnemonicGenerationViewModelProvider);
     final viewModel = ref.read(mnemonicGenerationViewModelProvider.notifier);
     final l10n = AppLocalizations.of(context);
     return DropdownMenuFormField<MnemonicWordlist>(
-      initialSelection: wordlist,
+      initialSelection: form.wordlist,
+      enabled: !form.isGenerating,
       onSelected: viewModel.selectWordlist,
       expandedInsets: EdgeInsets.zero,
       selectOnly: true,

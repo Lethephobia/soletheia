@@ -24,7 +24,7 @@ class MnemonicCustomEntropyField extends ConsumerWidget {
           secondary: const Icon(Icons.tune),
           title: Text(l10n.mnemonicGenerationCustomEntropyLabel),
           value: form.customEntropy,
-          onChanged: viewModel.setCustomEntropy,
+          onChanged: form.isGenerating ? null : viewModel.setCustomEntropy,
         ),
         AnimatedSize(
           duration: _animationDuration,
@@ -34,6 +34,7 @@ class MnemonicCustomEntropyField extends ConsumerWidget {
                   padding: const EdgeInsets.only(top: _fieldSpacing),
                   child: TextFormField(
                     initialValue: form.entropy,
+                    enabled: !form.isGenerating,
                     onChanged: viewModel.setEntropy,
                     minLines: _entropyLines,
                     maxLines: _entropyLines,
