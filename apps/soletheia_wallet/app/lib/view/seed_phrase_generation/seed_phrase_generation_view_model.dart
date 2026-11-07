@@ -1,42 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'seed_phrase_generation_state.dart';
+
 part 'seed_phrase_generation_view_model.g.dart';
-
-class SeedPhraseGenerationState {
-  const SeedPhraseGenerationState({
-    this.wordlist = 'en',
-    this.wordCount = 12,
-    this.customEntropy = false,
-    this.entropy = '',
-  });
-
-  final String wordlist;
-  final int wordCount;
-  final bool customEntropy;
-  final String entropy;
-
-  int get entropyBits => wordCount ~/ 3 * 32;
-  int get hexLength => entropyBits ~/ 4;
-
-  bool isValidEntropy(String? value) {
-    final hex = value?.trim() ?? '';
-    return hex.length == hexLength && RegExp(r'^[0-9a-fA-F]+$').hasMatch(hex);
-  }
-
-  SeedPhraseGenerationState copyWith({
-    String? wordlist,
-    int? wordCount,
-    bool? customEntropy,
-    String? entropy,
-  }) {
-    return SeedPhraseGenerationState(
-      wordlist: wordlist ?? this.wordlist,
-      wordCount: wordCount ?? this.wordCount,
-      customEntropy: customEntropy ?? this.customEntropy,
-      entropy: entropy ?? this.entropy,
-    );
-  }
-}
 
 @riverpod
 class SeedPhraseGenerationViewModel extends _$SeedPhraseGenerationViewModel {
