@@ -3,9 +3,7 @@ part of '../router.dart';
 @TypedGoRoute<OnboardingRoute>(
   path: '/onboarding',
   routes: [
-    TypedRelativeGoRoute<SeedPhraseGenerationRoute>(
-      path: 'generate-seed-phrase',
-    ),
+    TypedRelativeGoRoute<MnemonicGenerationRoute>(path: 'generate-mnemonic'),
     TypedRelativeGoRoute<LicensesRoute>(path: 'licenses'),
   ],
 )

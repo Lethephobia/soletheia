@@ -631,16 +631,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "94143f37725109f92c262ed2cf5e59bce7498c01bcc1502d7b9afe439a4e9f49"
 
 [[package]]
-name = "seed_phrase"
-version = "0.1.0"
-dependencies = [
- "bip39",
- "getrandom",
- "thiserror",
- "zeroize",
-]
-
-[[package]]
 name = "serde"
 version = "1.0.229"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -691,7 +681,12 @@ checksum = "d0d5d4b1981b8bbbb7aed204cae5726d683d5d6ac7e74ec54122ea28f315e7c8"
 name = "soletheia_flutter_bridge"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
+ "bip39",
  "flutter_rust_bridge",
+ "getrandom",
+ "thiserror",
+ "zeroize",
 ]
 
 [[package]]

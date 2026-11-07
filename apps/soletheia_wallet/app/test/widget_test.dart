@@ -18,8 +18,8 @@ void main() {
     expect(find.byTooltip('Back'), findsNothing);
     expect(find.byType(NavigationBar), findsNothing);
     expect(find.byType(NavigationRail), findsNothing);
-    expect(find.text('Generate seed phrase'), findsOneWidget);
-    expect(find.text('Import seed phrase'), findsOneWidget);
+    expect(find.text('Generate mnemonic'), findsOneWidget);
+    expect(find.text('Import mnemonic'), findsOneWidget);
     expect(find.text('Import private key'), findsOneWidget);
     expect(find.text('BIP-39 mnemonic'), findsNWidgets(2));
     expect(find.text('Ed25519 private key'), findsOneWidget);
@@ -58,9 +58,9 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     await tester.pumpWidget(const ProviderScope(child: App()));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Generate seed phrase'));
+    await tester.tap(find.text('Generate mnemonic'));
     await tester.pumpAndSettle();
-    expect(find.byType(SeedPhraseGenerationView), findsOneWidget);
+    expect(find.byType(MnemonicGenerationView), findsOneWidget);
     expect(tester.getSize(find.byType(AppBar)).width, 390);
     final wordlist = find.byType(DropdownMenuFormField<String>);
     final count = find.byType(DropdownMenuFormField<int>);
@@ -167,7 +167,7 @@ void main() {
     expect(tester.element(find.byType(AccountListView)), same(account));
     await tester.tap(find.byTooltip('Add account'));
     await tester.pumpAndSettle();
-    expect(find.byType(SeedPhraseGenerationView), findsOneWidget);
+    expect(find.byType(MnemonicGenerationView), findsOneWidget);
     expect(find.byType(NavigationRail), findsNothing);
     expect(find.byTooltip('Add account'), findsNothing);
     await tester.tap(find.byTooltip('Back'));
@@ -182,7 +182,7 @@ void main() {
     dispatcher.localesTestValue = [const Locale('ja', 'JP')];
     await tester.pumpWidget(const ProviderScope(child: App()));
     await tester.pumpAndSettle();
-    expect(find.text('Generate seed phrase'), findsOneWidget);
+    expect(find.text('Generate mnemonic'), findsOneWidget);
     expect(
       Localizations.localeOf(tester.element(find.byType(OnboardingView))),
       const Locale('en'),
@@ -195,7 +195,7 @@ void main() {
     for (final locale in [const Locale('en', 'US'), const Locale('fr', 'FR')]) {
       dispatcher.localesTestValue = [locale];
       await tester.pumpAndSettle();
-      expect(find.text('Generate seed phrase'), findsOneWidget);
+      expect(find.text('Generate mnemonic'), findsOneWidget);
     }
   });
 }

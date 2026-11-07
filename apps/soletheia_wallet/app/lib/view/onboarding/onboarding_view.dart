@@ -29,17 +29,17 @@ class OnboardingView extends StatelessWidget {
                   children: [
                     OnboardingOptionTile(
                       icon: Icons.add,
-                      title: l10n.onboardingGenerateSeedPhraseLabel,
-                      subtitle: l10n.onboardingGenerateSeedPhraseDescription,
+                      title: l10n.onboardingGenerateMnemonicLabel,
+                      subtitle: l10n.onboardingGenerateMnemonicDescription,
                       onTap: () {
-                        const SeedPhraseGenerationRoute().goRelative(context);
+                        const MnemonicGenerationRoute().goRelative(context);
                       },
                       isFirst: true,
                     ),
                     OnboardingOptionTile(
                       icon: Icons.text_snippet_outlined,
-                      title: l10n.onboardingImportSeedPhraseLabel,
-                      subtitle: l10n.onboardingImportSeedPhraseDescription,
+                      title: l10n.onboardingImportMnemonicLabel,
+                      subtitle: l10n.onboardingImportMnemonicDescription,
                     ),
                     OnboardingOptionTile(
                       icon: Icons.key_outlined,

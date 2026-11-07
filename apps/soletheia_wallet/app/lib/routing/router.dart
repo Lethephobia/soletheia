@@ -5,7 +5,7 @@ import 'package:material_ui/material_ui.dart';
 import '../shell/account.dart';
 import '../view/account_list.dart';
 import '../view/onboarding.dart';
-import '../view/seed_phrase_generation.dart';
+import '../view/mnemonic_generation.dart';
 import '../view/settings.dart';
 
 part 'account/account_branch.dart';
@@ -15,7 +15,7 @@ part 'account/settings_branch.dart';
 part 'account/settings_route.dart';
 part 'root/licenses_route.dart';
 part 'root/onboarding_route.dart';
-part 'root/seed_phrase_generation_route.dart';
+part 'root/mnemonic_generation_route.dart';
 part 'router.g.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();

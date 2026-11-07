@@ -95,7 +95,7 @@ Add explanatory copy solely because a sample card includes supporting text.
 
 ### DO keep onboarding choices concise and responsive
 
-The selected onboarding design offers three actions: generate a seed phrase, import a seed phrase,
+The selected onboarding design offers three actions: generate a mnemonic, import a mnemonic,
 or import a private key. Present these as one grouped vertical list on both mobile and desktop,
 with a constrained, centered width on desktop. Preserve their order and meaning across layouts. Do not
 ask for an account name in this initial choice screen or add a logo, setup caption, progress caption,

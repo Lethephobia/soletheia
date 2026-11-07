@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:infrastructure/infrastructure.dart';
+import 'package:infrastructure/rust.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'app.dart';

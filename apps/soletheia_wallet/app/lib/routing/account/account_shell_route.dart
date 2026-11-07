@@ -7,8 +7,8 @@ part of '../router.dart';
         TypedGoRoute<AccountListRoute>(
           path: '/accounts',
           routes: [
-            TypedRelativeGoRoute<SeedPhraseGenerationRoute>(
-              path: 'generate-seed-phrase',
+            TypedRelativeGoRoute<MnemonicGenerationRoute>(
+              path: 'generate-mnemonic',
             ),
           ],
         ),
@@ -35,7 +35,7 @@ class AccountShellRoute extends StatefulShellRouteData {
     return AccountShell(
       navigationShell: navigationShell,
       onAddAccount: state.uri.path == const AccountListRoute().location
-          ? () => const SeedPhraseGenerationRoute().goRelative(context)
+          ? () => const MnemonicGenerationRoute().goRelative(context)
           : null,
     );
   }

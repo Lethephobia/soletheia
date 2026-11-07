@@ -40,8 +40,8 @@ translation matches. Navigation labels and page titles have separate purposes.
 
 This is a developer-oriented wallet. Use established domain terms instead of replacing them with
 consumer metaphors or vague onboarding language. Name the operation and its actual input, such as
-seed phrase, private key, public key, keypair, transaction, or RPC endpoint. Keep distinct concepts
-distinct: do not use seed phrase, seed, and private key interchangeably, or label a local keypair
+mnemonic, private key, public key, keypair, transaction, or RPC endpoint. Keep distinct concepts
+distinct: do not use mnemonic, seed, and private key interchangeably, or label a local keypair
 operation as on-chain account creation unless it actually performs that operation. Verify terminology
 against the implemented format and relevant official documentation when the distinction matters.
 Short technical labels are preferable to explanatory marketing copy; retain information needed to
@@ -50,8 +50,8 @@ understand an operation's effects or handle secrets correctly.
 **Good**
 
 ```text
-Generate seed phrase
-Import seed phrase
+Generate mnemonic
+Import mnemonic
 Import private key
 RPC endpoint
 ```
@@ -60,7 +60,7 @@ RPC endpoint
 
 ```text
 Start your journey -> hides which key material will be generated
-Restore access -> does not distinguish a seed phrase from a private key
+Restore access -> does not distinguish a mnemonic from a private key
 Connection destination -> obscures a field that specifically expects an RPC endpoint
 ```
 

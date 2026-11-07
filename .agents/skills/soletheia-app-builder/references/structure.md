@@ -91,12 +91,12 @@ out of exception fields and messages.
 **Good**
 
 ```dart
-// seed_phrase_entropy_exception.dart
-sealed class SeedPhraseEntropyException implements Exception {
-  const SeedPhraseEntropyException();
+// mnemonic_entropy_exception.dart
+sealed class MnemonicEntropyException implements Exception {
+  const MnemonicEntropyException();
 }
 
-final class InvalidEntropyLengthException extends SeedPhraseEntropyException {
+final class InvalidEntropyLengthException extends MnemonicEntropyException {
   const InvalidEntropyLengthException(this.actualBytes);
 
   final int actualBytes;

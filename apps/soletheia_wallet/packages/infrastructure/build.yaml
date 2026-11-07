@@ -1,0 +1,7 @@
+targets:
+  $default:
+    builders:
+      freezed:
+        options:
+          # Generated bridge inputs may contain wallet entropy.
+          to_string_override: false

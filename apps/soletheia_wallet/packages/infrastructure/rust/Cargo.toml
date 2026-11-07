@@ -1,3 +1,20 @@
-[workspace]
-members = ["crates/seed_phrase", "flutter_bridge"]
-resolver = "2"
+[package]
+name = "soletheia_flutter_bridge"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.90"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[dependencies]
+flutter_rust_bridge = "=2.13.0"
+anyhow = "1"
+bip39 = { version = "3.0.0", features = ["all-languages", "zeroize"] }
+getrandom = { version = "0.4", features = ["std"] }
+thiserror = "2"
+zeroize = "1"
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }

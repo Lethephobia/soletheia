@@ -1,2 +1,2 @@
 export 'router.dart'
-    show LicensesRoute, OnboardingRoute, SeedPhraseGenerationRoute;
+    show LicensesRoute, OnboardingRoute, MnemonicGenerationRoute;
