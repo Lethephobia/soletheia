@@ -17,6 +17,13 @@ allow = [
     "Zlib",
 ]
 
+# Agave's BIP-39 dependency and its hash dependencies use CC0-1.0.
+exceptions = [
+    { name = "bip39", allow = ["CC0-1.0"] },
+    { name = "bitcoin_hashes", allow = ["CC0-1.0"] },
+    { name = "hex-conservative", allow = ["CC0-1.0"] },
+]
+
 # allo-isolate declares license-file instead of an SPDX expression.
 # Verified against the Apache-2.0 LICENSE shipped in this release.
 [[licenses.clarify]]

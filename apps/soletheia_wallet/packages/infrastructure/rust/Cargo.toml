@@ -1,3 +1,3 @@
 [workspace]
-members = ["flutter_bridge"]
+members = ["crates/seed_phrase", "flutter_bridge"]
 resolver = "2"
