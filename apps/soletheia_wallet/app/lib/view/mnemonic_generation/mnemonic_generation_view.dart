@@ -16,7 +16,7 @@ class MnemonicGenerationView extends ConsumerWidget {
   static const double _wideTopPadding = 48;
   static const double _fieldSpacing = 12;
   static const double _sectionSpacing = 24;
-  static const double _wordCountWidth = 128;
+  static const double _wordCountWidth = 144;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

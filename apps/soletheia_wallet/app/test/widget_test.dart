@@ -1,4 +1,5 @@
 import 'package:application/mnemonic.dart';
+import 'package:flutter/rendering.dart' show RenderParagraph;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
@@ -66,11 +67,19 @@ void main() {
     final wordlist = find.byType(DropdownMenuFormField<MnemonicWordlist>);
     final count = find.byType(DropdownMenuFormField<MnemonicWordCount>);
     expect(tester.getTopLeft(wordlist).dy, tester.getTopLeft(count).dy);
+    final label = tester.renderObject<RenderParagraph>(find.text('Word count'));
+    final boxes = label.getBoxesForSelection(
+      const TextSelection(baseOffset: 0, extentOffset: 10),
+    );
+    expect(boxes.map((box) => box.top).toSet(), hasLength(1));
     await tester.tap(find.byType(SwitchListTile));
     await tester.pumpAndSettle();
-    expect(find.text('128 bits · 32 hex characters'), findsOneWidget);
-    await tester.enterText(find.byType(TextFormField).last, '00');
+    expect(find.text('128 bits · hexadecimal'), findsOneWidget);
+    expect(find.text('0/32'), findsOneWidget);
+    final entropy = 'a' * 33;
+    await tester.enterText(find.byType(TextFormField).last, entropy);
     await tester.pumpAndSettle();
+    expect(find.text('33/32'), findsOneWidget);
     expect(
       find.text('Enter exactly 32 hexadecimal characters.'),
       findsOneWidget,
@@ -86,7 +95,7 @@ void main() {
           .widget<TextField>(find.byType(TextField).last)
           .decoration
           ?.helperText,
-      '256 bits · 64 hex characters',
+      '256 bits · hexadecimal',
     );
     expect(
       find.text('Enter exactly 64 hexadecimal characters.'),
@@ -101,15 +110,23 @@ void main() {
           .widget<TextField>(find.byType(TextField).last)
           .decoration
           ?.helperText,
-      '256 bits · 64 hex characters',
+      '256 bits · hexadecimal',
     );
-    expect(find.text('00'), findsOneWidget);
+    expect(find.text(entropy), findsOneWidget);
+    expect(find.text('33/64'), findsOneWidget);
     expect(
       tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
       isNull,
     );
+    await tester.tap(find.byType(SwitchListTile));
+    await tester.pumpAndSettle();
+    expect(find.text('Entropy'), findsNothing);
+    await tester.tap(find.byType(SwitchListTile));
+    await tester.pumpAndSettle();
+    expect(find.text(entropy), findsOneWidget);
     tester.view.physicalSize = const Size(320, 568);
     await tester.pumpAndSettle();
+    expect(tester.getTopLeft(wordlist).dy, tester.getTopLeft(count).dy);
     expect(tester.takeException(), isNull);
     await tester.tap(find.byTooltip('Back'));
     await tester.pumpAndSettle();

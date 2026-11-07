@@ -6,6 +6,9 @@ abstract final class AppTheme {
     final base = ThemeData(
       brightness: Brightness.dark,
       colorSchemeSeed: Colors.deepPurple,
+      inputDecorationTheme: const InputDecorationThemeData(
+        border: OutlineInputBorder(),
+      ),
     );
 
     return base.copyWith(

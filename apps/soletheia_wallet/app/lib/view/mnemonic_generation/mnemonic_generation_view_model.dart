@@ -4,14 +4,14 @@ import 'package:application/mnemonic.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../mnemonic.dart';
-import 'mnemonic_generation_state.dart';
+import 'mnemonic_generation_view_state.dart';
 
 part 'mnemonic_generation_view_model.g.dart';
 
 @riverpod
 class MnemonicGenerationViewModel extends _$MnemonicGenerationViewModel {
   @override
-  MnemonicGenerationState build() => const MnemonicGenerationState();
+  MnemonicGenerationViewState build() => const MnemonicGenerationViewState();
 
   void selectWordlist(MnemonicWordlist? value) {
     if (value != null) {
@@ -50,7 +50,7 @@ class MnemonicGenerationViewModel extends _$MnemonicGenerationViewModel {
     }
   }
 
-  static MnemonicEntropy _parseEntropy(MnemonicGenerationState form) {
+  static MnemonicEntropy _parseEntropy(MnemonicGenerationViewState form) {
     final hex = form.entropy.trim();
     final bytes = Uint8List(form.wordCount.entropyBytes);
     for (var i = 0; i < bytes.length; i++) {

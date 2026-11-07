@@ -74,7 +74,7 @@
   "@mnemonicGenerationCustomEntropyLabel": {
     "description": "Switch to supply hexadecimal entropy instead of random entropy."
   },
-  "mnemonicGenerationEntropyLabel": "Entropy · hex",
+  "mnemonicGenerationEntropyLabel": "Entropy",
   "@mnemonicGenerationEntropyLabel": {
     "description": "Label for the custom BIP-39 entropy hexadecimal input."
   },
@@ -126,14 +126,11 @@
   "@mnemonicWordlistPortuguese": {
     "description": "Name of the Portuguese BIP-39 wordlist, independent of the app locale."
   },
-  "mnemonicGenerationEntropyHint": "{bits} bits · {length} hex characters",
+  "mnemonicGenerationEntropyHint": "{bits} bits · hexadecimal",
   "@mnemonicGenerationEntropyHint": {
     "description": "Required entropy size for the selected mnemonic length.",
     "placeholders": {
       "bits": {
-        "type": "int"
-      },
-      "length": {
         "type": "int"
       }
     }

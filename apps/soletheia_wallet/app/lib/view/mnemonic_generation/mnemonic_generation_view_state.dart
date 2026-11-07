@@ -2,19 +2,19 @@ import 'package:application/mnemonic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'mnemonic_generation_state.freezed.dart';
+part 'mnemonic_generation_view_state.freezed.dart';
 
 @Freezed(toStringOverride: false)
-abstract class MnemonicGenerationState with _$MnemonicGenerationState {
-  const MnemonicGenerationState._();
+abstract class MnemonicGenerationViewState with _$MnemonicGenerationViewState {
+  const MnemonicGenerationViewState._();
 
-  const factory MnemonicGenerationState({
+  const factory MnemonicGenerationViewState({
     @Default(MnemonicWordlist.english) MnemonicWordlist wordlist,
     @Default(MnemonicWordCount.words12) MnemonicWordCount wordCount,
     @Default(false) bool customEntropy,
     @Default('') String entropy,
     AsyncValue<Mnemonic>? generation,
-  }) = _MnemonicGenerationState;
+  }) = _MnemonicGenerationViewState;
 
   int get entropyBits => wordCount.entropyBytes * 8;
   int get hexLength => entropyBits ~/ 4;
