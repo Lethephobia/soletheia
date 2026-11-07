@@ -1,6 +1,6 @@
 # Structure
 
-Use for Flutter module boundaries, public exports, file naming, and provider definitions.
+Use for Flutter module boundaries, public exports, file naming, provider definitions, and Dart application exceptions.
 
 ### DO use adjacent, same-name barrel files
 
@@ -77,4 +77,37 @@ Widget build(BuildContext context) => Scaffold(
   appBar: AppBar(title: Text(title)),
   body: content,
 );
+```
+
+### DO model expected application failures as sealed exception families
+
+Group related failures under a feature-specific sealed class that implements `Exception`.
+Define each failure as a final subclass and keep the family together in the same
+`*_exception.dart` file. Callers can catch the base type and use an exhaustive switch
+when each variant needs different handling. Give variants only the data needed for
+recovery or display, such as a byte count. Keep entropy, seed words, and private keys
+out of exception fields and messages.
+
+**Good**
+
+```dart
+// seed_phrase_entropy_exception.dart
+sealed class SeedPhraseEntropyException implements Exception {
+  const SeedPhraseEntropyException();
+}
+
+final class InvalidEntropyLengthException extends SeedPhraseEntropyException {
+  const InvalidEntropyLengthException(this.actualBytes);
+
+  final int actualBytes;
+}
+
+// At the validation site: throw InvalidEntropyLengthException(bytes.length);
+```
+
+**Bad**
+
+```dart
+// Callers must interpret the message to identify this input failure.
+throw ArgumentError('Invalid entropy length.');
 ```

@@ -1,3 +1,5 @@
+export 'seed_phrase.dart';
+
 /// A Calculator.
 class Calculator {
   /// Returns [value] plus 1.
