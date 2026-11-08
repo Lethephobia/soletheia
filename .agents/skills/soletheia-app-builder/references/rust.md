@@ -6,14 +6,14 @@ Use for the wallet's application-specific Rust implementation and Flutter bounda
 
 The wallet builds a single crate at `apps/soletheia_wallet/packages/infrastructure/rust`.
 Keep feature implementations and their Flutter-facing functions in Rust modules. FRB currently
-reads `crate::init` and `crate::mnemonic`. Use a file named after its module and place
+reads the account creation API, its mnemonic input types, and `crate::api::init`. Use a file named after its module and place
 child modules in the matching directory.
 
 **Good**
 
 ```text
-rust/src/mnemonic.rs -> Flutter-facing mnemonic API
-rust/src/mnemonic/generate_mnemonic.rs -> generation logic and unit tests
+rust/src/api/account.rs -> Flutter-facing account creation API
+rust/src/infrastructure/bip39/bip39_mnemonic_generator.rs -> generation logic and unit tests
 src/signing.rs + src/signing/<child>.rs -> module layout
 ```
 

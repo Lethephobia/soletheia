@@ -1,4 +1,15 @@
-rust_input: crate::init,crate::mnemonic
+rust_input: >-
+  crate::api::init,
+  crate::api::account::create_account,
+  crate::application::account::created_account,
+  crate::application::account::account_address,
+  crate::application::storage::mnemonic_id,
+  crate::application::keypair::derivation_path,
+  crate::application::mnemonic::mnemonic_word_count,
+  crate::application::mnemonic::mnemonic_wordlist,
+  crate::application::mnemonic::mnemonic_generation_source,
+  crate::application::mnemonic::mnemonic_entropy,
+  crate::application::mnemonic::mnemonic_passphrase
 rust_root: rust/
 dart_output: lib/src/rust_bridge
 web: false

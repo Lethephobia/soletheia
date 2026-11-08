@@ -3,16 +3,29 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
+import 'api/account/create_account.dart';
+import 'application/account/account_address.dart';
+import 'application/account/account_creator_error.dart';
+import 'application/account/created_account.dart';
+import 'application/keypair/derivation_path.dart';
+import 'application/keypair/keypair_deriver_error.dart';
+import 'application/mnemonic/mnemonic_entropy.dart';
+import 'application/mnemonic/mnemonic_generation_source.dart';
+import 'application/mnemonic/mnemonic_generator_error.dart';
+import 'application/mnemonic/mnemonic_passphrase.dart';
+import 'application/mnemonic/mnemonic_word_count.dart';
+import 'application/mnemonic/mnemonic_wordlist.dart';
+import 'application/storage/keypair_store_error.dart';
+import 'application/storage/mnemonic_id.dart';
+import 'application/storage/mnemonic_store_error.dart';
+
 import 'dart:async';
 import 'dart:convert';
 
 import 'frb_generated.dart';
 import 'frb_generated.io.dart'
     if (dart.library.js_interop) 'frb_generated.web.dart';
-import 'mnemonic/generate_mnemonic.dart';
-import 'mnemonic/mnemonic_generation_source.dart';
-import 'mnemonic/mnemonic_word_count.dart';
-import 'mnemonic/mnemonic_wordlist.dart';
+import 'lib.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
@@ -60,7 +73,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 
   @override
   Future<void> executeRustInitializers() async {
-    await api.crateInitInit();
+    await api.crateApiInitInit();
   }
 
   @override
@@ -71,7 +84,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.13.0';
 
   @override
-  int get rustContentHash => 566136419;
+  int get rustContentHash => -524917830;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -83,12 +96,57 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
-  Future<List<String>> crateMnemonicGenerateMnemonicGenerateMnemonic({
-    required MnemonicWordlist wordlist,
-    required MnemonicGenerationSource source,
+  DerivationPath crateApplicationKeypairDerivationPathDerivationPathParse({
+    required String value,
   });
 
-  Future<void> crateInitInit();
+  MnemonicEntropy crateApplicationMnemonicMnemonicEntropyMnemonicEntropyNew({
+    required List<int> bytes,
+  });
+
+  Future<MnemonicPassphrase>
+  crateApplicationMnemonicMnemonicPassphraseMnemonicPassphraseDefault();
+
+  MnemonicPassphrase
+  crateApplicationMnemonicMnemonicPassphraseMnemonicPassphraseNew({
+    required String value,
+  });
+
+  Future<CreatedAccount> crateApiAccountCreateAccountCreateAccount({
+    required MnemonicWordlist wordlist,
+    required MnemonicGenerationSource source,
+    required MnemonicPassphrase passphrase,
+    required DerivationPath derivationPath,
+  });
+
+  Future<void> crateApiInitInit();
+
+  RustArcIncrementStrongCountFnType
+  get rust_arc_increment_strong_count_DerivationPath;
+
+  RustArcDecrementStrongCountFnType
+  get rust_arc_decrement_strong_count_DerivationPath;
+
+  CrossPlatformFinalizerArg
+  get rust_arc_decrement_strong_count_DerivationPathPtr;
+
+  RustArcIncrementStrongCountFnType
+  get rust_arc_increment_strong_count_MnemonicEntropy;
+
+  RustArcDecrementStrongCountFnType
+  get rust_arc_decrement_strong_count_MnemonicEntropy;
+
+  CrossPlatformFinalizerArg
+  get rust_arc_decrement_strong_count_MnemonicEntropyPtr;
+
+  RustArcIncrementStrongCountFnType
+  get rust_arc_increment_strong_count_MnemonicPassphrase;
+
+  RustArcDecrementStrongCountFnType
+  get rust_arc_decrement_strong_count_MnemonicPassphrase;
+
+  CrossPlatformFinalizerArg
+  get rust_arc_decrement_strong_count_MnemonicPassphrasePtr;
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -100,9 +158,139 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   });
 
   @override
-  Future<List<String>> crateMnemonicGenerateMnemonicGenerateMnemonic({
+  DerivationPath crateApplicationKeypairDerivationPathDerivationPathParse({
+    required String value,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(value, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 1)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData:
+              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDerivationPath,
+          decodeErrorData: sse_decode_keypair_deriver_error,
+        ),
+        constMeta:
+            kCrateApplicationKeypairDerivationPathDerivationPathParseConstMeta,
+        argValues: [value],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kCrateApplicationKeypairDerivationPathDerivationPathParseConstMeta =>
+      const TaskConstMeta(
+        debugName: "DerivationPath_parse",
+        argNames: ["value"],
+      );
+
+  @override
+  MnemonicEntropy crateApplicationMnemonicMnemonicEntropyMnemonicEntropyNew({
+    required List<int> bytes,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_list_prim_u_8_loose(bytes, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 2)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData:
+              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicEntropy,
+          decodeErrorData: sse_decode_mnemonic_generator_error,
+        ),
+        constMeta:
+            kCrateApplicationMnemonicMnemonicEntropyMnemonicEntropyNewConstMeta,
+        argValues: [bytes],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kCrateApplicationMnemonicMnemonicEntropyMnemonicEntropyNewConstMeta =>
+      const TaskConstMeta(
+        debugName: "MnemonicEntropy_new",
+        argNames: ["bytes"],
+      );
+
+  @override
+  Future<MnemonicPassphrase>
+  crateApplicationMnemonicMnemonicPassphraseMnemonicPassphraseDefault() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 3,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData:
+              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicPassphrase,
+          decodeErrorData: null,
+        ),
+        constMeta:
+            kCrateApplicationMnemonicMnemonicPassphraseMnemonicPassphraseDefaultConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kCrateApplicationMnemonicMnemonicPassphraseMnemonicPassphraseDefaultConstMeta =>
+      const TaskConstMeta(
+        debugName: "MnemonicPassphrase_default",
+        argNames: [],
+      );
+
+  @override
+  MnemonicPassphrase
+  crateApplicationMnemonicMnemonicPassphraseMnemonicPassphraseNew({
+    required String value,
+  }) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(value, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4)!;
+        },
+        codec: SseCodec(
+          decodeSuccessData:
+              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicPassphrase,
+          decodeErrorData: null,
+        ),
+        constMeta:
+            kCrateApplicationMnemonicMnemonicPassphraseMnemonicPassphraseNewConstMeta,
+        argValues: [value],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kCrateApplicationMnemonicMnemonicPassphraseMnemonicPassphraseNewConstMeta =>
+      const TaskConstMeta(
+        debugName: "MnemonicPassphrase_new",
+        argNames: ["value"],
+      );
+
+  @override
+  Future<CreatedAccount> crateApiAccountCreateAccountCreateAccount({
     required MnemonicWordlist wordlist,
     required MnemonicGenerationSource source,
+    required MnemonicPassphrase passphrase,
+    required DerivationPath derivationPath,
   }) {
     return handler.executeNormal(
       NormalTask(
@@ -110,32 +298,40 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           final serializer = SseSerializer(generalizedFrbRustBinding);
           sse_encode_mnemonic_wordlist(wordlist, serializer);
           sse_encode_box_autoadd_mnemonic_generation_source(source, serializer);
+          sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicPassphrase(
+            passphrase,
+            serializer,
+          );
+          sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDerivationPath(
+            derivationPath,
+            serializer,
+          );
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 1,
+            funcId: 5,
             port: port_,
           );
         },
         codec: SseCodec(
-          decodeSuccessData: sse_decode_list_String,
-          decodeErrorData: sse_decode_AnyhowException,
+          decodeSuccessData: sse_decode_created_account,
+          decodeErrorData: sse_decode_account_creator_error,
         ),
-        constMeta: kCrateMnemonicGenerateMnemonicGenerateMnemonicConstMeta,
-        argValues: [wordlist, source],
+        constMeta: kCrateApiAccountCreateAccountCreateAccountConstMeta,
+        argValues: [wordlist, source, passphrase, derivationPath],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateMnemonicGenerateMnemonicGenerateMnemonicConstMeta =>
+  TaskConstMeta get kCrateApiAccountCreateAccountCreateAccountConstMeta =>
       const TaskConstMeta(
-        debugName: "generate_mnemonic",
-        argNames: ["wordlist", "source"],
+        debugName: "create_account",
+        argNames: ["wordlist", "source", "passphrase", "derivationPath"],
       );
 
   @override
-  Future<void> crateInitInit() {
+  Future<void> crateApiInitInit() {
     return handler.executeNormal(
       NormalTask(
         callFfi: (port_) {
@@ -143,7 +339,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 2,
+            funcId: 6,
             port: port_,
           );
         },
@@ -151,26 +347,146 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: null,
         ),
-        constMeta: kCrateInitInitConstMeta,
+        constMeta: kCrateApiInitInitConstMeta,
         argValues: [],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateInitInitConstMeta =>
+  TaskConstMeta get kCrateApiInitInitConstMeta =>
       const TaskConstMeta(debugName: "init", argNames: []);
 
+  RustArcIncrementStrongCountFnType
+  get rust_arc_increment_strong_count_DerivationPath => wire
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDerivationPath;
+
+  RustArcDecrementStrongCountFnType
+  get rust_arc_decrement_strong_count_DerivationPath => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDerivationPath;
+
+  RustArcIncrementStrongCountFnType
+  get rust_arc_increment_strong_count_MnemonicEntropy => wire
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicEntropy;
+
+  RustArcDecrementStrongCountFnType
+  get rust_arc_decrement_strong_count_MnemonicEntropy => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicEntropy;
+
+  RustArcIncrementStrongCountFnType
+  get rust_arc_increment_strong_count_MnemonicPassphrase => wire
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicPassphrase;
+
+  RustArcDecrementStrongCountFnType
+  get rust_arc_decrement_strong_count_MnemonicPassphrase => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicPassphrase;
+
   @protected
-  AnyhowException dco_decode_AnyhowException(dynamic raw) {
+  DerivationPath
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDerivationPath(
+    dynamic raw,
+  ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return AnyhowException(raw as String);
+    return DerivationPathImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  MnemonicEntropy
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicEntropy(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return MnemonicEntropyImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  MnemonicPassphrase
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicPassphrase(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return MnemonicPassphraseImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  DerivationPath
+  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDerivationPath(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return DerivationPathImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  MnemonicEntropy
+  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicEntropy(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return MnemonicEntropyImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  MnemonicPassphrase
+  dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicPassphrase(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return MnemonicPassphraseImpl.frbInternalDcoDecode(raw as List<dynamic>);
   }
 
   @protected
   String dco_decode_String(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as String;
+  }
+
+  @protected
+  AccountAddress dco_decode_account_address(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return AccountAddress(value: dco_decode_u_8_array_32(arr[0]));
+  }
+
+  @protected
+  AccountCreatorError dco_decode_account_creator_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return AccountCreatorError_UnsupportedPlatform();
+      case 1:
+        return AccountCreatorError_MnemonicGeneration(
+          dco_decode_box_autoadd_mnemonic_generator_error(raw[1]),
+        );
+      case 2:
+        return AccountCreatorError_KeypairDerivation(
+          dco_decode_keypair_deriver_error(raw[1]),
+        );
+      case 3:
+        return AccountCreatorError_MnemonicStorage(
+          dco_decode_box_autoadd_mnemonic_store_error(raw[1]),
+        );
+      case 4:
+        return AccountCreatorError_KeypairStorage(
+          dco_decode_box_autoadd_keypair_store_error(raw[1]),
+        );
+      case 5:
+        return AccountCreatorError_MnemonicCleanup(
+          id: dco_decode_box_autoadd_mnemonic_id(raw[1]),
+          save: dco_decode_box_autoadd_keypair_store_error(raw[2]),
+          cleanup: dco_decode_box_autoadd_mnemonic_store_error(raw[3]),
+        );
+      default:
+        throw Exception("unreachable");
+    }
+  }
+
+  @protected
+  KeypairStoreError dco_decode_box_autoadd_keypair_store_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_keypair_store_error(raw);
   }
 
   @protected
@@ -182,15 +498,66 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  MnemonicGeneratorError dco_decode_box_autoadd_mnemonic_generator_error(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_mnemonic_generator_error(raw);
+  }
+
+  @protected
+  MnemonicId dco_decode_box_autoadd_mnemonic_id(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_mnemonic_id(raw);
+  }
+
+  @protected
+  MnemonicStoreError dco_decode_box_autoadd_mnemonic_store_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_mnemonic_store_error(raw);
+  }
+
+  @protected
+  CreatedAccount dco_decode_created_account(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2)
+      throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return CreatedAccount(
+      address: dco_decode_account_address(arr[0]),
+      mnemonicId: dco_decode_mnemonic_id(arr[1]),
+    );
+  }
+
+  @protected
   int dco_decode_i_32(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as int;
   }
 
   @protected
-  List<String> dco_decode_list_String(dynamic raw) {
+  KeypairDeriverError dco_decode_keypair_deriver_error(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
-    return (raw as List<dynamic>).map(dco_decode_String).toList();
+    return KeypairDeriverError.values[raw as int];
+  }
+
+  @protected
+  KeypairStoreError dco_decode_keypair_store_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return KeypairStoreError_AlreadyExists();
+      case 1:
+        return KeypairStoreError_Keychain(dco_decode_i_32(raw[1]));
+      default:
+        throw Exception("unreachable");
+    }
+  }
+
+  @protected
+  List<int> dco_decode_list_prim_u_8_loose(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as List<int>;
   }
 
   @protected
@@ -209,8 +576,49 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         );
       case 1:
         return MnemonicGenerationSource_Entropy(
-          dco_decode_list_prim_u_8_strict(raw[1]),
+          dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicEntropy(
+            raw[1],
+          ),
         );
+      default:
+        throw Exception("unreachable");
+    }
+  }
+
+  @protected
+  MnemonicGeneratorError dco_decode_mnemonic_generator_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return MnemonicGeneratorError_InvalidEntropyLength(
+          actualBytes: dco_decode_usize(raw[1]),
+        );
+      case 1:
+        return MnemonicGeneratorError_Randomness();
+      default:
+        throw Exception("unreachable");
+    }
+  }
+
+  @protected
+  MnemonicId dco_decode_mnemonic_id(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 1)
+      throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
+    return MnemonicId(value: dco_decode_u_8_array_16(arr[0]));
+  }
+
+  @protected
+  MnemonicStoreError dco_decode_mnemonic_store_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return MnemonicStoreError_AlreadyExists();
+      case 1:
+        return MnemonicStoreError_IdentifierGeneration();
+      case 2:
+        return MnemonicStoreError_Keychain(dco_decode_i_32(raw[1]));
       default:
         throw Exception("unreachable");
     }
@@ -235,16 +643,99 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  U8Array16 dco_decode_u_8_array_16(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return U8Array16(dco_decode_list_prim_u_8_strict(raw));
+  }
+
+  @protected
+  U8Array32 dco_decode_u_8_array_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return U8Array32(dco_decode_list_prim_u_8_strict(raw));
+  }
+
+  @protected
   void dco_decode_unit(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return;
   }
 
   @protected
-  AnyhowException sse_decode_AnyhowException(SseDeserializer deserializer) {
+  BigInt dco_decode_usize(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dcoDecodeU64(raw);
+  }
+
+  @protected
+  DerivationPath
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDerivationPath(
+    SseDeserializer deserializer,
+  ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    var inner = sse_decode_String(deserializer);
-    return AnyhowException(inner);
+    return DerivationPathImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  MnemonicEntropy
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicEntropy(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return MnemonicEntropyImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  MnemonicPassphrase
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicPassphrase(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return MnemonicPassphraseImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  DerivationPath
+  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDerivationPath(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return DerivationPathImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  MnemonicEntropy
+  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicEntropy(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return MnemonicEntropyImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  MnemonicPassphrase
+  sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicPassphrase(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return MnemonicPassphraseImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
   }
 
   @protected
@@ -252,6 +743,65 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var inner = sse_decode_list_prim_u_8_strict(deserializer);
     return utf8.decoder.convert(inner);
+  }
+
+  @protected
+  AccountAddress sse_decode_account_address(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_value = sse_decode_u_8_array_32(deserializer);
+    return AccountAddress(value: var_value);
+  }
+
+  @protected
+  AccountCreatorError sse_decode_account_creator_error(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        return AccountCreatorError_UnsupportedPlatform();
+      case 1:
+        var var_field0 = sse_decode_box_autoadd_mnemonic_generator_error(
+          deserializer,
+        );
+        return AccountCreatorError_MnemonicGeneration(var_field0);
+      case 2:
+        var var_field0 = sse_decode_keypair_deriver_error(deserializer);
+        return AccountCreatorError_KeypairDerivation(var_field0);
+      case 3:
+        var var_field0 = sse_decode_box_autoadd_mnemonic_store_error(
+          deserializer,
+        );
+        return AccountCreatorError_MnemonicStorage(var_field0);
+      case 4:
+        var var_field0 = sse_decode_box_autoadd_keypair_store_error(
+          deserializer,
+        );
+        return AccountCreatorError_KeypairStorage(var_field0);
+      case 5:
+        var var_id = sse_decode_box_autoadd_mnemonic_id(deserializer);
+        var var_save = sse_decode_box_autoadd_keypair_store_error(deserializer);
+        var var_cleanup = sse_decode_box_autoadd_mnemonic_store_error(
+          deserializer,
+        );
+        return AccountCreatorError_MnemonicCleanup(
+          id: var_id,
+          save: var_save,
+          cleanup: var_cleanup,
+        );
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  KeypairStoreError sse_decode_box_autoadd_keypair_store_error(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_keypair_store_error(deserializer));
   }
 
   @protected
@@ -263,21 +813,73 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  MnemonicGeneratorError sse_decode_box_autoadd_mnemonic_generator_error(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_mnemonic_generator_error(deserializer));
+  }
+
+  @protected
+  MnemonicId sse_decode_box_autoadd_mnemonic_id(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_mnemonic_id(deserializer));
+  }
+
+  @protected
+  MnemonicStoreError sse_decode_box_autoadd_mnemonic_store_error(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_mnemonic_store_error(deserializer));
+  }
+
+  @protected
+  CreatedAccount sse_decode_created_account(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_address = sse_decode_account_address(deserializer);
+    var var_mnemonicId = sse_decode_mnemonic_id(deserializer);
+    return CreatedAccount(address: var_address, mnemonicId: var_mnemonicId);
+  }
+
+  @protected
   int sse_decode_i_32(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getInt32();
   }
 
   @protected
-  List<String> sse_decode_list_String(SseDeserializer deserializer) {
+  KeypairDeriverError sse_decode_keypair_deriver_error(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_i_32(deserializer);
+    return KeypairDeriverError.values[inner];
+  }
+
+  @protected
+  KeypairStoreError sse_decode_keypair_store_error(
+    SseDeserializer deserializer,
+  ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
 
-    var len_ = sse_decode_i_32(deserializer);
-    var ans_ = <String>[];
-    for (var idx_ = 0; idx_ < len_; ++idx_) {
-      ans_.add(sse_decode_String(deserializer));
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        return KeypairStoreError_AlreadyExists();
+      case 1:
+        var var_field0 = sse_decode_i_32(deserializer);
+        return KeypairStoreError_Keychain(var_field0);
+      default:
+        throw UnimplementedError('');
     }
-    return ans_;
+  }
+
+  @protected
+  List<int> sse_decode_list_prim_u_8_loose(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var len_ = sse_decode_i_32(deserializer);
+    return deserializer.buffer.getUint8List(len_);
   }
 
   @protected
@@ -299,8 +901,58 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         var var_field0 = sse_decode_mnemonic_word_count(deserializer);
         return MnemonicGenerationSource_Random(var_field0);
       case 1:
-        var var_field0 = sse_decode_list_prim_u_8_strict(deserializer);
+        var var_field0 =
+            sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicEntropy(
+              deserializer,
+            );
         return MnemonicGenerationSource_Entropy(var_field0);
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  MnemonicGeneratorError sse_decode_mnemonic_generator_error(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        var var_actualBytes = sse_decode_usize(deserializer);
+        return MnemonicGeneratorError_InvalidEntropyLength(
+          actualBytes: var_actualBytes,
+        );
+      case 1:
+        return MnemonicGeneratorError_Randomness();
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  MnemonicId sse_decode_mnemonic_id(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var var_value = sse_decode_u_8_array_16(deserializer);
+    return MnemonicId(value: var_value);
+  }
+
+  @protected
+  MnemonicStoreError sse_decode_mnemonic_store_error(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        return MnemonicStoreError_AlreadyExists();
+      case 1:
+        return MnemonicStoreError_IdentifierGeneration();
+      case 2:
+        var var_field0 = sse_decode_i_32(deserializer);
+        return MnemonicStoreError_Keychain(var_field0);
       default:
         throw UnimplementedError('');
     }
@@ -329,8 +981,28 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  U8Array16 sse_decode_u_8_array_16(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_list_prim_u_8_strict(deserializer);
+    return U8Array16(inner);
+  }
+
+  @protected
+  U8Array32 sse_decode_u_8_array_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    var inner = sse_decode_list_prim_u_8_strict(deserializer);
+    return U8Array32(inner);
+  }
+
+  @protected
   void sse_decode_unit(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+  }
+
+  @protected
+  BigInt sse_decode_usize(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getBigUint64();
   }
 
   @protected
@@ -340,18 +1012,138 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_AnyhowException(
-    AnyhowException self,
+  void
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDerivationPath(
+    DerivationPath self,
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_String(self.message, serializer);
+    sse_encode_usize(
+      (self as DerivationPathImpl).frbInternalSseEncode(move: true),
+      serializer,
+    );
+  }
+
+  @protected
+  void
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicEntropy(
+    MnemonicEntropy self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as MnemonicEntropyImpl).frbInternalSseEncode(move: true),
+      serializer,
+    );
+  }
+
+  @protected
+  void
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicPassphrase(
+    MnemonicPassphrase self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as MnemonicPassphraseImpl).frbInternalSseEncode(move: true),
+      serializer,
+    );
+  }
+
+  @protected
+  void
+  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDerivationPath(
+    DerivationPath self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as DerivationPathImpl).frbInternalSseEncode(move: null),
+      serializer,
+    );
+  }
+
+  @protected
+  void
+  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicEntropy(
+    MnemonicEntropy self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as MnemonicEntropyImpl).frbInternalSseEncode(move: null),
+      serializer,
+    );
+  }
+
+  @protected
+  void
+  sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicPassphrase(
+    MnemonicPassphrase self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize(
+      (self as MnemonicPassphraseImpl).frbInternalSseEncode(move: null),
+      serializer,
+    );
   }
 
   @protected
   void sse_encode_String(String self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_list_prim_u_8_strict(utf8.encoder.convert(self), serializer);
+  }
+
+  @protected
+  void sse_encode_account_address(
+    AccountAddress self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_8_array_32(self.value, serializer);
+  }
+
+  @protected
+  void sse_encode_account_creator_error(
+    AccountCreatorError self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case AccountCreatorError_UnsupportedPlatform():
+        sse_encode_i_32(0, serializer);
+      case AccountCreatorError_MnemonicGeneration(field0: final field0):
+        sse_encode_i_32(1, serializer);
+        sse_encode_box_autoadd_mnemonic_generator_error(field0, serializer);
+      case AccountCreatorError_KeypairDerivation(field0: final field0):
+        sse_encode_i_32(2, serializer);
+        sse_encode_keypair_deriver_error(field0, serializer);
+      case AccountCreatorError_MnemonicStorage(field0: final field0):
+        sse_encode_i_32(3, serializer);
+        sse_encode_box_autoadd_mnemonic_store_error(field0, serializer);
+      case AccountCreatorError_KeypairStorage(field0: final field0):
+        sse_encode_i_32(4, serializer);
+        sse_encode_box_autoadd_keypair_store_error(field0, serializer);
+      case AccountCreatorError_MnemonicCleanup(
+        id: final id,
+        save: final save,
+        cleanup: final cleanup,
+      ):
+        sse_encode_i_32(5, serializer);
+        sse_encode_box_autoadd_mnemonic_id(id, serializer);
+        sse_encode_box_autoadd_keypair_store_error(save, serializer);
+        sse_encode_box_autoadd_mnemonic_store_error(cleanup, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_box_autoadd_keypair_store_error(
+    KeypairStoreError self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_keypair_store_error(self, serializer);
   }
 
   @protected
@@ -364,18 +1156,82 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_mnemonic_generator_error(
+    MnemonicGeneratorError self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_mnemonic_generator_error(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_mnemonic_id(
+    MnemonicId self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_mnemonic_id(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_mnemonic_store_error(
+    MnemonicStoreError self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_mnemonic_store_error(self, serializer);
+  }
+
+  @protected
+  void sse_encode_created_account(
+    CreatedAccount self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_account_address(self.address, serializer);
+    sse_encode_mnemonic_id(self.mnemonicId, serializer);
+  }
+
+  @protected
   void sse_encode_i_32(int self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putInt32(self);
   }
 
   @protected
-  void sse_encode_list_String(List<String> self, SseSerializer serializer) {
+  void sse_encode_keypair_deriver_error(
+    KeypairDeriverError self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_keypair_store_error(
+    KeypairStoreError self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case KeypairStoreError_AlreadyExists():
+        sse_encode_i_32(0, serializer);
+      case KeypairStoreError_Keychain(field0: final field0):
+        sse_encode_i_32(1, serializer);
+        sse_encode_i_32(field0, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_prim_u_8_loose(
+    List<int> self,
+    SseSerializer serializer,
+  ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_i_32(self.length, serializer);
-    for (final item in self) {
-      sse_encode_String(item, serializer);
-    }
+    serializer.buffer.putUint8List(
+      self is Uint8List ? self : Uint8List.fromList(self),
+    );
   }
 
   @protected
@@ -400,7 +1256,50 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         sse_encode_mnemonic_word_count(field0, serializer);
       case MnemonicGenerationSource_Entropy(field0: final field0):
         sse_encode_i_32(1, serializer);
-        sse_encode_list_prim_u_8_strict(field0, serializer);
+        sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicEntropy(
+          field0,
+          serializer,
+        );
+    }
+  }
+
+  @protected
+  void sse_encode_mnemonic_generator_error(
+    MnemonicGeneratorError self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case MnemonicGeneratorError_InvalidEntropyLength(
+        actualBytes: final actualBytes,
+      ):
+        sse_encode_i_32(0, serializer);
+        sse_encode_usize(actualBytes, serializer);
+      case MnemonicGeneratorError_Randomness():
+        sse_encode_i_32(1, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_mnemonic_id(MnemonicId self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_8_array_16(self.value, serializer);
+  }
+
+  @protected
+  void sse_encode_mnemonic_store_error(
+    MnemonicStoreError self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case MnemonicStoreError_AlreadyExists():
+        sse_encode_i_32(0, serializer);
+      case MnemonicStoreError_IdentifierGeneration():
+        sse_encode_i_32(1, serializer);
+      case MnemonicStoreError_Keychain(field0: final field0):
+        sse_encode_i_32(2, serializer);
+        sse_encode_i_32(field0, serializer);
     }
   }
 
@@ -429,8 +1328,26 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_u_8_array_16(U8Array16 self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_list_prim_u_8_strict(self.inner, serializer);
+  }
+
+  @protected
+  void sse_encode_u_8_array_32(U8Array32 self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_list_prim_u_8_strict(self.inner, serializer);
+  }
+
+  @protected
   void sse_encode_unit(void self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+  }
+
+  @protected
+  void sse_encode_usize(BigInt self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putBigUint64(self);
   }
 
   @protected
@@ -438,4 +1355,68 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     serializer.buffer.putUint8(self ? 1 : 0);
   }
+}
+
+@sealed
+class DerivationPathImpl extends RustOpaque implements DerivationPath {
+  // Not to be used by end users
+  DerivationPathImpl.frbInternalDcoDecode(List<dynamic> wire)
+    : super.frbInternalDcoDecode(wire, _kStaticData);
+
+  // Not to be used by end users
+  DerivationPathImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
+    : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount:
+        RustLib.instance.api.rust_arc_increment_strong_count_DerivationPath,
+    rustArcDecrementStrongCount:
+        RustLib.instance.api.rust_arc_decrement_strong_count_DerivationPath,
+    rustArcDecrementStrongCountPtr:
+        RustLib.instance.api.rust_arc_decrement_strong_count_DerivationPathPtr,
+  );
+}
+
+@sealed
+class MnemonicEntropyImpl extends RustOpaque implements MnemonicEntropy {
+  // Not to be used by end users
+  MnemonicEntropyImpl.frbInternalDcoDecode(List<dynamic> wire)
+    : super.frbInternalDcoDecode(wire, _kStaticData);
+
+  // Not to be used by end users
+  MnemonicEntropyImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
+    : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount:
+        RustLib.instance.api.rust_arc_increment_strong_count_MnemonicEntropy,
+    rustArcDecrementStrongCount:
+        RustLib.instance.api.rust_arc_decrement_strong_count_MnemonicEntropy,
+    rustArcDecrementStrongCountPtr:
+        RustLib.instance.api.rust_arc_decrement_strong_count_MnemonicEntropyPtr,
+  );
+}
+
+@sealed
+class MnemonicPassphraseImpl extends RustOpaque implements MnemonicPassphrase {
+  // Not to be used by end users
+  MnemonicPassphraseImpl.frbInternalDcoDecode(List<dynamic> wire)
+    : super.frbInternalDcoDecode(wire, _kStaticData);
+
+  // Not to be used by end users
+  MnemonicPassphraseImpl.frbInternalSseDecode(
+    BigInt ptr,
+    int externalSizeOnNative,
+  ) : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount:
+        RustLib.instance.api.rust_arc_increment_strong_count_MnemonicPassphrase,
+    rustArcDecrementStrongCount:
+        RustLib.instance.api.rust_arc_decrement_strong_count_MnemonicPassphrase,
+    rustArcDecrementStrongCountPtr: RustLib
+        .instance
+        .api
+        .rust_arc_decrement_strong_count_MnemonicPassphrasePtr,
+  );
 }

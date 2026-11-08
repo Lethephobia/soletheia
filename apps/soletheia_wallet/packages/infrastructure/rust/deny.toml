@@ -22,6 +22,9 @@ exceptions = [
     { name = "bip39", allow = ["CC0-1.0"] },
     { name = "bitcoin_hashes", allow = ["CC0-1.0"] },
     { name = "hex-conservative", allow = ["CC0-1.0"] },
+    # The Solana Ed25519 implementation and its constant-time operations.
+    { name = "solana-ed25519", allow = ["BSD-3-Clause"] },
+    { name = "subtle", allow = ["BSD-3-Clause"] },
 ]
 
 # allo-isolate declares license-file instead of an SPDX expression.

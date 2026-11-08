@@ -34,13 +34,13 @@
   "@navigationCollapseLabel": {
     "description": "Tooltip for collapsing the navigation rail."
   },
-  "onboardingGenerateMnemonicLabel": "Generate mnemonic",
-  "@onboardingGenerateMnemonicLabel": {
-    "description": "Label of the onboarding action for generating a new mnemonic."
+  "onboardingCreateAccountLabel": "Create new account",
+  "@onboardingCreateAccountLabel": {
+    "description": "Label of the onboarding action that creates an account with a new mnemonic."
   },
-  "onboardingGenerateMnemonicDescription": "BIP-39 mnemonic",
-  "@onboardingGenerateMnemonicDescription": {
-    "description": "Mnemonic standard for the planned mnemonic generation flow."
+  "onboardingCreateAccountDescription": "BIP-39 mnemonic",
+  "@onboardingCreateAccountDescription": {
+    "description": "Standard of the mnemonic generated during account creation."
   },
   "onboardingImportMnemonicLabel": "Import mnemonic",
   "@onboardingImportMnemonicLabel": {
@@ -58,33 +58,33 @@
   "@onboardingImportPrivateKeyDescription": {
     "description": "Key type for the planned private key import flow."
   },
-  "mnemonicGenerationTitle": "Generate mnemonic",
-  "@mnemonicGenerationTitle": {
-    "description": "App bar title of the mnemonic generation screen."
+  "accountCreationTitle": "Create new account",
+  "@accountCreationTitle": {
+    "description": "App bar title of the account creation screen."
   },
-  "mnemonicGenerationWordlistLabel": "Wordlist",
-  "@mnemonicGenerationWordlistLabel": {
+  "accountCreationWordlistLabel": "Wordlist",
+  "@accountCreationWordlistLabel": {
     "description": "Label for the BIP-39 wordlist language selector."
   },
-  "mnemonicGenerationWordCountLabel": "Word count",
-  "@mnemonicGenerationWordCountLabel": {
+  "accountCreationWordCountLabel": "Word count",
+  "@accountCreationWordCountLabel": {
     "description": "Label for the BIP-39 mnemonic length selector."
   },
-  "mnemonicGenerationCustomEntropyLabel": "Custom entropy",
-  "@mnemonicGenerationCustomEntropyLabel": {
+  "accountCreationCustomEntropyLabel": "Custom entropy",
+  "@accountCreationCustomEntropyLabel": {
     "description": "Switch to supply hexadecimal entropy instead of random entropy."
   },
-  "mnemonicGenerationEntropyLabel": "Entropy",
-  "@mnemonicGenerationEntropyLabel": {
+  "accountCreationEntropyLabel": "Entropy",
+  "@accountCreationEntropyLabel": {
     "description": "Label for the custom BIP-39 entropy hexadecimal input."
   },
-  "mnemonicGenerationGenerateLabel": "Generate",
-  "@mnemonicGenerationGenerateLabel": {
-    "description": "Button to generate a mnemonic using the selected options."
+  "accountCreationSubmitLabel": "Create account",
+  "@accountCreationSubmitLabel": {
+    "description": "Button to create the account using the selected options."
   },
-  "mnemonicGenerationFailure": "Could not generate the mnemonic. Try again.",
-  "@mnemonicGenerationFailure": {
-    "description": "Error displayed when mnemonic generation fails."
+  "accountCreationFailure": "Could not create the account. Try again.",
+  "@accountCreationFailure": {
+    "description": "Error displayed when account creation fails."
   },
   "mnemonicWordlistEnglish": "English",
   "@mnemonicWordlistEnglish": {
@@ -126,8 +126,8 @@
   "@mnemonicWordlistPortuguese": {
     "description": "Name of the Portuguese BIP-39 wordlist, independent of the app locale."
   },
-  "mnemonicGenerationEntropyHint": "{bits} bits · hexadecimal",
-  "@mnemonicGenerationEntropyHint": {
+  "accountCreationEntropyHint": "{bits} bits · hexadecimal",
+  "@accountCreationEntropyHint": {
     "description": "Required entropy size for the selected mnemonic length.",
     "placeholders": {
       "bits": {
@@ -135,13 +135,33 @@
       }
     }
   },
-  "mnemonicGenerationEntropyError": "Enter exactly {length} hexadecimal characters.",
-  "@mnemonicGenerationEntropyError": {
+  "accountCreationEntropyError": "Enter exactly {length} hexadecimal characters.",
+  "@accountCreationEntropyError": {
     "description": "Validation error for custom entropy of incorrect length or format.",
     "placeholders": {
       "length": {
         "type": "int"
       }
     }
+  },
+  "accountCreationPassphraseLabel": "BIP-39 passphrase (optional)",
+  "@accountCreationPassphraseLabel": {
+    "description": "Label for the optional passphrase used in seed derivation."
+  },
+  "accountCreationDerivationPathLabel": "Derivation path",
+  "@accountCreationDerivationPathLabel": {
+    "description": "Label for the absolute Solana derivation path."
+  },
+  "accountCreationInvalidPath": "Enter an absolute derivation path.",
+  "@accountCreationInvalidPath": {
+    "description": "Validation message for an invalid derivation path."
+  },
+  "accountCreationSaveRetry": "Retry saving",
+  "@accountCreationSaveRetry": {
+    "description": "Retries the local account metadata write."
+  },
+  "accountCreationSaveFailure": "Keys saved. Retry saving the account details.",
+  "@accountCreationSaveFailure": {
+    "description": "The Keychain write succeeded but the account metadata write failed."
   }
 }

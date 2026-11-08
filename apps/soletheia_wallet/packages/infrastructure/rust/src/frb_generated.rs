@@ -27,6 +27,9 @@
 
 // Section: imports
 
+use crate::application::keypair::derivation_path::*;
+use crate::application::mnemonic::mnemonic_entropy::*;
+use crate::application::mnemonic::mnemonic_passphrase::*;
 use flutter_rust_bridge::for_generated::byteorder::{NativeEndian, ReadBytesExt, WriteBytesExt};
 use flutter_rust_bridge::for_generated::{transform_result_dco, Lifetimeable, Lockable};
 use flutter_rust_bridge::{Handler, IntoIntoDart};
@@ -39,7 +42,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.13.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 566136419;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -524917830;
 
 // Section: executor
 
@@ -47,17 +50,16 @@ flutter_rust_bridge::frb_generated_default_handler!();
 
 // Section: wire_funcs
 
-fn wire__crate__mnemonic__generate_mnemonic__generate_mnemonic_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
+fn wire__crate__application__keypair__derivation_path__DerivationPath_parse_impl(
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "generate_mnemonic",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+            debug_name: "DerivationPath_parse",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
         },
         move || {
             let message = unsafe {
@@ -69,29 +71,123 @@ fn wire__crate__mnemonic__generate_mnemonic__generate_mnemonic_impl(
             };
             let mut deserializer =
                 flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_wordlist = <crate::mnemonic::mnemonic_wordlist::MnemonicWordlist>::sse_decode(
-                &mut deserializer,
-            );
-            let api_source =
-                <crate::mnemonic::mnemonic_generation_source::MnemonicGenerationSource>::sse_decode(
-                    &mut deserializer,
-                );
+            let api_value = <String>::sse_decode(&mut deserializer);
             deserializer.end();
-            move |context| {
-                transform_result_sse::<_, flutter_rust_bridge::for_generated::anyhow::Error>(
-                    (move || {
-                        let output_ok = crate::mnemonic::generate_mnemonic::generate_mnemonic(
-                            api_wordlist,
-                            api_source,
-                        )?;
-                        std::result::Result::Ok(output_ok)
-                    })(),
-                )
-            }
+            transform_result_sse::<
+                _,
+                crate::application::keypair::keypair_deriver_error::KeypairDeriverError,
+            >((move || {
+                let output_ok =
+                    crate::application::keypair::derivation_path::DerivationPath::parse(api_value)?;
+                std::result::Result::Ok(output_ok)
+            })())
         },
     )
 }
-fn wire__crate__init__init_impl(
+fn wire__crate__application__mnemonic__mnemonic_entropy__MnemonicEntropy_new_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "MnemonicEntropy_new",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_bytes = <Vec<u8>>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<
+                _,
+                crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError,
+            >((move || {
+                let output_ok =
+                    crate::application::mnemonic::mnemonic_entropy::MnemonicEntropy::new(
+                        api_bytes,
+                    )?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__application__mnemonic__mnemonic_passphrase__MnemonicPassphrase_default_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "MnemonicPassphrase_default", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || {
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            deserializer.end(); move |context|  {
+                    transform_result_sse::<_, ()>((move ||  {
+                         let output_ok = Ok::<_, ()>(crate::application::mnemonic::mnemonic_passphrase::MnemonicPassphrase::default())?;   std::result::Result::Ok(output_ok)
+                    })())
+                } })
+}
+fn wire__crate__application__mnemonic__mnemonic_passphrase__MnemonicPassphrase_new_impl(
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_sync::<flutter_rust_bridge::for_generated::SseCodec, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "MnemonicPassphrase_new",
+            port: None,
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Sync,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_value = <String>::sse_decode(&mut deserializer);
+            deserializer.end();
+            transform_result_sse::<_, ()>((move || {
+                let output_ok = Ok::<_, ()>(
+                    crate::application::mnemonic::mnemonic_passphrase::MnemonicPassphrase::new(
+                        api_value,
+                    ),
+                )?;
+                std::result::Result::Ok(output_ok)
+            })())
+        },
+    )
+}
+fn wire__crate__api__account__create_account__create_account_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "create_account", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || {
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_wordlist = <crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist>::sse_decode(&mut deserializer);
+let api_source = <crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource>::sse_decode(&mut deserializer);
+let api_passphrase = <MnemonicPassphrase>::sse_decode(&mut deserializer);
+let api_derivation_path = <DerivationPath>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+                    transform_result_sse::<_, crate::application::account::account_creator_error::AccountCreatorError>((move ||  {
+                         let output_ok = crate::api::account::create_account::create_account(api_wordlist, api_source, api_passphrase, api_derivation_path)?;   std::result::Result::Ok(output_ok)
+                    })())
+                } })
+}
+fn wire__crate__api__init__init_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -117,7 +213,7 @@ fn wire__crate__init__init_impl(
             move |context| {
                 transform_result_sse::<_, ()>((move || {
                     let output_ok = Ok::<_, ()>({
-                        crate::init::init();
+                        crate::api::init::init();
                     })?;
                     std::result::Result::Ok(output_ok)
                 })())
@@ -126,13 +222,77 @@ fn wire__crate__init__init_impl(
     )
 }
 
+// Section: related_funcs
+
+flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
+    flutter_rust_bridge::for_generated::RustAutoOpaqueInner<DerivationPath>
+);
+flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
+    flutter_rust_bridge::for_generated::RustAutoOpaqueInner<MnemonicEntropy>
+);
+flutter_rust_bridge::frb_generated_moi_arc_impl_value!(
+    flutter_rust_bridge::for_generated::RustAutoOpaqueInner<MnemonicPassphrase>
+);
+
 // Section: dart2rust
 
-impl SseDecode for flutter_rust_bridge::for_generated::anyhow::Error {
+impl SseDecode for DerivationPath {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut inner = <String>::sse_decode(deserializer);
-        return flutter_rust_bridge::for_generated::anyhow::anyhow!("{}", inner);
+        let mut inner = <RustOpaqueMoi<
+            flutter_rust_bridge::for_generated::RustAutoOpaqueInner<DerivationPath>,
+        >>::sse_decode(deserializer);
+        return flutter_rust_bridge::for_generated::rust_auto_opaque_decode_owned(inner);
+    }
+}
+
+impl SseDecode for MnemonicEntropy {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <RustOpaqueMoi<
+            flutter_rust_bridge::for_generated::RustAutoOpaqueInner<MnemonicEntropy>,
+        >>::sse_decode(deserializer);
+        return flutter_rust_bridge::for_generated::rust_auto_opaque_decode_owned(inner);
+    }
+}
+
+impl SseDecode for MnemonicPassphrase {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <RustOpaqueMoi<
+            flutter_rust_bridge::for_generated::RustAutoOpaqueInner<MnemonicPassphrase>,
+        >>::sse_decode(deserializer);
+        return flutter_rust_bridge::for_generated::rust_auto_opaque_decode_owned(inner);
+    }
+}
+
+impl SseDecode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<DerivationPath>>
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <usize>::sse_decode(deserializer);
+        return decode_rust_opaque_moi(inner);
+    }
+}
+
+impl SseDecode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<MnemonicEntropy>>
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <usize>::sse_decode(deserializer);
+        return decode_rust_opaque_moi(inner);
+    }
+}
+
+impl SseDecode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<MnemonicPassphrase>>
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <usize>::sse_decode(deserializer);
+        return decode_rust_opaque_moi(inner);
     }
 }
 
@@ -144,6 +304,69 @@ impl SseDecode for String {
     }
 }
 
+impl SseDecode for crate::application::account::account_address::AccountAddress {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_value = <[u8; 32]>::sse_decode(deserializer);
+        return crate::application::account::account_address::AccountAddress { value: var_value };
+    }
+}
+
+impl SseDecode for crate::application::account::account_creator_error::AccountCreatorError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut tag_ = <i32>::sse_decode(deserializer);
+        match tag_ {
+            0 => {
+                return crate::application::account::account_creator_error::AccountCreatorError::UnsupportedPlatform;
+            }
+            1 => {
+                let mut var_field0 = <crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError>::sse_decode(deserializer);
+                return crate::application::account::account_creator_error::AccountCreatorError::MnemonicGeneration(var_field0);
+            }
+            2 => {
+                let mut var_field0 = <crate::application::keypair::keypair_deriver_error::KeypairDeriverError>::sse_decode(deserializer);
+                return crate::application::account::account_creator_error::AccountCreatorError::KeypairDerivation(var_field0);
+            }
+            3 => {
+                let mut var_field0 = <crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_decode(deserializer);
+                return crate::application::account::account_creator_error::AccountCreatorError::MnemonicStorage(var_field0);
+            }
+            4 => {
+                let mut var_field0 = <crate::application::storage::keypair_store_error::KeypairStoreError>::sse_decode(deserializer);
+                return crate::application::account::account_creator_error::AccountCreatorError::KeypairStorage(var_field0);
+            }
+            5 => {
+                let mut var_id = <crate::application::storage::mnemonic_id::MnemonicId>::sse_decode(
+                    deserializer,
+                );
+                let mut var_save = <crate::application::storage::keypair_store_error::KeypairStoreError>::sse_decode(deserializer);
+                let mut var_cleanup = <crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_decode(deserializer);
+                return crate::application::account::account_creator_error::AccountCreatorError::MnemonicCleanup{id: var_id, save: var_save, cleanup: var_cleanup};
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+
+impl SseDecode for crate::application::account::created_account::CreatedAccount {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_address =
+            <crate::application::account::account_address::AccountAddress>::sse_decode(
+                deserializer,
+            );
+        let mut var_mnemonicId =
+            <crate::application::storage::mnemonic_id::MnemonicId>::sse_decode(deserializer);
+        return crate::application::account::created_account::CreatedAccount {
+            address: var_address,
+            mnemonic_id: var_mnemonicId,
+        };
+    }
+}
+
 impl SseDecode for i32 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -151,15 +374,34 @@ impl SseDecode for i32 {
     }
 }
 
-impl SseDecode for Vec<String> {
+impl SseDecode for crate::application::keypair::keypair_deriver_error::KeypairDeriverError {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut len_ = <i32>::sse_decode(deserializer);
-        let mut ans_ = Vec::with_capacity(len_ as usize);
-        for idx_ in 0..len_ {
-            ans_.push(<String>::sse_decode(deserializer));
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::application::keypair::keypair_deriver_error::KeypairDeriverError::InvalidPath,
+1 => crate::application::keypair::keypair_deriver_error::KeypairDeriverError::DerivationFailed,
+            _ => unreachable!("Invalid variant for KeypairDeriverError: {}", inner),
+        };
+    }
+}
+
+impl SseDecode for crate::application::storage::keypair_store_error::KeypairStoreError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut tag_ = <i32>::sse_decode(deserializer);
+        match tag_ {
+            0 => {
+                return crate::application::storage::keypair_store_error::KeypairStoreError::AlreadyExists;
+            }
+            1 => {
+                let mut var_field0 = <i32>::sse_decode(deserializer);
+                return crate::application::storage::keypair_store_error::KeypairStoreError::Keychain(var_field0);
+            }
+            _ => {
+                unimplemented!("");
+            }
         }
-        return ans_;
     }
 }
 
@@ -175,21 +417,20 @@ impl SseDecode for Vec<u8> {
     }
 }
 
-impl SseDecode for crate::mnemonic::mnemonic_generation_source::MnemonicGenerationSource {
+impl SseDecode
+    for crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource
+{
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut tag_ = <i32>::sse_decode(deserializer);
         match tag_ {
             0 => {
-                let mut var_field0 =
-                    <crate::mnemonic::mnemonic_word_count::MnemonicWordCount>::sse_decode(
-                        deserializer,
-                    );
-                return crate::mnemonic::mnemonic_generation_source::MnemonicGenerationSource::Random(var_field0);
+                let mut var_field0 = <crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount>::sse_decode(deserializer);
+                return crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource::Random(var_field0);
             }
             1 => {
-                let mut var_field0 = <Vec<u8>>::sse_decode(deserializer);
-                return crate::mnemonic::mnemonic_generation_source::MnemonicGenerationSource::Entropy(var_field0);
+                let mut var_field0 = <MnemonicEntropy>::sse_decode(deserializer);
+                return crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource::Entropy(var_field0);
             }
             _ => {
                 unimplemented!("");
@@ -198,36 +439,85 @@ impl SseDecode for crate::mnemonic::mnemonic_generation_source::MnemonicGenerati
     }
 }
 
-impl SseDecode for crate::mnemonic::mnemonic_word_count::MnemonicWordCount {
+impl SseDecode for crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut tag_ = <i32>::sse_decode(deserializer);
+        match tag_ {
+            0 => {
+                let mut var_actualBytes = <usize>::sse_decode(deserializer);
+                return crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError::InvalidEntropyLength{actual_bytes: var_actualBytes};
+            }
+            1 => {
+                return crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError::Randomness;
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+
+impl SseDecode for crate::application::storage::mnemonic_id::MnemonicId {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_value = <[u8; 16]>::sse_decode(deserializer);
+        return crate::application::storage::mnemonic_id::MnemonicId { value: var_value };
+    }
+}
+
+impl SseDecode for crate::application::storage::mnemonic_store_error::MnemonicStoreError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut tag_ = <i32>::sse_decode(deserializer);
+        match tag_ {
+            0 => {
+                return crate::application::storage::mnemonic_store_error::MnemonicStoreError::AlreadyExists;
+            }
+            1 => {
+                return crate::application::storage::mnemonic_store_error::MnemonicStoreError::IdentifierGeneration;
+            }
+            2 => {
+                let mut var_field0 = <i32>::sse_decode(deserializer);
+                return crate::application::storage::mnemonic_store_error::MnemonicStoreError::Keychain(var_field0);
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+
+impl SseDecode for crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::mnemonic::mnemonic_word_count::MnemonicWordCount::Words12,
-            1 => crate::mnemonic::mnemonic_word_count::MnemonicWordCount::Words15,
-            2 => crate::mnemonic::mnemonic_word_count::MnemonicWordCount::Words18,
-            3 => crate::mnemonic::mnemonic_word_count::MnemonicWordCount::Words21,
-            4 => crate::mnemonic::mnemonic_word_count::MnemonicWordCount::Words24,
+            0 => crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount::Words12,
+            1 => crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount::Words15,
+            2 => crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount::Words18,
+            3 => crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount::Words21,
+            4 => crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount::Words24,
             _ => unreachable!("Invalid variant for MnemonicWordCount: {}", inner),
         };
     }
 }
 
-impl SseDecode for crate::mnemonic::mnemonic_wordlist::MnemonicWordlist {
+impl SseDecode for crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut inner = <i32>::sse_decode(deserializer);
         return match inner {
-            0 => crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::English,
-            1 => crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Japanese,
-            2 => crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Korean,
-            3 => crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::SimplifiedChinese,
-            4 => crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::TraditionalChinese,
-            5 => crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::French,
-            6 => crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Italian,
-            7 => crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Spanish,
-            8 => crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Czech,
-            9 => crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Portuguese,
+            0 => crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::English,
+1 => crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::Japanese,
+2 => crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::Korean,
+3 => crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::SimplifiedChinese,
+4 => crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::TraditionalChinese,
+5 => crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::French,
+6 => crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::Italian,
+7 => crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::Spanish,
+8 => crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::Czech,
+9 => crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::Portuguese,
             _ => unreachable!("Invalid variant for MnemonicWordlist: {}", inner),
         };
     }
@@ -240,9 +530,32 @@ impl SseDecode for u8 {
     }
 }
 
+impl SseDecode for [u8; 16] {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <Vec<u8>>::sse_decode(deserializer);
+        return flutter_rust_bridge::for_generated::from_vec_to_array(inner);
+    }
+}
+
+impl SseDecode for [u8; 32] {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <Vec<u8>>::sse_decode(deserializer);
+        return flutter_rust_bridge::for_generated::from_vec_to_array(inner);
+    }
+}
+
 impl SseDecode for () {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {}
+}
+
+impl SseDecode for usize {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        deserializer.cursor.read_u64::<NativeEndian>().unwrap() as _
+    }
 }
 
 impl SseDecode for bool {
@@ -261,13 +574,21 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        1 => wire__crate__mnemonic__generate_mnemonic__generate_mnemonic_impl(
+        3 => {
+            wire__crate__application__mnemonic__mnemonic_passphrase__MnemonicPassphrase_default_impl(
+                port,
+                ptr,
+                rust_vec_len,
+                data_len,
+            )
+        }
+        5 => wire__crate__api__account__create_account__create_account_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        2 => wire__crate__init__init_impl(port, ptr, rust_vec_len, data_len),
+        6 => wire__crate__api__init__init_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -280,6 +601,21 @@ fn pde_ffi_dispatcher_sync_impl(
 ) -> flutter_rust_bridge::for_generated::WireSyncRust2DartSse {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
+        1 => wire__crate__application__keypair__derivation_path__DerivationPath_parse_impl(
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        2 => wire__crate__application__mnemonic__mnemonic_entropy__MnemonicEntropy_new_impl(
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        4 => wire__crate__application__mnemonic__mnemonic_passphrase__MnemonicPassphrase_new_impl(
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
         _ => unreachable!(),
     }
 }
@@ -287,15 +623,168 @@ fn pde_ffi_dispatcher_sync_impl(
 // Section: rust2dart
 
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<DerivationPath> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self.0)
+            .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for FrbWrapper<DerivationPath> {}
+
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<DerivationPath>> for DerivationPath {
+    fn into_into_dart(self) -> FrbWrapper<DerivationPath> {
+        self.into()
+    }
+}
+
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<MnemonicEntropy> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self.0)
+            .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for FrbWrapper<MnemonicEntropy> {}
+
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<MnemonicEntropy>> for MnemonicEntropy {
+    fn into_into_dart(self) -> FrbWrapper<MnemonicEntropy> {
+        self.into()
+    }
+}
+
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for FrbWrapper<MnemonicPassphrase> {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self.0)
+            .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for FrbWrapper<MnemonicPassphrase>
+{
+}
+
+impl flutter_rust_bridge::IntoIntoDart<FrbWrapper<MnemonicPassphrase>> for MnemonicPassphrase {
+    fn into_into_dart(self) -> FrbWrapper<MnemonicPassphrase> {
+        self.into()
+    }
+}
+
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart
-    for crate::mnemonic::mnemonic_generation_source::MnemonicGenerationSource
+    for crate::application::account::account_address::AccountAddress
+{
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [self.value.into_into_dart().into_dart()].into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::application::account::account_address::AccountAddress
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::application::account::account_address::AccountAddress>
+    for crate::application::account::account_address::AccountAddress
+{
+    fn into_into_dart(self) -> crate::application::account::account_address::AccountAddress {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart
+    for crate::application::account::account_creator_error::AccountCreatorError
+{
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {crate::application::account::account_creator_error::AccountCreatorError::UnsupportedPlatform => { [0.into_dart()].into_dart() }
+crate::application::account::account_creator_error::AccountCreatorError::MnemonicGeneration(field0) => { [1.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+crate::application::account::account_creator_error::AccountCreatorError::KeypairDerivation(field0) => { [2.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+crate::application::account::account_creator_error::AccountCreatorError::MnemonicStorage(field0) => { [3.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+crate::application::account::account_creator_error::AccountCreatorError::KeypairStorage(field0) => { [4.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+crate::application::account::account_creator_error::AccountCreatorError::MnemonicCleanup{id,save,cleanup} => { [5.into_dart(),
+id.into_into_dart().into_dart(),
+save.into_into_dart().into_dart(),
+cleanup.into_into_dart().into_dart()].into_dart() }
+ _ => { unimplemented!(""); }}
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::application::account::account_creator_error::AccountCreatorError
+{
+}
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::application::account::account_creator_error::AccountCreatorError,
+    > for crate::application::account::account_creator_error::AccountCreatorError
+{
+    fn into_into_dart(
+        self,
+    ) -> crate::application::account::account_creator_error::AccountCreatorError {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart
+    for crate::application::account::created_account::CreatedAccount
+{
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.address.into_into_dart().into_dart(),
+            self.mnemonic_id.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::application::account::created_account::CreatedAccount
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::application::account::created_account::CreatedAccount>
+    for crate::application::account::created_account::CreatedAccount
+{
+    fn into_into_dart(self) -> crate::application::account::created_account::CreatedAccount {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart
+    for crate::application::keypair::keypair_deriver_error::KeypairDeriverError
 {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {
-            crate::mnemonic::mnemonic_generation_source::MnemonicGenerationSource::Random(
-                field0,
-            ) => [0.into_dart(), field0.into_into_dart().into_dart()].into_dart(),
-            crate::mnemonic::mnemonic_generation_source::MnemonicGenerationSource::Entropy(
+            Self::InvalidPath => 0.into_dart(),
+            Self::DerivationFailed => 1.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::application::keypair::keypair_deriver_error::KeypairDeriverError
+{
+}
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::application::keypair::keypair_deriver_error::KeypairDeriverError,
+    > for crate::application::keypair::keypair_deriver_error::KeypairDeriverError
+{
+    fn into_into_dart(
+        self,
+    ) -> crate::application::keypair::keypair_deriver_error::KeypairDeriverError {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart
+    for crate::application::storage::keypair_store_error::KeypairStoreError
+{
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            crate::application::storage::keypair_store_error::KeypairStoreError::AlreadyExists => {
+                [0.into_dart()].into_dart()
+            }
+            crate::application::storage::keypair_store_error::KeypairStoreError::Keychain(
                 field0,
             ) => [1.into_dart(), field0.into_into_dart().into_dart()].into_dart(),
             _ => {
@@ -305,90 +794,230 @@ impl flutter_rust_bridge::IntoDart
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::mnemonic::mnemonic_generation_source::MnemonicGenerationSource
+    for crate::application::storage::keypair_store_error::KeypairStoreError
 {
 }
 impl
     flutter_rust_bridge::IntoIntoDart<
-        crate::mnemonic::mnemonic_generation_source::MnemonicGenerationSource,
-    > for crate::mnemonic::mnemonic_generation_source::MnemonicGenerationSource
+        crate::application::storage::keypair_store_error::KeypairStoreError,
+    > for crate::application::storage::keypair_store_error::KeypairStoreError
 {
-    fn into_into_dart(
-        self,
-    ) -> crate::mnemonic::mnemonic_generation_source::MnemonicGenerationSource {
+    fn into_into_dart(self) -> crate::application::storage::keypair_store_error::KeypairStoreError {
         self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart
-    for FrbWrapper<crate::mnemonic::mnemonic_word_count::MnemonicWordCount>
+    for crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource
 {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        match self.0 {
-            crate::mnemonic::mnemonic_word_count::MnemonicWordCount::Words12 => 0.into_dart(),
-            crate::mnemonic::mnemonic_word_count::MnemonicWordCount::Words15 => 1.into_dart(),
-            crate::mnemonic::mnemonic_word_count::MnemonicWordCount::Words18 => 2.into_dart(),
-            crate::mnemonic::mnemonic_word_count::MnemonicWordCount::Words21 => 3.into_dart(),
-            crate::mnemonic::mnemonic_word_count::MnemonicWordCount::Words24 => 4.into_dart(),
-            _ => unreachable!(),
-        }
+        match self {crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource::Random(field0) => { [0.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource::Entropy(field0) => { [1.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+ _ => { unimplemented!(""); }}
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for FrbWrapper<crate::mnemonic::mnemonic_word_count::MnemonicWordCount>
+    for crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource
 {
 }
 impl
     flutter_rust_bridge::IntoIntoDart<
-        FrbWrapper<crate::mnemonic::mnemonic_word_count::MnemonicWordCount>,
-    > for crate::mnemonic::mnemonic_word_count::MnemonicWordCount
+        crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource,
+    > for crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource
 {
-    fn into_into_dart(self) -> FrbWrapper<crate::mnemonic::mnemonic_word_count::MnemonicWordCount> {
-        self.into()
+    fn into_into_dart(
+        self,
+    ) -> crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource {
+        self
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart
-    for FrbWrapper<crate::mnemonic::mnemonic_wordlist::MnemonicWordlist>
+    for crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError
 {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        match self.0 {
-            crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::English => 0.into_dart(),
-            crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Japanese => 1.into_dart(),
-            crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Korean => 2.into_dart(),
-            crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::SimplifiedChinese => {
-                3.into_dart()
-            }
-            crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::TraditionalChinese => {
-                4.into_dart()
-            }
-            crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::French => 5.into_dart(),
-            crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Italian => 6.into_dart(),
-            crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Spanish => 7.into_dart(),
-            crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Czech => 8.into_dart(),
-            crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Portuguese => 9.into_dart(),
+        match self {crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError::InvalidEntropyLength{actual_bytes} => { [0.into_dart(),
+actual_bytes.into_into_dart().into_dart()].into_dart() }
+crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError::Randomness => { [1.into_dart()].into_dart() }
+ _ => { unimplemented!(""); }}
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError
+{
+}
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError,
+    > for crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError
+{
+    fn into_into_dart(
+        self,
+    ) -> crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::application::storage::mnemonic_id::MnemonicId {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [self.value.into_into_dart().into_dart()].into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::application::storage::mnemonic_id::MnemonicId
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::application::storage::mnemonic_id::MnemonicId>
+    for crate::application::storage::mnemonic_id::MnemonicId
+{
+    fn into_into_dart(self) -> crate::application::storage::mnemonic_id::MnemonicId {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart
+    for crate::application::storage::mnemonic_store_error::MnemonicStoreError
+{
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {crate::application::storage::mnemonic_store_error::MnemonicStoreError::AlreadyExists => { [0.into_dart()].into_dart() }
+crate::application::storage::mnemonic_store_error::MnemonicStoreError::IdentifierGeneration => { [1.into_dart()].into_dart() }
+crate::application::storage::mnemonic_store_error::MnemonicStoreError::Keychain(field0) => { [2.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+ _ => { unimplemented!(""); }}
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::application::storage::mnemonic_store_error::MnemonicStoreError
+{
+}
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::application::storage::mnemonic_store_error::MnemonicStoreError,
+    > for crate::application::storage::mnemonic_store_error::MnemonicStoreError
+{
+    fn into_into_dart(
+        self,
+    ) -> crate::application::storage::mnemonic_store_error::MnemonicStoreError {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart
+    for crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount
+{
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            Self::Words12 => 0.into_dart(),
+            Self::Words15 => 1.into_dart(),
+            Self::Words18 => 2.into_dart(),
+            Self::Words21 => 3.into_dart(),
+            Self::Words24 => 4.into_dart(),
             _ => unreachable!(),
         }
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for FrbWrapper<crate::mnemonic::mnemonic_wordlist::MnemonicWordlist>
+    for crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount
 {
 }
 impl
     flutter_rust_bridge::IntoIntoDart<
-        FrbWrapper<crate::mnemonic::mnemonic_wordlist::MnemonicWordlist>,
-    > for crate::mnemonic::mnemonic_wordlist::MnemonicWordlist
+        crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount,
+    > for crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount
 {
-    fn into_into_dart(self) -> FrbWrapper<crate::mnemonic::mnemonic_wordlist::MnemonicWordlist> {
-        self.into()
+    fn into_into_dart(
+        self,
+    ) -> crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart
+    for crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist
+{
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            Self::English => 0.into_dart(),
+            Self::Japanese => 1.into_dart(),
+            Self::Korean => 2.into_dart(),
+            Self::SimplifiedChinese => 3.into_dart(),
+            Self::TraditionalChinese => 4.into_dart(),
+            Self::French => 5.into_dart(),
+            Self::Italian => 6.into_dart(),
+            Self::Spanish => 7.into_dart(),
+            Self::Czech => 8.into_dart(),
+            Self::Portuguese => 9.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist
+{
+}
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist,
+    > for crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist
+{
+    fn into_into_dart(self) -> crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist {
+        self
     }
 }
 
-impl SseEncode for flutter_rust_bridge::for_generated::anyhow::Error {
+impl SseEncode for DerivationPath {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <String>::sse_encode(format!("{:?}", self), serializer);
+        <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<DerivationPath>>>::sse_encode(flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self), serializer);
+    }
+}
+
+impl SseEncode for MnemonicEntropy {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<MnemonicEntropy>>>::sse_encode(flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self), serializer);
+    }
+}
+
+impl SseEncode for MnemonicPassphrase {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<MnemonicPassphrase>>>::sse_encode(flutter_rust_bridge::for_generated::rust_auto_opaque_encode::<_, MoiArc<_>>(self), serializer);
+    }
+}
+
+impl SseEncode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<DerivationPath>>
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        let (ptr, size) = self.sse_encode_raw();
+        <usize>::sse_encode(ptr, serializer);
+        <i32>::sse_encode(size, serializer);
+    }
+}
+
+impl SseEncode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<MnemonicEntropy>>
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        let (ptr, size) = self.sse_encode_raw();
+        <usize>::sse_encode(ptr, serializer);
+        <i32>::sse_encode(size, serializer);
+    }
+}
+
+impl SseEncode
+    for RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<MnemonicPassphrase>>
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        let (ptr, size) = self.sse_encode_raw();
+        <usize>::sse_encode(ptr, serializer);
+        <i32>::sse_encode(size, serializer);
     }
 }
 
@@ -399,6 +1028,47 @@ impl SseEncode for String {
     }
 }
 
+impl SseEncode for crate::application::account::account_address::AccountAddress {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <[u8; 32]>::sse_encode(self.value, serializer);
+    }
+}
+
+impl SseEncode for crate::application::account::account_creator_error::AccountCreatorError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        match self {crate::application::account::account_creator_error::AccountCreatorError::UnsupportedPlatform => { <i32>::sse_encode(0, serializer);  }
+crate::application::account::account_creator_error::AccountCreatorError::MnemonicGeneration(field0) => { <i32>::sse_encode(1, serializer); <crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError>::sse_encode(field0, serializer);
+ }
+crate::application::account::account_creator_error::AccountCreatorError::KeypairDerivation(field0) => { <i32>::sse_encode(2, serializer); <crate::application::keypair::keypair_deriver_error::KeypairDeriverError>::sse_encode(field0, serializer);
+ }
+crate::application::account::account_creator_error::AccountCreatorError::MnemonicStorage(field0) => { <i32>::sse_encode(3, serializer); <crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_encode(field0, serializer);
+ }
+crate::application::account::account_creator_error::AccountCreatorError::KeypairStorage(field0) => { <i32>::sse_encode(4, serializer); <crate::application::storage::keypair_store_error::KeypairStoreError>::sse_encode(field0, serializer);
+ }
+crate::application::account::account_creator_error::AccountCreatorError::MnemonicCleanup{id,save,cleanup} => { <i32>::sse_encode(5, serializer); <crate::application::storage::mnemonic_id::MnemonicId>::sse_encode(id, serializer);
+<crate::application::storage::keypair_store_error::KeypairStoreError>::sse_encode(save, serializer);
+<crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_encode(cleanup, serializer);
+ }
+ _ => { unimplemented!(""); }}
+    }
+}
+
+impl SseEncode for crate::application::account::created_account::CreatedAccount {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <crate::application::account::account_address::AccountAddress>::sse_encode(
+            self.address,
+            serializer,
+        );
+        <crate::application::storage::mnemonic_id::MnemonicId>::sse_encode(
+            self.mnemonic_id,
+            serializer,
+        );
+    }
+}
+
 impl SseEncode for i32 {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -406,12 +1076,31 @@ impl SseEncode for i32 {
     }
 }
 
-impl SseEncode for Vec<String> {
+impl SseEncode for crate::application::keypair::keypair_deriver_error::KeypairDeriverError {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <i32>::sse_encode(self.len() as _, serializer);
-        for item in self {
-            <String>::sse_encode(item, serializer);
+        <i32>::sse_encode(match self {crate::application::keypair::keypair_deriver_error::KeypairDeriverError::InvalidPath => { 0 }
+crate::application::keypair::keypair_deriver_error::KeypairDeriverError::DerivationFailed => { 1 }
+ _ => { unimplemented!(""); }}, serializer);
+    }
+}
+
+impl SseEncode for crate::application::storage::keypair_store_error::KeypairStoreError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        match self {
+            crate::application::storage::keypair_store_error::KeypairStoreError::AlreadyExists => {
+                <i32>::sse_encode(0, serializer);
+            }
+            crate::application::storage::keypair_store_error::KeypairStoreError::Keychain(
+                field0,
+            ) => {
+                <i32>::sse_encode(1, serializer);
+                <i32>::sse_encode(field0, serializer);
+            }
+            _ => {
+                unimplemented!("");
+            }
         }
     }
 }
@@ -426,41 +1115,57 @@ impl SseEncode for Vec<u8> {
     }
 }
 
-impl SseEncode for crate::mnemonic::mnemonic_generation_source::MnemonicGenerationSource {
+impl SseEncode
+    for crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource
+{
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        match self {
-            crate::mnemonic::mnemonic_generation_source::MnemonicGenerationSource::Random(
-                field0,
-            ) => {
-                <i32>::sse_encode(0, serializer);
-                <crate::mnemonic::mnemonic_word_count::MnemonicWordCount>::sse_encode(
-                    field0, serializer,
-                );
-            }
-            crate::mnemonic::mnemonic_generation_source::MnemonicGenerationSource::Entropy(
-                field0,
-            ) => {
-                <i32>::sse_encode(1, serializer);
-                <Vec<u8>>::sse_encode(field0, serializer);
-            }
-            _ => {
-                unimplemented!("");
-            }
-        }
+        match self {crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource::Random(field0) => { <i32>::sse_encode(0, serializer); <crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount>::sse_encode(field0, serializer);
+ }
+crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource::Entropy(field0) => { <i32>::sse_encode(1, serializer); <MnemonicEntropy>::sse_encode(field0, serializer);
+ }
+ _ => { unimplemented!(""); }}
     }
 }
 
-impl SseEncode for crate::mnemonic::mnemonic_word_count::MnemonicWordCount {
+impl SseEncode for crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        match self {crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError::InvalidEntropyLength{actual_bytes} => { <i32>::sse_encode(0, serializer); <usize>::sse_encode(actual_bytes, serializer);
+ }
+crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError::Randomness => { <i32>::sse_encode(1, serializer);  }
+ _ => { unimplemented!(""); }}
+    }
+}
+
+impl SseEncode for crate::application::storage::mnemonic_id::MnemonicId {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <[u8; 16]>::sse_encode(self.value, serializer);
+    }
+}
+
+impl SseEncode for crate::application::storage::mnemonic_store_error::MnemonicStoreError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        match self {crate::application::storage::mnemonic_store_error::MnemonicStoreError::AlreadyExists => { <i32>::sse_encode(0, serializer);  }
+crate::application::storage::mnemonic_store_error::MnemonicStoreError::IdentifierGeneration => { <i32>::sse_encode(1, serializer);  }
+crate::application::storage::mnemonic_store_error::MnemonicStoreError::Keychain(field0) => { <i32>::sse_encode(2, serializer); <i32>::sse_encode(field0, serializer);
+ }
+ _ => { unimplemented!(""); }}
+    }
+}
+
+impl SseEncode for crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(
             match self {
-                crate::mnemonic::mnemonic_word_count::MnemonicWordCount::Words12 => 0,
-                crate::mnemonic::mnemonic_word_count::MnemonicWordCount::Words15 => 1,
-                crate::mnemonic::mnemonic_word_count::MnemonicWordCount::Words18 => 2,
-                crate::mnemonic::mnemonic_word_count::MnemonicWordCount::Words21 => 3,
-                crate::mnemonic::mnemonic_word_count::MnemonicWordCount::Words24 => 4,
+                crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount::Words12 => 0,
+                crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount::Words15 => 1,
+                crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount::Words18 => 2,
+                crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount::Words21 => 3,
+                crate::application::mnemonic::mnemonic_word_count::MnemonicWordCount::Words24 => 4,
                 _ => {
                     unimplemented!("");
                 }
@@ -470,27 +1175,20 @@ impl SseEncode for crate::mnemonic::mnemonic_word_count::MnemonicWordCount {
     }
 }
 
-impl SseEncode for crate::mnemonic::mnemonic_wordlist::MnemonicWordlist {
+impl SseEncode for crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        <i32>::sse_encode(
-            match self {
-                crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::English => 0,
-                crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Japanese => 1,
-                crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Korean => 2,
-                crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::SimplifiedChinese => 3,
-                crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::TraditionalChinese => 4,
-                crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::French => 5,
-                crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Italian => 6,
-                crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Spanish => 7,
-                crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Czech => 8,
-                crate::mnemonic::mnemonic_wordlist::MnemonicWordlist::Portuguese => 9,
-                _ => {
-                    unimplemented!("");
-                }
-            },
-            serializer,
-        );
+        <i32>::sse_encode(match self {crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::English => { 0 }
+crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::Japanese => { 1 }
+crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::Korean => { 2 }
+crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::SimplifiedChinese => { 3 }
+crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::TraditionalChinese => { 4 }
+crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::French => { 5 }
+crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::Italian => { 6 }
+crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::Spanish => { 7 }
+crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::Czech => { 8 }
+crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist::Portuguese => { 9 }
+ _ => { unimplemented!(""); }}, serializer);
     }
 }
 
@@ -501,9 +1199,45 @@ impl SseEncode for u8 {
     }
 }
 
+impl SseEncode for [u8; 16] {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Vec<u8>>::sse_encode(
+            {
+                let boxed: Box<[_]> = Box::new(self);
+                boxed.into_vec()
+            },
+            serializer,
+        );
+    }
+}
+
+impl SseEncode for [u8; 32] {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Vec<u8>>::sse_encode(
+            {
+                let boxed: Box<[_]> = Box::new(self);
+                boxed.into_vec()
+            },
+            serializer,
+        );
+    }
+}
+
 impl SseEncode for () {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {}
+}
+
+impl SseEncode for usize {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        serializer
+            .cursor
+            .write_u64::<NativeEndian>(self as _)
+            .unwrap();
+    }
 }
 
 impl SseEncode for bool {
@@ -521,6 +1255,9 @@ mod io {
     // Section: imports
 
     use super::*;
+    use crate::application::keypair::derivation_path::*;
+    use crate::application::mnemonic::mnemonic_entropy::*;
+    use crate::application::mnemonic::mnemonic_passphrase::*;
     use flutter_rust_bridge::for_generated::byteorder::{
         NativeEndian, ReadBytesExt, WriteBytesExt,
     };
@@ -530,6 +1267,48 @@ mod io {
     // Section: boilerplate
 
     flutter_rust_bridge::frb_generated_boilerplate_io!();
+
+    #[unsafe(no_mangle)]
+    pub extern "C" fn frbgen_infrastructure_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDerivationPath(
+        ptr: *const std::ffi::c_void,
+    ) {
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<DerivationPath>>::increment_strong_count(ptr as _);
+    }
+
+    #[unsafe(no_mangle)]
+    pub extern "C" fn frbgen_infrastructure_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDerivationPath(
+        ptr: *const std::ffi::c_void,
+    ) {
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<DerivationPath>>::decrement_strong_count(ptr as _);
+    }
+
+    #[unsafe(no_mangle)]
+    pub extern "C" fn frbgen_infrastructure_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicEntropy(
+        ptr: *const std::ffi::c_void,
+    ) {
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<MnemonicEntropy>>::increment_strong_count(ptr as _);
+    }
+
+    #[unsafe(no_mangle)]
+    pub extern "C" fn frbgen_infrastructure_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicEntropy(
+        ptr: *const std::ffi::c_void,
+    ) {
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<MnemonicEntropy>>::decrement_strong_count(ptr as _);
+    }
+
+    #[unsafe(no_mangle)]
+    pub extern "C" fn frbgen_infrastructure_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicPassphrase(
+        ptr: *const std::ffi::c_void,
+    ) {
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<MnemonicPassphrase>>::increment_strong_count(ptr as _);
+    }
+
+    #[unsafe(no_mangle)]
+    pub extern "C" fn frbgen_infrastructure_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicPassphrase(
+        ptr: *const std::ffi::c_void,
+    ) {
+        MoiArc::<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<MnemonicPassphrase>>::decrement_strong_count(ptr as _);
+    }
 }
 #[cfg(not(target_family = "wasm"))]
 pub use io::*;

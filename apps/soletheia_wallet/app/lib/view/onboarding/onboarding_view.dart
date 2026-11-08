@@ -29,10 +29,10 @@ class OnboardingView extends StatelessWidget {
                   children: [
                     OnboardingOptionTile(
                       icon: Icons.add,
-                      title: l10n.onboardingGenerateMnemonicLabel,
-                      subtitle: l10n.onboardingGenerateMnemonicDescription,
+                      title: l10n.onboardingCreateAccountLabel,
+                      subtitle: l10n.onboardingCreateAccountDescription,
                       onTap: () {
-                        const MnemonicGenerationRoute().goRelative(context);
+                        const AccountCreationRoute().goRelative(context);
                       },
                       isFirst: true,
                     ),

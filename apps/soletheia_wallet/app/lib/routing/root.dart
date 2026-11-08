@@ -1,2 +1,1 @@
-export 'router.dart'
-    show LicensesRoute, OnboardingRoute, MnemonicGenerationRoute;
+export 'router.dart' show LicensesRoute, OnboardingRoute, AccountCreationRoute;
