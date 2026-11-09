@@ -17,28 +17,18 @@ abstract class AccountCreationViewState with _$AccountCreationViewState {
     EntropyValidationError? entropyError,
     @Default('') String passphrase,
     @Default(AccountCreationViewState.defaultPath) String path,
+    DerivationPathException? pathError,
     CreatedAccount? created,
     AsyncValue<CreatedAccount>? creation,
   }) = _AccountCreationViewState;
 
   static const defaultPath = "m/44'/501'/0'/0'";
 
-  DerivationPath? get parsedPath {
-    try {
-      return DerivationPath.parse(path);
-    } on DerivationPathException {
-      return null;
-    }
-  }
-
   int get hexLength => wordCount.entropyBytes * 2;
 
   bool get isFormLocked => creation?.isLoading == true || created != null;
 
-  bool get canSubmit {
-    return creation?.isLoading != true &&
-        (created != null || parsedPath != null);
-  }
+  bool get canSubmit => creation?.isLoading != true;
 
   EntropyValidationError? validateEntropy() {
     if (entropy.isEmpty) return null;

@@ -21,7 +21,7 @@ class AccountDerivationPathField extends ConsumerWidget {
       onChanged: viewModel.setPath,
       decoration: InputDecoration(
         labelText: l10n.accountCreationDerivationPathLabel,
-        errorText: form.parsedPath == null
+        errorText: form.pathError != null
             ? l10n.accountCreationInvalidPath
             : null,
       ),

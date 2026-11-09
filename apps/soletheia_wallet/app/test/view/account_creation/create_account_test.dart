@@ -113,8 +113,17 @@ void main() {
       final path = find.widgetWithText(TextFormField, 'Derivation path');
       await tester.enterText(path, 'invalid');
       await tester.pump();
-      expect(tester.widget<FilledButton>(submit).onPressed, isNull);
+      final invalidPath = find.text('Enter an absolute derivation path.');
+      expect(invalidPath, findsNothing);
+      expect(tester.widget<FilledButton>(submit).onPressed, isNotNull);
+      await tester.ensureVisible(submit);
+      await tester.tap(submit);
+      await tester.pump();
+      expect(invalidPath, findsOneWidget);
+      expect(creator.calls, hasLength(1));
       await tester.enterText(path, "m/44/501/7/0");
+      await tester.pump();
+      expect(invalidPath, findsNothing);
       await tester.enterText(
         find.widgetWithText(TextFormField, 'Passphrase (optional)'),
         ' test ',

@@ -38,20 +38,26 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
   }
 
   void setPath(String value) {
-    state = state.copyWith(path: value, creation: null);
+    state = state.copyWith(path: value, pathError: null, creation: null);
   }
 
   Future<void> createAccount() async {
     if (!state.canSubmit) return;
     final pending = state;
-    if (pending.created == null) {
-      final error = pending.validateEntropy();
-      if (error != null) {
-        state = pending.copyWith(entropyError: error);
-        return;
-      }
+    final entropyError = pending.created == null
+        ? pending.validateEntropy()
+        : null;
+    final DerivationPath path;
+    try {
+      path = DerivationPath.parse(pending.path);
+    } on DerivationPathException catch (error) {
+      state = pending.copyWith(pathError: error, entropyError: entropyError);
+      return;
     }
-    final path = pending.parsedPath!;
+    if (entropyError != null) {
+      state = pending.copyWith(entropyError: entropyError);
+      return;
+    }
     final repository = ref.read(accountRepositoryProvider);
     state = pending.copyWith(creation: const AsyncLoading());
     final result = await AsyncValue.guard(() async {
