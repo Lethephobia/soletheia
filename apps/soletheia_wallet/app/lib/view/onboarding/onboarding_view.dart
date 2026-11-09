@@ -50,8 +50,9 @@ class OnboardingView extends StatelessWidget {
                     Align(
                       alignment: AlignmentDirectional.centerEnd,
                       child: TextButton(
-                        onPressed: () =>
-                            const LicensesRoute().goRelative(context),
+                        onPressed: () {
+                          const LicensesRoute().goRelative(context);
+                        },
                         child: Text(
                           MaterialLocalizations.of(context).licensesPageTitle,
                         ),

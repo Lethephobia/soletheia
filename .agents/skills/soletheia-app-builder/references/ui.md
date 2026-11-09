@@ -4,7 +4,8 @@ Use for developer-wallet screen design, layout ownership, themes, and responsive
 
 ### DO let each View own its AppBar and page scaffold
 
-OnboardingShell/OnboardingLayout host the first-account creation flow without branch navigation.
+OnboardingView owns a standalone scaffold with centered choices and no AppBar.
+AccountCreationView owns the form scaffold and AppBar on the root navigator.
 AccountShell/AccountLayout host normal account functionality with responsive NavigationBar/Rail
 and a menu button to expand the rail. Page-specific AppBars remain in Views inside that shell.
 Nested Scaffolds are allowed for this separation; verify insets and overlay ownership.
@@ -15,7 +16,7 @@ no FAB. Do not make the layout inspect concrete View types or local View state.
 **Good**
 
 ```text
-OnboardingLayout: safe, constrained content region for setup steps
+OnboardingView: safe, centered and constrained first-account choices
 AccountShell: branch selection and branch-specific action
 AccountLayout: navigation, rail expansion, placement of the supplied action
 AccountListView: page AppBar and body
@@ -36,14 +37,14 @@ installed API and current official support before relying on Expressive features
 widgets when they have a concrete purpose, not to recreate standard controls.
 
 The agreed product flow sends users with zero accounts through creation of their first account.
-Existing accounts lead to AccountShell. Keep loading distinct from an empty result. The current
-skeleton starts at onboarding; persistence and automatic redirects are not implemented yet.
+Existing accounts lead to AccountShell. Startup loads the catalog before choosing
+the initial screen, as described in the [routing guide](routing.md).
 
 **Good**
 
 ```text
 Onboarding: localized first-account setup content; normal shell after creation.
-Add an account action when that workflow is requested, using a Material control.
+Accounts: the branch action opens the same creation form on the root navigator.
 ```
 
 **Bad**
@@ -102,8 +103,8 @@ ask for an account name in this initial choice screen or add a logo, setup capti
 or decorative explanatory copy. Keep accessible labels even when visual text is minimal.
 Use [domain terminology](localization.md) for action labels and concise technical supporting text:
 BIP-39 mnemonic for the phrase flows and Ed25519 private key for key import. Keypair JSON loading
-belongs inside private-key import, not a fourth entry. The entry screen is implemented; its three
-callbacks remain disconnected and disabled until the corresponding flows are implemented.
+belongs inside private-key import, not a fourth entry. The Create account option opens
+the creation form. The two import options remain disabled.
 
 **Good**
 
@@ -130,7 +131,7 @@ constraints when sizing a bounded region, and MediaQuery for viewport-level navi
 
 ```dart
 // Viewport-level navigation choice.
-final useRail = Bp.of(context).isAtLeast(Bp.medium);
+final showsNavigationRail = Bp.of(context).isAtLeast(Bp.medium);
 // Text styling comes from the theme.
 final textStyle = Theme.of(context).textTheme.bodyMedium;
 ```

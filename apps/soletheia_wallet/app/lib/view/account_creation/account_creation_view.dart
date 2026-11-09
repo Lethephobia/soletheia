@@ -4,10 +4,10 @@ import 'package:material_ui/material_ui.dart';
 import '../../l10n.dart';
 import '../../responsive.dart';
 import '../../routing.dart';
-import 'account_derivation_path_field.dart';
-import 'mnemonic_passphrase_field.dart';
-import 'mnemonic_custom_entropy_field.dart';
 import 'account_creation_view_model.dart';
+import 'account_derivation_path_field.dart';
+import 'mnemonic_custom_entropy_field.dart';
+import 'mnemonic_passphrase_field.dart';
 import 'mnemonic_word_count_field.dart';
 import 'mnemonic_wordlist_field.dart';
 

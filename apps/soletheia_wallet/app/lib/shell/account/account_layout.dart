@@ -22,19 +22,19 @@ class AccountLayout extends StatefulWidget {
 }
 
 class _AccountLayoutState extends State<AccountLayout> {
-  bool _extended = false;
+  bool _isExtended = false;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final useRail = Bp.of(context).isAtLeast(Bp.medium);
+    final showsNavigationRail = Bp.of(context).isAtLeast(Bp.medium);
     return Scaffold(
       body: Row(
         children: [
-          if (useRail)
+          if (showsNavigationRail)
             SafeArea(
               child: NavigationRail(
-                extended: _extended,
+                extended: _isExtended,
                 labelType: NavigationRailLabelType.none,
                 selectedIndex: widget.selectedIndex,
                 onDestinationSelected: widget.onDestinationSelected,
@@ -42,11 +42,12 @@ class _AccountLayoutState extends State<AccountLayout> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     IconButton(
-                      tooltip: _extended
+                      tooltip: _isExtended
                           ? l10n.navigationCollapseLabel
                           : l10n.navigationExpandLabel,
-                      onPressed: () => setState(() => _extended = !_extended),
-                      icon: Icon(_extended ? Icons.menu_open : Icons.menu),
+                      onPressed: () =>
+                          setState(() => _isExtended = !_isExtended),
+                      icon: Icon(_isExtended ? Icons.menu_open : Icons.menu),
                     ),
                     if (widget.primaryAction != null) widget.primaryAction!,
                   ],
@@ -68,8 +69,8 @@ class _AccountLayoutState extends State<AccountLayout> {
           Expanded(key: const ValueKey('account-content'), child: widget.child),
         ],
       ),
-      floatingActionButton: useRail ? null : widget.primaryAction,
-      bottomNavigationBar: useRail
+      floatingActionButton: showsNavigationRail ? null : widget.primaryAction,
+      bottomNavigationBar: showsNavigationRail
           ? null
           : NavigationBar(
               selectedIndex: widget.selectedIndex,

@@ -9,8 +9,9 @@ import 'account_metadata.dart';
 part 'account_metadata_store.g.dart';
 
 @riverpod
-AccountMetadataStore accountMetadataStore(Ref ref) =>
-    const AccountMetadataStore();
+AccountMetadataStore accountMetadataStore(Ref ref) {
+  return const AccountMetadataStore();
+}
 
 class AccountMetadataStore {
   const AccountMetadataStore({this.directory = getApplicationSupportDirectory});

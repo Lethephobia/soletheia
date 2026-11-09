@@ -7,9 +7,7 @@ part of '../router.dart';
         TypedGoRoute<AccountListRoute>(
           path: '/accounts',
           routes: [
-            TypedRelativeGoRoute<AccountCreationRoute>(
-              path: 'create-account',
-            ),
+            TypedRelativeGoRoute<AccountCreationRoute>(path: 'create-account'),
           ],
         ),
       ],

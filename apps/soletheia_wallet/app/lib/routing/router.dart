@@ -1,12 +1,12 @@
 import 'package:go_router/go_router.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../account.dart';
 import '../shell/account.dart';
+import '../view/account_creation.dart';
 import '../view/account_list.dart';
 import '../view/onboarding.dart';
-import '../view/account_creation.dart';
 import '../view/settings.dart';
 
 part 'account/account_branch.dart';

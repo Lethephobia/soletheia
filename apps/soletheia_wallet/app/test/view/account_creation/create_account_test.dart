@@ -5,8 +5,8 @@ import 'package:application/application.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:soletheia/app.dart';
 import 'package:soletheia/account.dart';
+import 'package:soletheia/app.dart';
 
 class _Creator implements AccountCreator {
   final calls =

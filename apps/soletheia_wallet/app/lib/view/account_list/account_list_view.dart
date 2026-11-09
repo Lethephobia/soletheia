@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
-import '../../l10n.dart';
 import '../../account.dart';
+import '../../l10n.dart';
 
 class AccountListView extends ConsumerWidget {
   static const double _contentPadding = 24;
