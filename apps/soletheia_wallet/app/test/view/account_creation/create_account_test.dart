@@ -134,6 +134,20 @@ void main() {
       await tester.pump();
       expect(invalidEntropy, findsOneWidget);
       expect(creator.calls, hasLength(1));
+      final invalidHex = find.text('Use only hexadecimal digits (0–9, A–F).');
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Entropy'),
+        '0g',
+      );
+      await tester.pumpAndSettle();
+      expect(invalidEntropy, findsNothing);
+      expect(invalidHex, findsNothing);
+      await tester.ensureVisible(submit);
+      await tester.tap(submit);
+      await tester.pump();
+      expect(invalidHex, findsOneWidget);
+      expect(invalidEntropy, findsNothing);
+      expect(creator.calls, hasLength(1));
       await tester.enterText(
         find.widgetWithText(TextFormField, 'Entropy'),
         '0102030405060708090A0b0c0d0e0f10',

@@ -23,7 +23,7 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
     if (value != null) {
       state = state.copyWith(
         wordCount: value,
-        hasEntropyError: false,
+        entropyError: null,
         creation: null,
       );
     }
@@ -32,17 +32,13 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
   void setCustomEntropy(bool value) {
     state = state.copyWith(
       isCustomEntropy: value,
-      hasEntropyError: false,
+      entropyError: null,
       creation: null,
     );
   }
 
   void setEntropy(String value) {
-    state = state.copyWith(
-      entropy: value,
-      hasEntropyError: false,
-      creation: null,
-    );
+    state = state.copyWith(entropy: value, entropyError: null, creation: null);
   }
 
   void setPassphrase(String value) {
@@ -56,11 +52,12 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
   Future<void> createAccount() async {
     if (!state.canSubmit) return;
     final pending = state;
-    if (pending.created == null &&
-        pending.isCustomEntropy &&
-        !pending.isEntropyValid) {
-      state = pending.copyWith(hasEntropyError: true);
-      return;
+    if (pending.created == null && pending.isCustomEntropy) {
+      final error = pending.validateEntropy();
+      if (error != null) {
+        state = pending.copyWith(entropyError: error);
+        return;
+      }
     }
     final path = pending.parsedPath!;
     final repository = ref.read(accountRepositoryProvider);

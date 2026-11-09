@@ -147,9 +147,13 @@
       "length": { "type": "int" }
     }
   },
-  "accountCreationEntropyError": "Enter exactly {length} hexadecimal characters.",
-  "@accountCreationEntropyError": {
-    "description": "Validation error for custom entropy of incorrect length or format.",
+  "accountCreationEntropyInvalidHex": "Use only hexadecimal digits (0–9, A–F).",
+  "@accountCreationEntropyInvalidHex": {
+    "description": "Validation error when entropy contains a non-hexadecimal character."
+  },
+  "accountCreationEntropyInvalidLength": "Enter exactly {length} hexadecimal characters.",
+  "@accountCreationEntropyInvalidLength": {
+    "description": "Validation error for custom entropy of incorrect length.",
     "placeholders": {
       "length": {
         "type": "int"

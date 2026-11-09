@@ -3,6 +3,7 @@ import 'package:material_ui/material_ui.dart';
 
 import '../../l10n.dart';
 import 'account_creation_view_model.dart';
+import 'entropy_validation_error.dart';
 
 class MnemonicCustomEntropyField extends ConsumerWidget {
   const MnemonicCustomEntropyField({super.key});
@@ -48,9 +49,15 @@ class MnemonicCustomEntropyField extends ConsumerWidget {
                         form.entropy.characters.length,
                         form.hexLength,
                       ),
-                      errorText: form.hasEntropyError
-                          ? l10n.accountCreationEntropyError(form.hexLength)
-                          : null,
+                      errorText: switch (form.entropyError) {
+                        InvalidEntropyHex() =>
+                          l10n.accountCreationEntropyInvalidHex,
+                        InvalidEntropyLength(:final expectedLength) =>
+                          l10n.accountCreationEntropyInvalidLength(
+                            expectedLength,
+                          ),
+                        null => null,
+                      },
                       helperText: l10n.accountCreationEntropyHint(
                         form.entropyBits,
                       ),

@@ -2,6 +2,8 @@ import 'package:application/application.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'entropy_validation_error.dart';
+
 part 'account_creation_view_state.freezed.dart';
 
 @Freezed(toStringOverride: false)
@@ -13,7 +15,7 @@ abstract class AccountCreationViewState with _$AccountCreationViewState {
     @Default(MnemonicWordCount.words12) MnemonicWordCount wordCount,
     @Default(false) bool isCustomEntropy,
     @Default('') String entropy,
-    @Default(false) bool hasEntropyError,
+    EntropyValidationError? entropyError,
     @Default('') String passphrase,
     @Default(AccountCreationViewState.defaultPath) String path,
     CreatedAccount? created,
@@ -40,8 +42,14 @@ abstract class AccountCreationViewState with _$AccountCreationViewState {
         (created != null || parsedPath != null);
   }
 
-  bool get isEntropyValid {
+  EntropyValidationError? validateEntropy() {
     final hex = entropy.trim();
-    return hex.length == hexLength && RegExp(r'^[0-9a-fA-F]+$').hasMatch(hex);
+    if (RegExp(r'[^0-9a-fA-F]').hasMatch(hex)) {
+      return const EntropyValidationError.invalidHex();
+    }
+    if (hex.length != hexLength) {
+      return EntropyValidationError.invalidLength(expectedLength: hexLength);
+    }
+    return null;
   }
 }
