@@ -15,6 +15,7 @@ class MnemonicPassphraseField extends ConsumerWidget {
     return TextFormField(
       initialValue: form.passphrase,
       enabled: !form.isFormLocked,
+      keyboardType: TextInputType.visiblePassword,
       autocorrect: false,
       enableSuggestions: false,
       obscureText: true,

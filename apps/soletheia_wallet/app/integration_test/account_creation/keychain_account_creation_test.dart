@@ -35,20 +35,22 @@ void main() {
       final account = await create();
       final dir = await Directory.systemTemp.createTemp('account-test');
       addTearDown(() => dir.delete(recursive: true));
-      final store = DriftAccountRepository(directory: dir);
+      final store = SqliteAccountRepository(directory: dir);
       addTearDown(store.close);
       await store.save(
         Account(
           address: account.address,
-          mnemonicId: account.mnemonicId,
-          derivationPath: path,
+          mnemonicDerivation: MnemonicDerivation(
+            mnemonicId: account.mnemonicId,
+            derivationPath: path,
+          ),
         ),
       );
       final saved = (await store.watchAll().first).singleWhere(
         (entry) => entry.address == account.address,
       );
-      expect(saved.mnemonicId, account.mnemonicId);
-      expect(saved.derivationPath, path);
+      expect(saved.mnemonicDerivation!.mnemonicId, account.mnemonicId);
+      expect(saved.mnemonicDerivation!.derivationPath, path);
       await expectLater(
         create(),
         throwsA(

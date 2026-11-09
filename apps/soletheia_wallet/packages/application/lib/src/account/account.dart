@@ -1,8 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../mnemonic/mnemonic_id.dart';
 import 'account_address.dart';
-import 'derivation_path.dart';
+import 'mnemonic_derivation.dart';
 
 part 'account.freezed.dart';
 
@@ -11,7 +10,6 @@ part 'account.freezed.dart';
 sealed class Account with _$Account {
   const factory Account({
     required AccountAddress address,
-    required MnemonicId mnemonicId,
-    required DerivationPath derivationPath,
+    MnemonicDerivation? mnemonicDerivation,
   }) = _Account;
 }

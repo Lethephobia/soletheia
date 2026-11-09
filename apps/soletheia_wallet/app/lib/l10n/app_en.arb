@@ -82,7 +82,7 @@
   "@accountCreationEntropyLabel": {
     "description": "Label for the custom BIP-39 entropy hexadecimal input."
   },
-  "accountCreationSubmitLabel": "Create account",
+  "accountCreationSubmitLabel": "Create",
   "@accountCreationSubmitLabel": {
     "description": "Button to create the account using the selected options."
   },
@@ -137,6 +137,14 @@
       "bits": {
         "type": "int"
       }
+    }
+  },
+  "accountCreationEntropyCounter": "{count}/{length}",
+  "@accountCreationEntropyCounter": {
+    "description": "Entered characters and required hexadecimal length in the custom entropy field.",
+    "placeholders": {
+      "count": { "type": "int" },
+      "length": { "type": "int" }
     }
   },
   "accountCreationEntropyError": "Enter exactly {length} hexadecimal characters.",

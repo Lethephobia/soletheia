@@ -8,3 +8,4 @@ export 'account/bip44_change_index.dart';
 export 'account/created_account.dart';
 export 'account/derivation_path.dart';
 export 'account/derivation_path_exception.dart';
+export 'account/mnemonic_derivation.dart';

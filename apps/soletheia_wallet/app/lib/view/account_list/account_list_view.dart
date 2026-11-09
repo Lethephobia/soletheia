@@ -28,7 +28,10 @@ class AccountListView extends ConsumerWidget {
               for (final account in accounts)
                 ListTile(
                   title: SelectableText(base58.encode(account.address.bytes)),
-                  subtitle: Text(account.derivationPath.value),
+                  subtitle: switch (account.mnemonicDerivation) {
+                    final derivation? => Text(derivation.derivationPath.value),
+                    null => null,
+                  },
                 ),
             ],
           ),

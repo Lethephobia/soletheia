@@ -13,6 +13,7 @@ abstract class AccountCreationViewState with _$AccountCreationViewState {
     @Default(MnemonicWordCount.words12) MnemonicWordCount wordCount,
     @Default(false) bool isCustomEntropy,
     @Default('') String entropy,
+    @Default(false) bool hasEntropyError,
     @Default('') String passphrase,
     @Default(AccountCreationViewState.defaultPath) String path,
     CreatedAccount? created,
@@ -36,13 +37,11 @@ abstract class AccountCreationViewState with _$AccountCreationViewState {
 
   bool get canSubmit {
     return creation?.isLoading != true &&
-        (created != null ||
-            (parsedPath != null &&
-                (!isCustomEntropy || isValidEntropy(entropy))));
+        (created != null || parsedPath != null);
   }
 
-  bool isValidEntropy(String? value) {
-    final hex = value?.trim() ?? '';
+  bool get isEntropyValid {
+    final hex = entropy.trim();
     return hex.length == hexLength && RegExp(r'^[0-9a-fA-F]+$').hasMatch(hex);
   }
 }

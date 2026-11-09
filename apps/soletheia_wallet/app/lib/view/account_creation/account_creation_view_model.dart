@@ -21,16 +21,28 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
 
   void selectWordCount(MnemonicWordCount? value) {
     if (value != null) {
-      state = state.copyWith(wordCount: value, creation: null);
+      state = state.copyWith(
+        wordCount: value,
+        hasEntropyError: false,
+        creation: null,
+      );
     }
   }
 
   void setCustomEntropy(bool value) {
-    state = state.copyWith(isCustomEntropy: value, creation: null);
+    state = state.copyWith(
+      isCustomEntropy: value,
+      hasEntropyError: false,
+      creation: null,
+    );
   }
 
   void setEntropy(String value) {
-    state = state.copyWith(entropy: value, creation: null);
+    state = state.copyWith(
+      entropy: value,
+      hasEntropyError: false,
+      creation: null,
+    );
   }
 
   void setPassphrase(String value) {
@@ -44,6 +56,12 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
   Future<void> createAccount() async {
     if (!state.canSubmit) return;
     final pending = state;
+    if (pending.created == null &&
+        pending.isCustomEntropy &&
+        !pending.isEntropyValid) {
+      state = pending.copyWith(hasEntropyError: true);
+      return;
+    }
     final path = pending.parsedPath!;
     final repository = ref.read(accountRepositoryProvider);
     state = pending.copyWith(creation: const AsyncLoading());
@@ -68,8 +86,10 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
       await repository.save(
         Account(
           address: account.address,
-          mnemonicId: account.mnemonicId,
-          derivationPath: path,
+          mnemonicDerivation: MnemonicDerivation(
+            mnemonicId: account.mnemonicId,
+            derivationPath: path,
+          ),
         ),
       );
       return account;

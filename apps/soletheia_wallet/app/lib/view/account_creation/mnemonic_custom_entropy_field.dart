@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart' show MaxLengthEnforcement;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -38,25 +37,24 @@ class MnemonicCustomEntropyField extends ConsumerWidget {
                     onChanged: viewModel.setEntropy,
                     minLines: _entropyLines,
                     maxLines: _entropyLines,
-                    maxLength: form.hexLength,
-                    maxLengthEnforcement: MaxLengthEnforcement.none,
+                    keyboardType: TextInputType.visiblePassword,
                     autocorrect: false,
                     enableSuggestions: false,
                     spellCheckConfiguration:
                         const SpellCheckConfiguration.disabled(),
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     decoration: InputDecoration(
                       labelText: l10n.accountCreationEntropyLabel,
+                      counterText: l10n.accountCreationEntropyCounter(
+                        form.entropy.characters.length,
+                        form.hexLength,
+                      ),
+                      errorText: form.hasEntropyError
+                          ? l10n.accountCreationEntropyError(form.hexLength)
+                          : null,
                       helperText: l10n.accountCreationEntropyHint(
                         form.entropyBits,
                       ),
                     ),
-                    validator: (value) {
-                      if (!form.isValidEntropy(value)) {
-                        return l10n.accountCreationEntropyError(form.hexLength);
-                      }
-                      return null;
-                    },
                   ),
                 )
               : const SizedBox.shrink(),

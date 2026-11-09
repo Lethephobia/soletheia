@@ -96,7 +96,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Create account'));
       await tester.pumpAndSettle();
-      final submit = find.widgetWithText(FilledButton, 'Create account');
+      final submit = find.widgetWithText(FilledButton, 'Create');
       await tester.ensureVisible(submit);
       await tester.tap(submit);
       await tester.pump();
@@ -125,7 +125,15 @@ void main() {
       );
       await tester.tap(find.byType(SwitchListTile));
       await tester.pumpAndSettle();
-      expect(tester.widget<FilledButton>(submit).onPressed, isNull);
+      final invalidEntropy = find.text(
+        'Enter exactly 32 hexadecimal characters.',
+      );
+      expect(invalidEntropy, findsNothing);
+      await tester.ensureVisible(submit);
+      await tester.tap(submit);
+      await tester.pump();
+      expect(invalidEntropy, findsOneWidget);
+      expect(creator.calls, hasLength(1));
       await tester.enterText(
         find.widgetWithText(TextFormField, 'Entropy'),
         '0102030405060708090A0b0c0d0e0f10',

@@ -1,12 +1,12 @@
 import 'package:application/account.dart';
-import 'package:infrastructure/drift.dart';
+import 'package:infrastructure/sqlite.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'account_repository.g.dart';
 
 @Riverpod(keepAlive: true)
 AccountRepository accountRepository(Ref ref) {
-  final repository = DriftAccountRepository();
+  final repository = SqliteAccountRepository();
   ref.onDispose(repository.close);
   return repository;
 }

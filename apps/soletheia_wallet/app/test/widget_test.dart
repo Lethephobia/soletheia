@@ -99,7 +99,7 @@ void main() {
     expect(find.text('33/32'), findsOneWidget);
     expect(
       find.text('Enter exactly 32 hexadecimal characters.'),
-      findsOneWidget,
+      findsNothing,
     );
     await tester.tap(
       find.descendant(of: count, matching: find.byType(TextField)),
@@ -116,7 +116,7 @@ void main() {
     );
     expect(
       find.text('Enter exactly 64 hexadecimal characters.'),
-      findsOneWidget,
+      findsNothing,
     );
     tester.view.physicalSize = const Size(1280, 800);
     await tester.pumpAndSettle();
@@ -133,7 +133,7 @@ void main() {
     expect(find.text('33/64'), findsOneWidget);
     expect(
       tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
-      isNull,
+      isNotNull,
     );
     await tester.tap(find.byType(SwitchListTile));
     await tester.pumpAndSettle();
@@ -158,13 +158,7 @@ void main() {
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.view.resetPhysicalSize);
     final repository = TestAccountRepository();
-    await repository.save(
-      Account(
-        address: AccountAddress(Uint8List(32)),
-        mnemonicId: MnemonicId(Uint8List(16)),
-        derivationPath: DerivationPath.parse("m/44'/501'/0'/0'"),
-      ),
-    );
+    await repository.save(Account(address: AccountAddress(Uint8List(32))));
     final container = await accountTestContainer(repository: repository);
     await tester.pumpWidget(
       UncontrolledProviderScope(container: container, child: const App()),
@@ -172,6 +166,11 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(AccountShell), findsOneWidget);
     expect(find.byType(NavigationBar), findsOneWidget);
+    final tile = find.widgetWithText(
+      ListTile,
+      '11111111111111111111111111111111',
+    );
+    expect(tester.widget<ListTile>(tile).subtitle, isNull);
     final account = tester.element(find.byType(AccountListView));
     await tester.tap(find.byIcon(Icons.settings_outlined));
     await tester.pumpAndSettle();

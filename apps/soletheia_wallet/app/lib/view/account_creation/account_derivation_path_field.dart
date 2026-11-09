@@ -15,6 +15,7 @@ class AccountDerivationPathField extends ConsumerWidget {
     return TextFormField(
       initialValue: form.path,
       enabled: !form.isFormLocked,
+      keyboardType: TextInputType.visiblePassword,
       autocorrect: false,
       enableSuggestions: false,
       onChanged: viewModel.setPath,

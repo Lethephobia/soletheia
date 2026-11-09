@@ -1,0 +1,6 @@
+CREATE TABLE accounts (
+  address BLOB NOT NULL PRIMARY KEY,
+  mnemonic_id BLOB,
+  derivation_path TEXT,
+  CHECK ((mnemonic_id IS NULL) = (derivation_path IS NULL))
+) AS AccountRow;
