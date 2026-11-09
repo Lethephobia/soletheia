@@ -74,13 +74,9 @@
   "@accountCreationWordCountLabel": {
     "description": "Label for the BIP-39 mnemonic length selector."
   },
-  "accountCreationCustomEntropyLabel": "Custom entropy",
+  "accountCreationCustomEntropyLabel": "Custom entropy (optional)",
   "@accountCreationCustomEntropyLabel": {
-    "description": "Switch to supply hexadecimal entropy instead of random entropy."
-  },
-  "accountCreationEntropyLabel": "Entropy",
-  "@accountCreationEntropyLabel": {
-    "description": "Label for the custom BIP-39 entropy hexadecimal input."
+    "description": "Label for the optional hexadecimal entropy input."
   },
   "accountCreationSubmitLabel": "Create",
   "@accountCreationSubmitLabel": {
@@ -130,11 +126,11 @@
   "@mnemonicWordlistPortuguese": {
     "description": "Name of the Portuguese BIP-39 wordlist, independent of the app locale."
   },
-  "accountCreationEntropyHint": "{bits} bits · hexadecimal",
+  "accountCreationEntropyHint": "Leave blank for random entropy, or enter {length} hex digits.",
   "@accountCreationEntropyHint": {
     "description": "Required entropy size for the selected mnemonic length.",
     "placeholders": {
-      "bits": {
+      "length": {
         "type": "int"
       }
     }
@@ -160,7 +156,7 @@
       }
     }
   },
-  "accountCreationPassphraseLabel": "Passphrase",
+  "accountCreationPassphraseLabel": "Passphrase (optional)",
   "@accountCreationPassphraseLabel": {
     "description": "Label for the optional passphrase used in seed derivation."
   },

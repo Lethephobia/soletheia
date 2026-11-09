@@ -8,8 +8,6 @@ import 'entropy_validation_error.dart';
 class MnemonicCustomEntropyField extends ConsumerWidget {
   const MnemonicCustomEntropyField({super.key});
 
-  static const double _fieldSpacing = 24;
-  static const _animationDuration = Duration(milliseconds: 200);
   static const int _entropyLines = 3;
 
   @override
@@ -17,56 +15,31 @@ class MnemonicCustomEntropyField extends ConsumerWidget {
     final form = ref.watch(accountCreationViewModelProvider);
     final viewModel = ref.read(accountCreationViewModelProvider.notifier);
     final l10n = AppLocalizations.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SwitchListTile(
-          secondary: const Icon(Icons.tune),
-          title: Text(l10n.accountCreationCustomEntropyLabel),
-          value: form.isCustomEntropy,
-          onChanged: form.isFormLocked ? null : viewModel.setCustomEntropy,
+    return TextFormField(
+      initialValue: form.entropy,
+      enabled: !form.isFormLocked,
+      onChanged: viewModel.setEntropy,
+      minLines: _entropyLines,
+      maxLines: _entropyLines,
+      keyboardType: TextInputType.visiblePassword,
+      autocorrect: false,
+      enableSuggestions: false,
+      spellCheckConfiguration: const SpellCheckConfiguration.disabled(),
+      decoration: InputDecoration(
+        labelText: l10n.accountCreationCustomEntropyLabel,
+        counterText: l10n.accountCreationEntropyCounter(
+          form.entropy.characters.length,
+          form.hexLength,
         ),
-        AnimatedSize(
-          duration: _animationDuration,
-          alignment: Alignment.topCenter,
-          child: form.isCustomEntropy
-              ? Padding(
-                  padding: const EdgeInsets.only(top: _fieldSpacing),
-                  child: TextFormField(
-                    initialValue: form.entropy,
-                    enabled: !form.isFormLocked,
-                    onChanged: viewModel.setEntropy,
-                    minLines: _entropyLines,
-                    maxLines: _entropyLines,
-                    keyboardType: TextInputType.visiblePassword,
-                    autocorrect: false,
-                    enableSuggestions: false,
-                    spellCheckConfiguration:
-                        const SpellCheckConfiguration.disabled(),
-                    decoration: InputDecoration(
-                      labelText: l10n.accountCreationEntropyLabel,
-                      counterText: l10n.accountCreationEntropyCounter(
-                        form.entropy.characters.length,
-                        form.hexLength,
-                      ),
-                      errorText: switch (form.entropyError) {
-                        InvalidEntropyHex() =>
-                          l10n.accountCreationEntropyInvalidHex,
-                        InvalidEntropyLength(:final expectedLength) =>
-                          l10n.accountCreationEntropyInvalidLength(
-                            expectedLength,
-                          ),
-                        null => null,
-                      },
-                      helperText: l10n.accountCreationEntropyHint(
-                        form.entropyBits,
-                      ),
-                    ),
-                  ),
-                )
-              : const SizedBox.shrink(),
-        ),
-      ],
+        errorText: switch (form.entropyError) {
+          InvalidEntropyHex() => l10n.accountCreationEntropyInvalidHex,
+          InvalidEntropyLength(:final expectedLength) =>
+            l10n.accountCreationEntropyInvalidLength(expectedLength),
+          null => null,
+        },
+        helperMaxLines: 3,
+        helperText: l10n.accountCreationEntropyHint(form.hexLength),
+      ),
     );
   }
 }

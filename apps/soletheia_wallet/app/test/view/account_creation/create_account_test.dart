@@ -55,11 +55,8 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Create account'));
     await tester.pumpAndSettle();
-    final toggle = find.byType(SwitchListTile);
-    await tester.tap(toggle);
-    await tester.pumpAndSettle();
     await tester.enterText(
-      find.widgetWithText(TextFormField, 'Entropy'),
+      find.widgetWithText(TextFormField, 'Custom entropy (optional)'),
       'abcd',
     );
 
@@ -67,12 +64,11 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Create account'));
     await tester.pumpAndSettle();
-    expect(tester.widget<SwitchListTile>(toggle).value, isFalse);
-    await tester.tap(toggle);
-    await tester.pumpAndSettle();
     expect(
       tester
-          .widget<TextField>(find.widgetWithText(TextField, 'Entropy'))
+          .widget<TextField>(
+            find.widgetWithText(TextField, 'Custom entropy (optional)'),
+          )
           .controller!
           .text,
       isEmpty,
@@ -120,10 +116,13 @@ void main() {
       expect(tester.widget<FilledButton>(submit).onPressed, isNull);
       await tester.enterText(path, "m/44/501/7/0");
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'Passphrase'),
+        find.widgetWithText(TextFormField, 'Passphrase (optional)'),
         ' test ',
       );
-      await tester.tap(find.byType(SwitchListTile));
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Custom entropy (optional)'),
+        '0f',
+      );
       await tester.pumpAndSettle();
       final invalidEntropy = find.text(
         'Enter exactly 32 hexadecimal characters.',
@@ -136,8 +135,8 @@ void main() {
       expect(creator.calls, hasLength(1));
       final invalidHex = find.text('Use only hexadecimal digits (0–9, A–F).');
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'Entropy'),
-        '0g',
+        find.widgetWithText(TextFormField, 'Custom entropy (optional)'),
+        '   ',
       );
       await tester.pumpAndSettle();
       expect(invalidEntropy, findsNothing);
@@ -149,7 +148,7 @@ void main() {
       expect(invalidEntropy, findsNothing);
       expect(creator.calls, hasLength(1));
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'Entropy'),
+        find.widgetWithText(TextFormField, 'Custom entropy (optional)'),
         '0102030405060708090A0b0c0d0e0f10',
       );
       await tester.pumpAndSettle();
@@ -161,12 +160,8 @@ void main() {
           find.byWidgetPredicate((widget) => widget is DropdownMenu<dynamic>),
         );
         expect(menus.map((menu) => menu.enabled), [enabled, enabled]);
-        final toggle = tester.widget<SwitchListTile>(
-          find.byType(SwitchListTile),
-        );
-        expect(toggle.onChanged != null, enabled);
         final entropy = tester.widget<TextField>(
-          find.widgetWithText(TextField, 'Entropy'),
+          find.widgetWithText(TextField, 'Custom entropy (optional)'),
         );
         expect(entropy.enabled, enabled);
         expect(tester.widget<FilledButton>(submit).onPressed != null, enabled);

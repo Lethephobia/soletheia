@@ -29,14 +29,6 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
     }
   }
 
-  void setCustomEntropy(bool value) {
-    state = state.copyWith(
-      isCustomEntropy: value,
-      entropyError: null,
-      creation: null,
-    );
-  }
-
   void setEntropy(String value) {
     state = state.copyWith(entropy: value, entropyError: null, creation: null);
   }
@@ -52,7 +44,7 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
   Future<void> createAccount() async {
     if (!state.canSubmit) return;
     final pending = state;
-    if (pending.created == null && pending.isCustomEntropy) {
+    if (pending.created == null) {
       final error = pending.validateEntropy();
       if (error != null) {
         state = pending.copyWith(entropyError: error);
@@ -65,7 +57,7 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
     final result = await AsyncValue.guard(() async {
       var account = pending.created;
       if (account == null) {
-        final source = pending.isCustomEntropy
+        final source = pending.entropy.isNotEmpty
             ? MnemonicGenerationSource.entropy(_parseEntropy(pending))
             : MnemonicGenerationSource.random(pending.wordCount);
         account = await ref

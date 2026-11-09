@@ -13,7 +13,6 @@ abstract class AccountCreationViewState with _$AccountCreationViewState {
   const factory AccountCreationViewState({
     @Default(MnemonicWordlist.english) MnemonicWordlist wordlist,
     @Default(MnemonicWordCount.words12) MnemonicWordCount wordCount,
-    @Default(false) bool isCustomEntropy,
     @Default('') String entropy,
     EntropyValidationError? entropyError,
     @Default('') String passphrase,
@@ -32,8 +31,7 @@ abstract class AccountCreationViewState with _$AccountCreationViewState {
     }
   }
 
-  int get entropyBits => wordCount.entropyBytes * 8;
-  int get hexLength => entropyBits ~/ 4;
+  int get hexLength => wordCount.entropyBytes * 2;
 
   bool get isFormLocked => creation?.isLoading == true || created != null;
 
@@ -43,8 +41,9 @@ abstract class AccountCreationViewState with _$AccountCreationViewState {
   }
 
   EntropyValidationError? validateEntropy() {
+    if (entropy.isEmpty) return null;
     final hex = entropy.trim();
-    if (RegExp(r'[^0-9a-fA-F]').hasMatch(hex)) {
+    if (hex.isEmpty || RegExp(r'[^0-9a-fA-F]').hasMatch(hex)) {
       return const EntropyValidationError.invalidHex();
     }
     if (hex.length != hexLength) {

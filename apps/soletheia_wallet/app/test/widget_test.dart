@@ -86,21 +86,19 @@ void main() {
       const TextSelection(baseOffset: 0, extentOffset: 10),
     );
     expect(boxes.map((box) => box.top).toSet(), hasLength(1));
-    await tester.tap(find.byType(SwitchListTile));
-    await tester.pumpAndSettle();
-    expect(find.text('128 bits · hexadecimal'), findsOneWidget);
+    expect(
+      find.text('Leave blank for random entropy, or enter 32 hex digits.'),
+      findsOneWidget,
+    );
     expect(find.text('0/32'), findsOneWidget);
     final entropy = 'a' * 33;
     await tester.enterText(
-      find.widgetWithText(TextFormField, 'Entropy'),
+      find.widgetWithText(TextFormField, 'Custom entropy (optional)'),
       entropy,
     );
     await tester.pumpAndSettle();
     expect(find.text('33/32'), findsOneWidget);
-    expect(
-      find.text('Enter exactly 32 hexadecimal characters.'),
-      findsNothing,
-    );
+    expect(find.text('Enter exactly 32 hexadecimal characters.'), findsNothing);
     await tester.tap(
       find.descendant(of: count, matching: find.byType(TextField)),
     );
@@ -109,25 +107,26 @@ void main() {
     await tester.pumpAndSettle();
     expect(
       tester
-          .widget<TextField>(find.widgetWithText(TextField, 'Entropy'))
+          .widget<TextField>(
+            find.widgetWithText(TextField, 'Custom entropy (optional)'),
+          )
           .decoration
           ?.helperText,
-      '256 bits · hexadecimal',
+      'Leave blank for random entropy, or enter 64 hex digits.',
     );
-    expect(
-      find.text('Enter exactly 64 hexadecimal characters.'),
-      findsNothing,
-    );
+    expect(find.text('Enter exactly 64 hexadecimal characters.'), findsNothing);
     tester.view.physicalSize = const Size(1280, 800);
     await tester.pumpAndSettle();
     expect(tester.getSize(find.byType(AppBar)).width, 1280);
     expect(tester.getTopLeft(wordlist).dx, greaterThan(300));
     expect(
       tester
-          .widget<TextField>(find.widgetWithText(TextField, 'Entropy'))
+          .widget<TextField>(
+            find.widgetWithText(TextField, 'Custom entropy (optional)'),
+          )
           .decoration
           ?.helperText,
-      '256 bits · hexadecimal',
+      'Leave blank for random entropy, or enter 64 hex digits.',
     );
     expect(find.text(entropy), findsOneWidget);
     expect(find.text('33/64'), findsOneWidget);
@@ -135,12 +134,6 @@ void main() {
       tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
       isNotNull,
     );
-    await tester.tap(find.byType(SwitchListTile));
-    await tester.pumpAndSettle();
-    expect(find.text('Entropy'), findsNothing);
-    await tester.tap(find.byType(SwitchListTile));
-    await tester.pumpAndSettle();
-    expect(find.text(entropy), findsOneWidget);
     tester.view.physicalSize = const Size(320, 568);
     await tester.pumpAndSettle();
     expect(tester.getTopLeft(wordlist).dy, tester.getTopLeft(count).dy);
