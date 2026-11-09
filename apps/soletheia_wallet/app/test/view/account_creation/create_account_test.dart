@@ -207,9 +207,8 @@ void main() {
       expect(creator.calls, hasLength(2));
       expect(store.attempts, hasLength(2));
       expect(store.attempts.last, same(store.attempts.first));
-      expect(find.text('Accounts'), findsWidgets);
+      expect(find.text('Token'), findsWidgets);
       expect(find.widgetWithText(SnackBar, 'Account created.'), findsOneWidget);
-      expect(find.text('11111111111111111111111111111111'), findsOneWidget);
     },
   );
 }

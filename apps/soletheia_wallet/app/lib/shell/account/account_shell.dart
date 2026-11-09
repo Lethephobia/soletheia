@@ -15,15 +15,26 @@ class AccountShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final label = AppLocalizations.of(context).accountAddLabel;
     return AccountLayout(
       selectedIndex: navigationShell.currentIndex,
       onDestinationSelected: (index) => navigationShell.goBranch(index),
-      primaryAction: onAddAccount != null
-          ? FloatingActionButton(
-              onPressed: onAddAccount,
-              tooltip: AppLocalizations.of(context).accountAddLabel,
-              child: const Icon(Icons.add),
-            )
+      primaryActionBuilder: onAddAccount != null
+          ? ({required extended}) {
+              if (extended) {
+                return FloatingActionButton.extended(
+                  onPressed: onAddAccount,
+                  tooltip: label,
+                  icon: const Icon(Icons.add),
+                  label: Text(label),
+                );
+              }
+              return FloatingActionButton(
+                onPressed: onAddAccount,
+                tooltip: label,
+                child: const Icon(Icons.add),
+              );
+            }
           : null,
       child: navigationShell,
     );

@@ -41,7 +41,7 @@ class AccountCreationView extends ConsumerWidget {
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text(message)));
       if (next is AccountCreationSucceeded) {
-        const AccountListRoute().go(context);
+        const TokenRoute().go(context);
       }
     });
     return PopScope(

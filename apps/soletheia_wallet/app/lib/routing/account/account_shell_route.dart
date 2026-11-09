@@ -2,10 +2,10 @@ part of '../router.dart';
 
 @TypedStatefulShellRoute<AccountShellRoute>(
   branches: [
-    TypedStatefulShellBranch<AccountBranch>(
+    TypedStatefulShellBranch<TokenBranch>(
       routes: [
-        TypedGoRoute<AccountListRoute>(
-          path: '/accounts',
+        TypedGoRoute<TokenRoute>(
+          path: '/tokens',
           routes: [
             TypedRelativeGoRoute<AccountCreationRoute>(path: 'create-account'),
           ],
@@ -32,7 +32,7 @@ class AccountShellRoute extends StatefulShellRouteData {
   ) {
     return AccountShell(
       navigationShell: navigationShell,
-      onAddAccount: state.uri.path == const AccountListRoute().location
+      onAddAccount: state.uri.path == const TokenRoute().location
           ? () => const AccountCreationRoute().goRelative(context)
           : null,
     );

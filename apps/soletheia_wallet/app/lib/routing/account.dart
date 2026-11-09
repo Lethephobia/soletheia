@@ -1,7 +1,7 @@
 export 'router.dart'
     show
-        AccountBranch,
-        AccountListRoute,
+        TokenBranch,
+        TokenRoute,
         AccountShellRoute,
         SettingsBranch,
         SettingsRoute;

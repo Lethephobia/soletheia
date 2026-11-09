@@ -5,12 +5,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../account.dart';
 import '../shell/account.dart';
 import '../view/account_creation.dart';
-import '../view/account_list.dart';
+import '../view/token.dart';
 import '../view/onboarding.dart';
 import '../view/settings.dart';
 
-part 'account/account_branch.dart';
-part 'account/account_list_route.dart';
+part 'account/token_branch.dart';
+part 'account/token_route.dart';
 part 'account/account_shell_route.dart';
 part 'account/settings_branch.dart';
 part 'account/settings_route.dart';
@@ -27,7 +27,7 @@ GoRouter router(Ref ref) {
     navigatorKey: _rootNavigatorKey,
     initialLocation: ref.read(accountsProvider).requireValue.isEmpty
         ? const OnboardingRoute().location
-        : const AccountListRoute().location,
+        : const TokenRoute().location,
     routes: $appRoutes,
   );
   ref.onDispose(router.dispose);

@@ -4,28 +4,18 @@
   "@appTitle": {
     "description": "Application name. Keep the Soletheia brand name unchanged."
   },
-  "navigationAccountLabel": "Accounts",
-  "@navigationAccountLabel": {
-    "description": "Navigation bar and navigation rail label for the accounts destination."
+  "navigationTokenLabel": "Token",
+  "@navigationTokenLabel": {
+    "description": "Navigation bar and navigation rail label for the token destination."
   },
   "navigationSettingsLabel": "Settings",
   "@navigationSettingsLabel": {
     "description": "Navigation bar and navigation rail label for the settings destination."
   },
   "accountAddLabel": "Add account",
-  "@accountAddLabel": {"description": "Tooltip for the accounts branch action that opens account setup."},
-  "accountListTitle": "Accounts",
-  "@accountListTitle": {
-    "description": "App bar title of the account list screen."
-  },
-  "accountListLoadFailure": "Could not load accounts.",
-  "@accountListLoadFailure": {
-    "description": "Shown when the stored accounts cannot be read."
-  },
-  "accountListEmptyMessage": "No accounts",
-  "@accountListEmptyMessage": {
-    "description": "Message shown in the account list when no wallet accounts have been added."
-  },
+  "@accountAddLabel": {"description": "Label for the action that opens account creation."},
+  "tokenTitle": "Token",
+  "@tokenTitle": {"description": "App bar title of the token screen."},
   "settingsTitle": "Settings",
   "@settingsTitle": {
     "description": "App bar title of the settings screen."

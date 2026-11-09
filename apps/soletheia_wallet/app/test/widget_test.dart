@@ -159,12 +159,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.byType(AccountShell), findsOneWidget);
     expect(find.byType(NavigationBar), findsOneWidget);
-    final tile = find.widgetWithText(
-      ListTile,
-      '11111111111111111111111111111111',
-    );
-    expect(tester.widget<ListTile>(tile).subtitle, isNull);
-    final account = tester.element(find.byType(AccountListView));
+    expect(find.text('Accounts'), findsNothing);
+    final token = tester.element(find.byType(TokenView));
     await tester.tap(find.byIcon(Icons.settings_outlined));
     await tester.pumpAndSettle();
     final settings = tester.element(find.byType(SettingsView));
@@ -183,21 +179,56 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.element(find.byType(SettingsView)), same(settings));
     expect(find.byType(NavigationRail), findsOneWidget);
+    final menuCenter = tester.getCenter(find.byTooltip('Expand navigation'));
     await tester.tap(find.byTooltip('Expand navigation'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 80));
+    expect(tester.getCenter(find.byTooltip('Collapse navigation')), menuCenter);
     await tester.pumpAndSettle();
     expect(
       tester.widget<NavigationRail>(find.byType(NavigationRail)).extended,
       isTrue,
     );
+    expect(tester.getCenter(find.byTooltip('Collapse navigation')), menuCenter);
+    final railLabels = [
+      for (final text in ['Token', 'Settings'])
+        find.descendant(
+          of: find.byType(NavigationRail),
+          matching: find.text(text),
+        ),
+    ];
+    final heights = [
+      for (final label in railLabels) tester.getSize(label).height,
+    ];
     await tester.tap(find.byTooltip('Collapse navigation'));
+    await tester.pump();
+    for (var frame = 0; frame < 9; frame++) {
+      await tester.pump(const Duration(milliseconds: 20));
+      expect([
+        for (final label in railLabels) tester.getSize(label).height,
+      ], heights);
+    }
     await tester.pumpAndSettle();
     expect(
       tester.widget<NavigationRail>(find.byType(NavigationRail)).extended,
       isFalse,
     );
-    await tester.tap(find.byIcon(Icons.account_circle_outlined));
+    for (final label in railLabels) {
+      expect(label.hitTestable(), findsOneWidget);
+    }
+    await tester.tap(find.byIcon(Icons.token_outlined));
     await tester.pumpAndSettle();
-    expect(tester.element(find.byType(AccountListView)), same(account));
+    expect(tester.element(find.byType(TokenView)), same(token));
+    final fab = find.byType(FloatingActionButton);
+    final collapsedWidth = tester.getSize(fab).width;
+    expect(find.text('Add account'), findsNothing);
+    await tester.tap(find.byTooltip('Expand navigation'));
+    await tester.pumpAndSettle();
+    expect(
+      find.widgetWithText(FloatingActionButton, 'Add account'),
+      findsOneWidget,
+    );
+    expect(tester.getSize(fab).width, greaterThan(collapsedWidth));
     await tester.tap(find.byTooltip('Add account'));
     await tester.pumpAndSettle();
     expect(find.byType(AccountCreationView), findsOneWidget);
@@ -205,7 +236,7 @@ void main() {
     expect(find.byTooltip('Add account'), findsNothing);
     await tester.tap(find.byTooltip('Back'));
     await tester.pumpAndSettle();
-    expect(tester.element(find.byType(AccountListView)), same(account));
+    expect(tester.element(find.byType(TokenView)), same(token));
     expect(tester.takeException(), isNull);
   });
 
