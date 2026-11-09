@@ -36,9 +36,11 @@ class _Creator implements AccountCreator {
 
 class _FailingRepository extends TestAccountRepository {
   bool fail = true;
+  final attempts = <Account>[];
 
   @override
   Future<void> save(Account account) async {
+    attempts.add(account);
     if (fail) throw StateError('storage unavailable');
     await super.save(account);
   }
@@ -106,7 +108,10 @@ void main() {
       creator.response.completeError(StateError('test failure'));
       await tester.pumpAndSettle();
       expect(
-        find.text('Could not create the account. Try again.'),
+        find.widgetWithText(
+          SnackBar,
+          'Could not create the account. Try again.',
+        ),
         findsOneWidget,
       );
 
@@ -188,7 +193,10 @@ void main() {
       creator.response.complete(created);
       await tester.pumpAndSettle();
       expect(
-        find.text('Keys saved. Retry saving the account details.'),
+        find.widgetWithText(
+          SnackBar,
+          'Keys saved. Retry saving the account details.',
+        ),
         findsOneWidget,
       );
       store.fail = false;
@@ -197,7 +205,10 @@ void main() {
       await tester.tap(retry);
       await tester.pumpAndSettle();
       expect(creator.calls, hasLength(2));
+      expect(store.attempts, hasLength(2));
+      expect(store.attempts.last, same(store.attempts.first));
       expect(find.text('Accounts'), findsWidgets);
+      expect(find.widgetWithText(SnackBar, 'Account created.'), findsOneWidget);
       expect(find.text('11111111111111111111111111111111'), findsOneWidget);
     },
   );

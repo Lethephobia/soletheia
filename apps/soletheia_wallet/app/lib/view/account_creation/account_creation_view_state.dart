@@ -1,7 +1,7 @@
 import 'package:application/application.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'account_creation_status.dart';
 import 'entropy_validation_error.dart';
 
 part 'account_creation_view_state.freezed.dart';
@@ -18,17 +18,17 @@ abstract class AccountCreationViewState with _$AccountCreationViewState {
     @Default('') String passphrase,
     @Default(AccountCreationViewState.defaultPath) String path,
     DerivationPathException? pathError,
-    CreatedAccount? created,
-    AsyncValue<CreatedAccount>? creation,
+    @Default(AccountCreationStatus.idle()) AccountCreationStatus status,
   }) = _AccountCreationViewState;
 
   static const defaultPath = "m/44'/501'/0'/0'";
 
   int get hexLength => wordCount.entropyBytes * 2;
 
-  bool get isFormLocked => creation?.isLoading == true || created != null;
+  bool get isFormLocked =>
+      status is! AccountCreationIdle && status is! AccountCreationFailed;
 
-  bool get canSubmit => creation?.isLoading != true;
+  bool get canSubmit => !isFormLocked || status is AccountSaveFailed;
 
   EntropyValidationError? validateEntropy() {
     if (entropy.isEmpty) return null;

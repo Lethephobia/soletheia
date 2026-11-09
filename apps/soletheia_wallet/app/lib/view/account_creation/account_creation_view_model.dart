@@ -4,6 +4,7 @@ import 'package:application/application.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../account.dart';
+import 'account_creation_status.dart';
 import 'account_creation_view_state.dart';
 
 part 'account_creation_view_model.g.dart';
@@ -14,39 +15,58 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
   AccountCreationViewState build() => const AccountCreationViewState();
 
   void selectWordlist(MnemonicWordlist? value) {
-    if (value != null) {
-      state = state.copyWith(wordlist: value, creation: null);
+    if (!state.isFormLocked && value != null) {
+      state = state.copyWith(
+        wordlist: value,
+        status: const AccountCreationStatus.idle(),
+      );
     }
   }
 
   void selectWordCount(MnemonicWordCount? value) {
-    if (value != null) {
+    if (!state.isFormLocked && value != null) {
       state = state.copyWith(
         wordCount: value,
         entropyError: null,
-        creation: null,
+        status: const AccountCreationStatus.idle(),
       );
     }
   }
 
   void setEntropy(String value) {
-    state = state.copyWith(entropy: value, entropyError: null, creation: null);
+    if (state.isFormLocked) return;
+    state = state.copyWith(
+      entropy: value,
+      entropyError: null,
+      status: const AccountCreationStatus.idle(),
+    );
   }
 
   void setPassphrase(String value) {
-    state = state.copyWith(passphrase: value, creation: null);
+    if (state.isFormLocked) return;
+    state = state.copyWith(
+      passphrase: value,
+      status: const AccountCreationStatus.idle(),
+    );
   }
 
   void setPath(String value) {
-    state = state.copyWith(path: value, pathError: null, creation: null);
+    if (state.isFormLocked) return;
+    state = state.copyWith(
+      path: value,
+      pathError: null,
+      status: const AccountCreationStatus.idle(),
+    );
   }
 
   Future<void> createAccount() async {
     if (!state.canSubmit) return;
     final pending = state;
-    final entropyError = pending.created == null
-        ? pending.validateEntropy()
-        : null;
+    if (pending.status case AccountSaveFailed(:final account)) {
+      await _saveAccount(ref.read(accountRepositoryProvider), account);
+      return;
+    }
+    final entropyError = pending.validateEntropy();
     final DerivationPath path;
     try {
       path = DerivationPath.parse(pending.path);
@@ -59,38 +79,61 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
       return;
     }
     final repository = ref.read(accountRepositoryProvider);
-    state = pending.copyWith(creation: const AsyncLoading());
-    final result = await AsyncValue.guard(() async {
-      var account = pending.created;
-      if (account == null) {
-        final source = pending.entropy.isNotEmpty
-            ? MnemonicGenerationSource.entropy(_parseEntropy(pending))
-            : MnemonicGenerationSource.random(pending.wordCount);
-        account = await ref
-            .read(accountCreatorProvider)
-            .create(
-              wordlist: pending.wordlist,
-              source: source,
-              passphrase: MnemonicPassphrase(pending.passphrase),
-              derivationPath: path,
-            );
-        if (ref.mounted) {
-          state = state.copyWith(created: account, passphrase: '', entropy: '');
-        }
-      }
-      await repository.save(
-        Account(
-          address: account.address,
-          mnemonicDerivation: MnemonicDerivation(
-            mnemonicId: account.mnemonicId,
+    state = pending.copyWith(status: const AccountCreationStatus.creating());
+    final CreatedAccount created;
+    try {
+      final source = pending.entropy.isNotEmpty
+          ? MnemonicGenerationSource.entropy(_parseEntropy(pending))
+          : MnemonicGenerationSource.random(pending.wordCount);
+      created = await ref
+          .read(accountCreatorProvider)
+          .create(
+            wordlist: pending.wordlist,
+            source: source,
+            passphrase: MnemonicPassphrase(pending.passphrase),
             derivationPath: path,
-          ),
-        ),
-      );
-      return account;
-    });
+          );
+    } catch (_) {
+      if (ref.mounted) {
+        state = state.copyWith(
+          status: const AccountCreationStatus.creationFailed(),
+        );
+      }
+      return;
+    }
+    final account = Account(
+      address: created.address,
+      mnemonicDerivation: MnemonicDerivation(
+        mnemonicId: created.mnemonicId,
+        derivationPath: path,
+      ),
+    );
+    await _saveAccount(repository, account);
+  }
+
+  Future<void> _saveAccount(
+    AccountRepository repository,
+    Account account,
+  ) async {
     if (ref.mounted) {
-      state = state.copyWith(creation: result);
+      state = state.copyWith(
+        status: AccountCreationStatus.saving(account),
+        passphrase: '',
+        entropy: '',
+      );
+    }
+    try {
+      await repository.save(account);
+    } catch (_) {
+      if (ref.mounted) {
+        state = state.copyWith(
+          status: AccountCreationStatus.saveFailed(account),
+        );
+      }
+      return;
+    }
+    if (ref.mounted) {
+      state = state.copyWith(status: const AccountCreationStatus.succeeded());
     }
   }
 

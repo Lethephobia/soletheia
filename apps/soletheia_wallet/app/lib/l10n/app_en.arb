@@ -82,6 +82,10 @@
   "@accountCreationSubmitLabel": {
     "description": "Button to create the account using the selected options."
   },
+  "accountCreationSuccess": "Account created.",
+  "@accountCreationSuccess": {
+    "description": "Confirmation shown after the account and its details have been saved."
+  },
   "accountCreationFailure": "Could not create the account. Try again.",
   "@accountCreationFailure": {
     "description": "Error displayed when account creation fails."

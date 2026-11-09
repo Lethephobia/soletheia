@@ -4,6 +4,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../l10n.dart';
 import '../../responsive.dart';
 import '../../routing.dart';
+import 'account_creation_status.dart';
 import 'account_creation_view_model.dart';
 import 'account_derivation_path_field.dart';
 import 'mnemonic_custom_entropy_field.dart';
@@ -25,14 +26,24 @@ class AccountCreationView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final form = ref.watch(accountCreationViewModelProvider);
     final l10n = AppLocalizations.of(context);
-    ref.listen(
-      accountCreationViewModelProvider.select((form) => form.creation),
-      (_, next) {
-        if (next is AsyncData) {
-          const AccountListRoute().go(context);
-        }
-      },
-    );
+    ref.listen(accountCreationViewModelProvider.select((form) => form.status), (
+      _,
+      next,
+    ) {
+      final message = switch (next) {
+        AccountCreationSucceeded() => l10n.accountCreationSuccess,
+        AccountCreationFailed() => l10n.accountCreationFailure,
+        AccountSaveFailed() => l10n.accountCreationSaveFailure,
+        _ => null,
+      };
+      if (message == null) return;
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(message)));
+      if (next is AccountCreationSucceeded) {
+        const AccountListRoute().go(context);
+      }
+    });
     return PopScope(
       canPop: !form.isFormLocked,
       child: Scaffold(
@@ -81,20 +92,14 @@ class AccountCreationView extends ConsumerWidget {
                                     .createAccount
                               : null,
                           child: Text(
-                            form.created == null
-                                ? l10n.accountCreationSubmitLabel
-                                : l10n.accountCreationSaveRetry,
+                            form.status is AccountSaveFailed
+                                ? l10n.accountCreationSaveRetry
+                                : l10n.accountCreationSubmitLabel,
                           ),
                         ),
                       ),
-                      if (form.creation case AsyncLoading())
+                      if (form.status case AccountCreating() || AccountSaving())
                         const LinearProgressIndicator(),
-                      if (form.creation case AsyncError())
-                        Text(
-                          form.created == null
-                              ? l10n.accountCreationFailure
-                              : l10n.accountCreationSaveFailure,
-                        ),
                     ],
                   ),
                 ),
