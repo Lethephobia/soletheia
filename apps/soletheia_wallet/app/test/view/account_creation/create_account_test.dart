@@ -46,7 +46,7 @@ void main() {
   testWidgets('reopening the creation screen resets its form', (tester) async {
     await tester.pumpWidget(const ProviderScope(child: App()));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Create new account'));
+    await tester.tap(find.text('Create account'));
     await tester.pumpAndSettle();
     final toggle = find.byType(SwitchListTile);
     await tester.tap(toggle);
@@ -55,7 +55,7 @@ void main() {
 
     await tester.pageBack();
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Create new account'));
+    await tester.tap(find.text('Create account'));
     await tester.pumpAndSettle();
     expect(tester.widget<SwitchListTile>(toggle).value, isFalse);
     await tester.tap(toggle);
@@ -81,7 +81,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Create new account'));
+      await tester.tap(find.text('Create account'));
       await tester.pumpAndSettle();
       final submit = find.widgetWithText(FilledButton, 'Create account');
       await tester.ensureVisible(submit);
@@ -107,7 +107,7 @@ void main() {
       expect(tester.widget<FilledButton>(submit).onPressed, isNull);
       await tester.enterText(path, "m/44/501/7/0");
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'BIP-39 passphrase (optional)'),
+        find.widgetWithText(TextFormField, 'Passphrase'),
         ' test ',
       );
       await tester.tap(find.byType(SwitchListTile));

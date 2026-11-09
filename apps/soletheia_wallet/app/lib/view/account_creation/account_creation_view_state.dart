@@ -11,9 +11,9 @@ abstract class AccountCreationViewState with _$AccountCreationViewState {
   const factory AccountCreationViewState({
     @Default(MnemonicWordlist.english) MnemonicWordlist wordlist,
     @Default(MnemonicWordCount.words12) MnemonicWordCount wordCount,
-    @Default(false) bool customEntropy,
+    @Default(false) bool isCustomEntropy,
     @Default('') String entropy,
-    @Default("") String passphrase,
+    @Default('') String passphrase,
     @Default(AccountCreationViewState.defaultPath) String path,
     CreatedAccount? created,
     AsyncValue<CreatedAccount>? creation,
@@ -38,7 +38,7 @@ abstract class AccountCreationViewState with _$AccountCreationViewState {
     return creation?.isLoading != true &&
         (created != null ||
             (parsedPath != null &&
-                (!customEntropy || isValidEntropy(entropy))));
+                (!isCustomEntropy || isValidEntropy(entropy))));
   }
 
   bool isValidEntropy(String? value) {

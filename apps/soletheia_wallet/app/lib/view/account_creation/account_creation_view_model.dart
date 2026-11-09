@@ -26,7 +26,7 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
   }
 
   void setCustomEntropy(bool value) {
-    state = state.copyWith(customEntropy: value, creation: null);
+    state = state.copyWith(isCustomEntropy: value, creation: null);
   }
 
   void setEntropy(String value) {
@@ -50,7 +50,7 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
     final result = await AsyncValue.guard(() async {
       var account = pending.created;
       if (account == null) {
-        final source = pending.customEntropy
+        final source = pending.isCustomEntropy
             ? MnemonicGenerationSource.entropy(_parseEntropy(pending))
             : MnemonicGenerationSource.random(pending.wordCount);
         account = await ref

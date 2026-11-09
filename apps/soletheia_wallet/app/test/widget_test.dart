@@ -20,7 +20,7 @@ void main() {
     expect(find.byTooltip('Back'), findsNothing);
     expect(find.byType(NavigationBar), findsNothing);
     expect(find.byType(NavigationRail), findsNothing);
-    expect(find.text('Create new account'), findsOneWidget);
+    expect(find.text('Create account'), findsOneWidget);
     expect(find.text('Import mnemonic'), findsOneWidget);
     expect(find.text('Import private key'), findsOneWidget);
     expect(find.text('BIP-39 mnemonic'), findsNWidgets(2));
@@ -60,7 +60,7 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     await tester.pumpWidget(const ProviderScope(child: App()));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Create new account'));
+    await tester.tap(find.text('Create account'));
     await tester.pumpAndSettle();
     expect(find.byType(AccountCreationView), findsOneWidget);
     expect(tester.getSize(find.byType(AppBar)).width, 390);
@@ -200,7 +200,7 @@ void main() {
     dispatcher.localesTestValue = [const Locale('ja', 'JP')];
     await tester.pumpWidget(const ProviderScope(child: App()));
     await tester.pumpAndSettle();
-    expect(find.text('Create new account'), findsOneWidget);
+    expect(find.text('Create account'), findsOneWidget);
     expect(
       Localizations.localeOf(tester.element(find.byType(OnboardingView))),
       const Locale('en'),
@@ -213,7 +213,7 @@ void main() {
     for (final locale in [const Locale('en', 'US'), const Locale('fr', 'FR')]) {
       dispatcher.localesTestValue = [locale];
       await tester.pumpAndSettle();
-      expect(find.text('Create new account'), findsOneWidget);
+      expect(find.text('Create account'), findsOneWidget);
     }
   });
 }

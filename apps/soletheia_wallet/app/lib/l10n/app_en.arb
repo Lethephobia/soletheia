@@ -34,7 +34,7 @@
   "@navigationCollapseLabel": {
     "description": "Tooltip for collapsing the navigation rail."
   },
-  "onboardingCreateAccountLabel": "Create new account",
+  "onboardingCreateAccountLabel": "Create account",
   "@onboardingCreateAccountLabel": {
     "description": "Label of the onboarding action that creates an account with a new mnemonic."
   },
@@ -58,7 +58,7 @@
   "@onboardingImportPrivateKeyDescription": {
     "description": "Key type for the planned private key import flow."
   },
-  "accountCreationTitle": "Create new account",
+  "accountCreationTitle": "Create account",
   "@accountCreationTitle": {
     "description": "App bar title of the account creation screen."
   },
@@ -144,7 +144,7 @@
       }
     }
   },
-  "accountCreationPassphraseLabel": "BIP-39 passphrase (optional)",
+  "accountCreationPassphraseLabel": "Passphrase",
   "@accountCreationPassphraseLabel": {
     "description": "Label for the optional passphrase used in seed derivation."
   },

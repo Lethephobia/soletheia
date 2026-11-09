@@ -23,13 +23,13 @@ class MnemonicCustomEntropyField extends ConsumerWidget {
         SwitchListTile(
           secondary: const Icon(Icons.tune),
           title: Text(l10n.accountCreationCustomEntropyLabel),
-          value: form.customEntropy,
+          value: form.isCustomEntropy,
           onChanged: form.isFormLocked ? null : viewModel.setCustomEntropy,
         ),
         AnimatedSize(
           duration: _animationDuration,
           alignment: Alignment.topCenter,
-          child: form.customEntropy
+          child: form.isCustomEntropy
               ? Padding(
                   padding: const EdgeInsets.only(top: _fieldSpacing),
                   child: TextFormField(
