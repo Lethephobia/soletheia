@@ -9,7 +9,7 @@ import '../../lib.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `clone`, `eq`, `fmt`, `hash`
-// These functions are ignored (category: IgnoreBecauseExplicitAttribute): `new`, `value`
+// These functions are ignored (category: IgnoreBecauseExplicitAttribute): `default`, `new`, `value`
 
 class MnemonicId {
   final U8Array16 value;

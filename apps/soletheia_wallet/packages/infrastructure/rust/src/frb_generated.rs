@@ -475,9 +475,6 @@ impl SseDecode for crate::application::storage::mnemonic_store_error::MnemonicSt
                 return crate::application::storage::mnemonic_store_error::MnemonicStoreError::AlreadyExists;
             }
             1 => {
-                return crate::application::storage::mnemonic_store_error::MnemonicStoreError::IdentifierGeneration;
-            }
-            2 => {
                 let mut var_field0 = <i32>::sse_decode(deserializer);
                 return crate::application::storage::mnemonic_store_error::MnemonicStoreError::Keychain(var_field0);
             }
@@ -882,8 +879,7 @@ impl flutter_rust_bridge::IntoDart
 {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         match self {crate::application::storage::mnemonic_store_error::MnemonicStoreError::AlreadyExists => { [0.into_dart()].into_dart() }
-crate::application::storage::mnemonic_store_error::MnemonicStoreError::IdentifierGeneration => { [1.into_dart()].into_dart() }
-crate::application::storage::mnemonic_store_error::MnemonicStoreError::Keychain(field0) => { [2.into_dart(),
+crate::application::storage::mnemonic_store_error::MnemonicStoreError::Keychain(field0) => { [1.into_dart(),
 field0.into_into_dart().into_dart()].into_dart() }
  _ => { unimplemented!(""); }}
     }
@@ -1149,8 +1145,7 @@ impl SseEncode for crate::application::storage::mnemonic_store_error::MnemonicSt
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         match self {crate::application::storage::mnemonic_store_error::MnemonicStoreError::AlreadyExists => { <i32>::sse_encode(0, serializer);  }
-crate::application::storage::mnemonic_store_error::MnemonicStoreError::IdentifierGeneration => { <i32>::sse_encode(1, serializer);  }
-crate::application::storage::mnemonic_store_error::MnemonicStoreError::Keychain(field0) => { <i32>::sse_encode(2, serializer); <i32>::sse_encode(field0, serializer);
+crate::application::storage::mnemonic_store_error::MnemonicStoreError::Keychain(field0) => { <i32>::sse_encode(1, serializer); <i32>::sse_encode(field0, serializer);
  }
  _ => { unimplemented!(""); }}
     }

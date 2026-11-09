@@ -47,9 +47,7 @@ impl KeychainMnemonicStore {
 
 impl MnemonicStore for KeychainMnemonicStore {
     fn save_mnemonic(&self, mnemonic: &Mnemonic) -> Result<MnemonicId, MnemonicStoreError> {
-        let mut bytes = [0; 16];
-        getrandom::fill(&mut bytes).map_err(|_| MnemonicStoreError::IdentifierGeneration)?;
-        let id = MnemonicId::new(bytes);
+        let id = MnemonicId::new();
         KeychainItem::insert(
             Self::SERVICE,
             &Self::account_name(id),

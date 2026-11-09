@@ -15,6 +15,7 @@ getrandom = { version = "0.4", features = ["std"] }
 solana-derivation-path = "3.0.0"
 solana-keypair = { version = "4.0.0", features = ["seed-derivable"] }
 thiserror = "2"
+uuid = { version = "1", features = ["v4"] }
 zeroize = "1"
 
 [target.'cfg(any(target_os = "ios", target_os = "macos"))'.dependencies]

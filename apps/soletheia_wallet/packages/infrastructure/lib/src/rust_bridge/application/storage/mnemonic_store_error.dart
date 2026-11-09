@@ -15,8 +15,6 @@ sealed class MnemonicStoreError with _$MnemonicStoreError {
 
   const factory MnemonicStoreError.alreadyExists() =
       MnemonicStoreError_AlreadyExists;
-  const factory MnemonicStoreError.identifierGeneration() =
-      MnemonicStoreError_IdentifierGeneration;
   const factory MnemonicStoreError.keychain(int field0) =
       MnemonicStoreError_Keychain;
 }

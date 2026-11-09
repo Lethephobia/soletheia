@@ -45,7 +45,9 @@ mod tests {
     impl MnemonicStore for &TestMnemonics {
         fn save_mnemonic(&self, mnemonic: &Mnemonic) -> Result<MnemonicId, MnemonicStoreError> {
             assert!(mnemonic.words().last().unwrap().value() == "about");
-            let id = MnemonicId::new([self.next.get(); 16]);
+            let id = MnemonicId {
+                value: [self.next.get(); 16],
+            };
             self.next.set(self.next.get() + 1);
             if self.entries.borrow_mut().insert(id) {
                 Ok(id)
@@ -143,7 +145,7 @@ mod tests {
     #[test]
     fn mnemonic_insert_failure_preserves_existing_entry_and_skips_keypair_save() {
         let mnemonics = TestMnemonics::default();
-        let existing = MnemonicId::new([0; 16]);
+        let existing = MnemonicId { value: [0; 16] };
         mnemonics.entries.borrow_mut().insert(existing);
         let creator = DefaultAccountCreator::new(
             Bip39MnemonicGenerator,

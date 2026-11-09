@@ -616,8 +616,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case 0:
         return MnemonicStoreError_AlreadyExists();
       case 1:
-        return MnemonicStoreError_IdentifierGeneration();
-      case 2:
         return MnemonicStoreError_Keychain(dco_decode_i_32(raw[1]));
       default:
         throw Exception("unreachable");
@@ -949,8 +947,6 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       case 0:
         return MnemonicStoreError_AlreadyExists();
       case 1:
-        return MnemonicStoreError_IdentifierGeneration();
-      case 2:
         var var_field0 = sse_decode_i_32(deserializer);
         return MnemonicStoreError_Keychain(var_field0);
       default:
@@ -1295,10 +1291,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     switch (self) {
       case MnemonicStoreError_AlreadyExists():
         sse_encode_i_32(0, serializer);
-      case MnemonicStoreError_IdentifierGeneration():
-        sse_encode_i_32(1, serializer);
       case MnemonicStoreError_Keychain(field0: final field0):
-        sse_encode_i_32(2, serializer);
+        sse_encode_i_32(1, serializer);
         sse_encode_i_32(field0, serializer);
     }
   }
