@@ -45,7 +45,7 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
     if (!state.canSubmit) return;
     final pending = state;
     final path = pending.parsedPath!;
-    final catalog = ref.read(accountCatalogProvider.notifier);
+    final repository = ref.read(accountRepositoryProvider);
     state = pending.copyWith(creation: const AsyncLoading());
     final result = await AsyncValue.guard(() async {
       var account = pending.created;
@@ -65,7 +65,13 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
           state = state.copyWith(created: account, passphrase: '', entropy: '');
         }
       }
-      await catalog.save(AccountMetadata(account, path));
+      await repository.save(
+        Account(
+          address: account.address,
+          mnemonicId: account.mnemonicId,
+          derivationPath: path,
+        ),
+      );
       return account;
     });
     if (ref.mounted) {

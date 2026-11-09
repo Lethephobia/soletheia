@@ -25,7 +25,7 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 GoRouter router(Ref ref) {
   final router = GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: ref.read(accountCatalogProvider).isEmpty
+    initialLocation: ref.read(accountsProvider).requireValue.isEmpty
         ? const OnboardingRoute().location
         : const AccountListRoute().location,
     routes: $appRoutes,

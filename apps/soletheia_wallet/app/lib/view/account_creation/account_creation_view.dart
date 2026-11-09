@@ -67,9 +67,9 @@ class AccountCreationView extends ConsumerWidget {
                           ),
                         ],
                       ),
-                      const AccountDerivationPathField(),
-                      const MnemonicPassphraseField(),
                       const MnemonicCustomEntropyField(),
+                      const MnemonicPassphraseField(),
+                      const AccountDerivationPathField(),
                       Align(
                         alignment: Alignment.centerRight,
                         child: FilledButton(

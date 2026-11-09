@@ -11,6 +11,8 @@ Future<void> main() async {
   initializeFonts();
   await initializeRust();
   final container = ProviderContainer();
-  await container.read(accountCatalogProvider.notifier).load();
+  final subscription = container.listen(accountsProvider.future, (_, _) {});
+  await subscription.read();
+  subscription.close();
   runApp(UncontrolledProviderScope(container: container, child: const App()));
 }

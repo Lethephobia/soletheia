@@ -1,4 +1,6 @@
-import 'package:application/mnemonic.dart';
+import 'dart:typed_data';
+
+import 'package:application/application.dart';
 import 'package:flutter/rendering.dart' show RenderParagraph;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,11 +10,18 @@ import 'package:soletheia/routing.dart';
 import 'package:soletheia/shell.dart';
 import 'package:soletheia/view.dart';
 
+import 'support/account_test_container.dart';
+
 void main() {
   testWidgets('starts in onboarding without account navigation', (
     tester,
   ) async {
-    await tester.pumpWidget(const ProviderScope(child: App()));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: await accountTestContainer(),
+        child: const App(),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.byType(OnboardingView), findsOneWidget);
     expect(find.byType(AccountShell), findsNothing);
@@ -58,7 +67,12 @@ void main() {
     tester.view.physicalSize = const Size(390, 844);
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.view.resetPhysicalSize);
-    await tester.pumpWidget(const ProviderScope(child: App()));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: await accountTestContainer(),
+        child: const App(),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('Create account'));
     await tester.pumpAndSettle();
@@ -77,7 +91,10 @@ void main() {
     expect(find.text('128 bits · hexadecimal'), findsOneWidget);
     expect(find.text('0/32'), findsOneWidget);
     final entropy = 'a' * 33;
-    await tester.enterText(find.byType(TextFormField).last, entropy);
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Entropy'),
+      entropy,
+    );
     await tester.pumpAndSettle();
     expect(find.text('33/32'), findsOneWidget);
     expect(
@@ -92,7 +109,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(
       tester
-          .widget<TextField>(find.byType(TextField).last)
+          .widget<TextField>(find.widgetWithText(TextField, 'Entropy'))
           .decoration
           ?.helperText,
       '256 bits · hexadecimal',
@@ -107,7 +124,7 @@ void main() {
     expect(tester.getTopLeft(wordlist).dx, greaterThan(300));
     expect(
       tester
-          .widget<TextField>(find.byType(TextField).last)
+          .widget<TextField>(find.widgetWithText(TextField, 'Entropy'))
           .decoration
           ?.helperText,
       '256 bits · hexadecimal',
@@ -140,9 +157,15 @@ void main() {
     tester.view.physicalSize = const Size(390, 844);
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.view.resetPhysicalSize);
-    final container = ProviderContainer();
-    addTearDown(container.dispose);
-    container.read(routerProvider).go(const AccountListRoute().location);
+    final repository = TestAccountRepository();
+    await repository.save(
+      Account(
+        address: AccountAddress(Uint8List(32)),
+        mnemonicId: MnemonicId(Uint8List(16)),
+        derivationPath: DerivationPath.parse("m/44'/501'/0'/0'"),
+      ),
+    );
+    final container = await accountTestContainer(repository: repository);
     await tester.pumpWidget(
       UncontrolledProviderScope(container: container, child: const App()),
     );
@@ -198,7 +221,12 @@ void main() {
     final dispatcher = tester.binding.platformDispatcher;
     addTearDown(dispatcher.clearLocalesTestValue);
     dispatcher.localesTestValue = [const Locale('ja', 'JP')];
-    await tester.pumpWidget(const ProviderScope(child: App()));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: await accountTestContainer(),
+        child: const App(),
+      ),
+    );
     await tester.pumpAndSettle();
     expect(find.text('Create account'), findsOneWidget);
     expect(

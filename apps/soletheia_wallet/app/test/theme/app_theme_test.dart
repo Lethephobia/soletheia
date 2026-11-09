@@ -5,6 +5,8 @@ import 'package:material_ui/material_ui.dart';
 import 'package:soletheia/app.dart';
 import 'package:soletheia/view.dart';
 
+import '../support/account_test_container.dart';
+
 void main() {
   testWidgets('stays dark regardless of system brightness', (tester) async {
     final allowRuntimeFetching = GoogleFonts.config.allowRuntimeFetching;
@@ -16,7 +18,12 @@ void main() {
     addTearDown(dispatcher.clearPlatformBrightnessTestValue);
     dispatcher.platformBrightnessTestValue = Brightness.light;
 
-    await tester.pumpWidget(const ProviderScope(child: App()));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: await accountTestContainer(),
+        child: const App(),
+      ),
+    );
     await tester.runAsync(() => GoogleFonts.pendingFonts());
     await tester.pumpAndSettle();
 

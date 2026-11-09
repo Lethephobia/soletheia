@@ -4,9 +4,8 @@ import 'dart:typed_data';
 
 import 'package:application/application.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:infrastructure/rust.dart';
+import 'package:infrastructure/infrastructure.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:soletheia/account.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -36,12 +35,19 @@ void main() {
       final account = await create();
       final dir = await Directory.systemTemp.createTemp('account-test');
       addTearDown(() => dir.delete(recursive: true));
-      final store = AccountMetadataStore(directory: () async => dir);
-      await store.save(AccountMetadata(account, path));
-      final saved = (await store.load()).singleWhere(
-        (entry) => entry.account.address == account.address,
+      final store = DriftAccountRepository(directory: dir);
+      addTearDown(store.close);
+      await store.save(
+        Account(
+          address: account.address,
+          mnemonicId: account.mnemonicId,
+          derivationPath: path,
+        ),
       );
-      expect(saved.account.mnemonicId, account.mnemonicId);
+      final saved = (await store.watchAll().first).singleWhere(
+        (entry) => entry.address == account.address,
+      );
+      expect(saved.mnemonicId, account.mnemonicId);
       expect(saved.derivationPath, path);
       await expectLater(
         create(),

@@ -18,6 +18,10 @@
   "@accountListTitle": {
     "description": "App bar title of the account list screen."
   },
+  "accountListLoadFailure": "Could not load accounts.",
+  "@accountListLoadFailure": {
+    "description": "Shown when the stored accounts cannot be read."
+  },
   "accountListEmptyMessage": "No accounts",
   "@accountListEmptyMessage": {
     "description": "Message shown in the account list when no wallet accounts have been added."

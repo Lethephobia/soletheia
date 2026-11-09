@@ -5,8 +5,9 @@ import 'package:application/application.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:soletheia/account.dart';
 import 'package:soletheia/app.dart';
+
+import '../../support/account_test_container.dart';
 
 class _Creator implements AccountCreator {
   final calls =
@@ -33,25 +34,34 @@ class _Creator implements AccountCreator {
   }
 }
 
-class _MetadataStore extends AccountMetadataStore {
+class _FailingRepository extends TestAccountRepository {
   bool fail = true;
 
   @override
-  Future<void> save(AccountMetadata record) async {
+  Future<void> save(Account account) async {
     if (fail) throw StateError('storage unavailable');
+    await super.save(account);
   }
 }
 
 void main() {
   testWidgets('reopening the creation screen resets its form', (tester) async {
-    await tester.pumpWidget(const ProviderScope(child: App()));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: await accountTestContainer(),
+        child: const App(),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('Create account'));
     await tester.pumpAndSettle();
     final toggle = find.byType(SwitchListTile);
     await tester.tap(toggle);
     await tester.pumpAndSettle();
-    await tester.enterText(find.byType(TextFormField).last, 'abcd');
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Entropy'),
+      'abcd',
+    );
 
     await tester.pageBack();
     await tester.pumpAndSettle();
@@ -61,7 +71,10 @@ void main() {
     await tester.tap(toggle);
     await tester.pumpAndSettle();
     expect(
-      tester.widget<TextField>(find.byType(TextField).last).controller!.text,
+      tester
+          .widget<TextField>(find.widgetWithText(TextField, 'Entropy'))
+          .controller!
+          .text,
       isEmpty,
     );
   });
@@ -70,13 +83,13 @@ void main() {
     'Create passes the options to Rust and retries metadata without creating another key',
     (tester) async {
       final creator = _Creator();
-      final store = _MetadataStore();
+      final store = _FailingRepository();
       await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            accountCreatorProvider.overrideWithValue(creator),
-            accountMetadataStoreProvider.overrideWithValue(store),
-          ],
+        UncontrolledProviderScope(
+          container: await accountTestContainer(
+            creator: creator,
+            repository: store,
+          ),
           child: const App(),
         ),
       );
@@ -114,7 +127,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(tester.widget<FilledButton>(submit).onPressed, isNull);
       await tester.enterText(
-        find.byType(TextFormField).last,
+        find.widgetWithText(TextFormField, 'Entropy'),
         '0102030405060708090A0b0c0d0e0f10',
       );
       await tester.pumpAndSettle();
@@ -130,7 +143,9 @@ void main() {
           find.byType(SwitchListTile),
         );
         expect(toggle.onChanged != null, enabled);
-        final entropy = tester.widget<TextField>(find.byType(TextField).last);
+        final entropy = tester.widget<TextField>(
+          find.widgetWithText(TextField, 'Entropy'),
+        );
         expect(entropy.enabled, enabled);
         expect(tester.widget<FilledButton>(submit).onPressed != null, enabled);
       }

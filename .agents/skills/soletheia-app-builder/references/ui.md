@@ -37,7 +37,7 @@ installed API and current official support before relying on Expressive features
 widgets when they have a concrete purpose, not to recreate standard controls.
 
 The agreed product flow sends users with zero accounts through creation of their first account.
-Existing accounts lead to AccountShell. Startup loads the catalog before choosing
+Existing accounts lead to AccountShell. Startup awaits the first account list before choosing
 the initial screen, as described in the [routing guide](routing.md).
 
 **Good**

@@ -9,15 +9,15 @@ hosts the account list and settings branches. Parent route annotations define th
 Share the relative account creation route between onboarding and accounts, and the
 relative licenses route between onboarding and settings. Both use the root navigator.
 
-Startup awaits the account metadata catalog before creating the router. The router
-uses the loaded catalog to choose its initial location. Direct navigation has no
+Startup awaits the first list from `AccountRepository.watchAll()` before creating
+the router. The router uses that list to choose its initial location. Direct navigation has no
 account-count redirect. After account creation and metadata persistence succeed,
 navigate to the account list with `go`.
 
 **Good**
 
 ```text
-Startup with an empty catalog -> /onboarding
+Startup with an empty account list -> /onboarding
 Startup with stored accounts -> /accounts
 /onboarding/create-account or /accounts/create-account -> save -> /accounts
 ```
