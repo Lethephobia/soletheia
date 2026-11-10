@@ -9,7 +9,10 @@ part of '../router.dart';
           routes: [
             TypedRelativeGoRoute<SettingsRoute>(
               path: 'settings',
-              routes: [TypedRelativeGoRoute<LicensesRoute>(path: 'licenses')],
+              routes: [
+                TypedRelativeGoRoute<AccountListRoute>(path: 'accounts'),
+                TypedRelativeGoRoute<LicensesRoute>(path: 'licenses'),
+              ],
             ),
             TypedRelativeGoRoute<AccountSwitchRoute>(path: 'accounts'),
             TypedRelativeGoRoute<AddAccountRoute>(
@@ -32,7 +35,10 @@ part of '../router.dart';
           routes: [
             TypedRelativeGoRoute<SettingsRoute>(
               path: 'settings',
-              routes: [TypedRelativeGoRoute<LicensesRoute>(path: 'licenses')],
+              routes: [
+                TypedRelativeGoRoute<AccountListRoute>(path: 'accounts'),
+                TypedRelativeGoRoute<LicensesRoute>(path: 'licenses'),
+              ],
             ),
             TypedRelativeGoRoute<AccountSwitchRoute>(path: 'accounts'),
           ],
@@ -46,7 +52,10 @@ part of '../router.dart';
           routes: [
             TypedRelativeGoRoute<SettingsRoute>(
               path: 'settings',
-              routes: [TypedRelativeGoRoute<LicensesRoute>(path: 'licenses')],
+              routes: [
+                TypedRelativeGoRoute<AccountListRoute>(path: 'accounts'),
+                TypedRelativeGoRoute<LicensesRoute>(path: 'licenses'),
+              ],
             ),
             TypedRelativeGoRoute<AccountSwitchRoute>(path: 'accounts'),
           ],

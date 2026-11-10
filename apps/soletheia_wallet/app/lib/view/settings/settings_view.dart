@@ -28,9 +28,10 @@ class SettingsView extends StatelessWidget {
                   title: l10n.settingsWalletSection,
                   tiles: [
                     ListTile(
-                      enabled: false,
-                      leading: const Icon(Icons.manage_accounts_outlined),
+                      leading: const Icon(Icons.account_balance_wallet_outlined),
                       title: Text(l10n.settingsAccountsLabel),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => const AccountListRoute().goRelative(context),
                     ),
                   ],
                 ),

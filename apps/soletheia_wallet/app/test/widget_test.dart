@@ -178,6 +178,16 @@ void main() {
       await tester.tap(find.text('Settings'));
       await tester.pumpAndSettle();
       final settings = tester.element(find.byType(SettingsView));
+      await tester.tap(find.text('Accounts'));
+      await tester.pumpAndSettle();
+      expect(
+        container.read(routerProvider).state.uri.path,
+        '/tokens/settings/accounts',
+      );
+      expect(find.byType(ListTile), findsNWidgets(2));
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      expect(tester.element(find.byType(SettingsView)), same(settings));
       final router = container.read(routerProvider);
       await tester.tap(find.text('Licenses'));
       await tester.pump();
