@@ -29,6 +29,27 @@ class _AccountLayoutState extends State<AccountLayout> {
     final l10n = AppLocalizations.of(context);
     final showsNavigationRail = Bp.of(context).isAtLeast(Bp.medium);
     return Scaffold(
+      bottomNavigationBar: showsNavigationRail
+          ? null
+          : NavigationBar(
+              selectedIndex: widget.selectedIndex,
+              onDestinationSelected: widget.onDestinationSelected,
+              destinations: [
+                NavigationDestination(
+                  icon: const Icon(Icons.token_outlined),
+                  selectedIcon: const Icon(Icons.token),
+                  label: l10n.navigationTokenLabel,
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.swap_vert),
+                  label: l10n.navigationTradeLabel,
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.qr_code_scanner),
+                  label: l10n.scanLabel,
+                ),
+              ],
+            ),
       body: Row(
         children: [
           if (showsNavigationRail)
@@ -72,12 +93,12 @@ class _AccountLayoutState extends State<AccountLayout> {
                       label: Text(l10n.navigationTokenLabel, softWrap: false),
                     ),
                     NavigationRailDestination(
-                      icon: const Icon(Icons.settings_outlined),
-                      selectedIcon: const Icon(Icons.settings),
-                      label: Text(
-                        l10n.navigationSettingsLabel,
-                        softWrap: false,
-                      ),
+                      icon: const Icon(Icons.swap_vert),
+                      label: Text(l10n.navigationTradeLabel, softWrap: false),
+                    ),
+                    NavigationRailDestination(
+                      icon: const Icon(Icons.qr_code_scanner),
+                      label: Text(l10n.scanLabel, softWrap: false),
                     ),
                   ],
                 ),
@@ -86,24 +107,6 @@ class _AccountLayoutState extends State<AccountLayout> {
           Expanded(key: const ValueKey('account-content'), child: widget.child),
         ],
       ),
-      bottomNavigationBar: showsNavigationRail
-          ? null
-          : NavigationBar(
-              selectedIndex: widget.selectedIndex,
-              onDestinationSelected: widget.onDestinationSelected,
-              destinations: [
-                NavigationDestination(
-                  icon: const Icon(Icons.token_outlined),
-                  selectedIcon: const Icon(Icons.token),
-                  label: l10n.navigationTokenLabel,
-                ),
-                NavigationDestination(
-                  icon: const Icon(Icons.settings_outlined),
-                  selectedIcon: const Icon(Icons.settings),
-                  label: l10n.navigationSettingsLabel,
-                ),
-              ],
-            ),
     );
   }
 }

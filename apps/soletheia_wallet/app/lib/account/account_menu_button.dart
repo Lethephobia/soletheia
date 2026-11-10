@@ -29,6 +29,12 @@ class AccountMenuButton extends ConsumerWidget {
           leadingIcon: const Icon(Icons.swap_horiz),
           child: Text(l10n.switchAccountLabel),
         ),
+        const Divider(),
+        MenuItemButton(
+          onPressed: () => const SettingsRoute().goRelative(context),
+          leadingIcon: const Icon(Icons.settings_outlined),
+          child: Text(l10n.navigationSettingsLabel),
+        ),
       ],
       builder: (context, controller, child) {
         return IconButton(

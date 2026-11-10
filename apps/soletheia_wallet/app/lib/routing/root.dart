@@ -3,5 +3,6 @@ export 'router.dart'
         AccountSwitchRoute,
         AddAccountRoute,
         LicensesRoute,
+        SettingsRoute,
         OnboardingRoute,
         AccountCreationRoute;

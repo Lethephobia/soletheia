@@ -143,113 +143,122 @@ void main() {
     expect(find.byType(OnboardingView), findsOneWidget);
   });
 
-  testWidgets('account shell preserves branches and toggles the rail', (
-    tester,
-  ) async {
-    tester.view.devicePixelRatio = 1;
-    tester.view.physicalSize = const Size(390, 844);
-    addTearDown(tester.view.resetDevicePixelRatio);
-    addTearDown(tester.view.resetPhysicalSize);
-    final repository = TestAccountRepository();
-    await repository.save(Account(address: AccountAddress(Uint8List(32))));
-    final second = Account(address: AccountAddress(Uint8List(32)..[31] = 1));
-    await repository.save(second);
-    final container = await accountTestContainer(repository: repository);
-    await tester.pumpWidget(
-      UncontrolledProviderScope(container: container, child: const App()),
-    );
-    await tester.pumpAndSettle();
-    expect(find.byType(AccountShell), findsOneWidget);
-    expect(find.byType(NavigationBar), findsOneWidget);
-    expect(find.text('Accounts'), findsNothing);
-    final token = tester.element(find.byType(TokenView));
-    await tester.tap(find.byIcon(Icons.settings_outlined));
-    await tester.pumpAndSettle();
-    final settings = tester.element(find.byType(SettingsView));
-    final router = container.read(routerProvider);
-    await tester.tap(find.text('Licenses'));
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
-    expect(router.state.uri.path, '/settings/licenses');
-    expect(find.byType(LicensePage), findsOneWidget);
-    expect(find.byType(NavigationBar), findsNothing);
-    await tester.pageBack();
-    await tester.pumpAndSettle();
-    expect(router.state.uri.path, '/settings');
-    expect(tester.element(find.byType(SettingsView)), same(settings));
-    tester.view.physicalSize = const Size(1024, 768);
-    await tester.pumpAndSettle();
-    expect(tester.element(find.byType(SettingsView)), same(settings));
-    expect(find.byType(NavigationRail), findsOneWidget);
-    final menuCenter = tester.getCenter(find.byTooltip('Expand navigation'));
-    await tester.tap(find.byTooltip('Expand navigation'));
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 80));
-    expect(tester.getCenter(find.byTooltip('Collapse navigation')), menuCenter);
-    await tester.pumpAndSettle();
-    expect(
-      tester.widget<NavigationRail>(find.byType(NavigationRail)).extended,
-      isTrue,
-    );
-    expect(tester.getCenter(find.byTooltip('Collapse navigation')), menuCenter);
-    final railLabels = [
-      for (final text in ['Token', 'Settings'])
-        find.descendant(
-          of: find.byType(NavigationRail),
-          matching: find.text(text),
-        ),
-    ];
-    final heights = [
-      for (final label in railLabels) tester.getSize(label).height,
-    ];
-    await tester.tap(find.byTooltip('Collapse navigation'));
-    await tester.pump();
-    for (var frame = 0; frame < 9; frame++) {
-      await tester.pump(const Duration(milliseconds: 20));
-      expect([
-        for (final label in railLabels) tester.getSize(label).height,
-      ], heights);
-    }
-    await tester.pumpAndSettle();
-    expect(
-      tester.widget<NavigationRail>(find.byType(NavigationRail)).extended,
-      isFalse,
-    );
-    for (final label in railLabels) {
-      expect(label.hitTestable(), findsOneWidget);
-    }
-    await tester.tap(find.byIcon(Icons.token_outlined));
-    await tester.pumpAndSettle();
-    expect(tester.element(find.byType(TokenView)), same(token));
-    await tester.tap(find.byTooltip('Account menu'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Switch account'));
-    await tester.pumpAndSettle();
-    expect(find.byType(NavigationRail), findsNothing);
-    expect(
-      tester.widget<ListTile>(find.byType(ListTile).first).selected,
-      isTrue,
-    );
-    await tester.tap(find.byType(ListTile).last);
-    await tester.pumpAndSettle();
-    expect(tester.element(find.byType(TokenView)), same(token));
-    expect(await repository.watchCurrentAddress().first, second.address);
-    await tester.tap(find.byIcon(Icons.settings_outlined));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Account menu'));
-    await tester.pumpAndSettle();
-    expect(find.text('Add account'), findsNothing);
-    await tester.tap(find.text('Switch account'));
-    await tester.pumpAndSettle();
-    expect(
-      tester.widget<ListTile>(find.byType(ListTile).last).selected,
-      isTrue,
-    );
-    await tester.pageBack();
-    await tester.pumpAndSettle();
-    expect(tester.element(find.byType(SettingsView)), same(settings));
-    expect(tester.takeException(), isNull);
-  });
+  testWidgets(
+    'avatar menu opens settings and account switch above the token screen',
+    (tester) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(390, 844);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(tester.view.resetPhysicalSize);
+      final repository = TestAccountRepository();
+      await repository.save(Account(address: AccountAddress(Uint8List(32))));
+      final second = Account(address: AccountAddress(Uint8List(32)..[31] = 1));
+      await repository.save(second);
+      final container = await accountTestContainer(repository: repository);
+      await tester.pumpWidget(
+        UncontrolledProviderScope(container: container, child: const App()),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(AccountShell), findsOneWidget);
+      expect(find.byType(NavigationBar), findsOneWidget);
+      await tester.tap(find.text('Scan'));
+      await tester.pumpAndSettle();
+      expect(container.read(routerProvider).state.uri.path, '/scan');
+      await tester.tap(find.text('Trade'));
+      await tester.pumpAndSettle();
+      expect(container.read(routerProvider).state.uri.path, '/trade');
+      expect(find.text('Swap'), findsOneWidget);
+      await tester.tap(find.text('Token'));
+      await tester.pumpAndSettle();
+      expect(find.text('Accounts'), findsNothing);
+      final token = tester.element(find.byType(TokenView));
+      expect(find.text('Settings'), findsNothing);
+      await tester.tap(find.byTooltip('Account menu'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Settings'));
+      await tester.pumpAndSettle();
+      final settings = tester.element(find.byType(SettingsView));
+      final router = container.read(routerProvider);
+      await tester.tap(find.text('Licenses'));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+      expect(router.state.uri.path, '/tokens/settings/licenses');
+      expect(find.byType(LicensePage), findsOneWidget);
+      expect(find.byType(NavigationBar), findsNothing);
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      expect(router.state.uri.path, '/tokens/settings');
+      expect(tester.element(find.byType(SettingsView)), same(settings));
+      tester.view.physicalSize = const Size(1024, 768);
+      await tester.pumpAndSettle();
+      expect(tester.element(find.byType(SettingsView)), same(settings));
+      expect(find.byType(NavigationRail), findsNothing);
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      expect(tester.element(find.byType(TokenView)), same(token));
+      expect(find.byType(NavigationRail), findsOneWidget);
+      await tester.tap(find.text('Trade'));
+      await tester.pumpAndSettle();
+      expect(router.state.uri.path, '/trade');
+      expect(find.text('Swap'), findsOneWidget);
+      await tester.tap(find.text('Token'));
+      await tester.pumpAndSettle();
+      final menuCenter = tester.getCenter(find.byTooltip('Expand navigation'));
+      await tester.tap(find.byTooltip('Expand navigation'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 80));
+      expect(
+        tester.getCenter(find.byTooltip('Collapse navigation')),
+        menuCenter,
+      );
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<NavigationRail>(find.byType(NavigationRail)).extended,
+        isTrue,
+      );
+      expect(
+        tester.getCenter(find.byTooltip('Collapse navigation')),
+        menuCenter,
+      );
+      await tester.tap(find.byTooltip('Collapse navigation'));
+      await tester.pumpAndSettle();
+      expect(
+        find
+            .descendant(
+              of: find.byType(NavigationRail),
+              matching: find.text('Token'),
+            )
+            .hitTestable(),
+        findsOneWidget,
+      );
+      await tester.tap(find.byTooltip('Account menu'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Switch account'));
+      await tester.pumpAndSettle();
+      expect(find.byType(NavigationRail), findsNothing);
+      expect(
+        tester.widget<ListTile>(find.byType(ListTile).first).selected,
+        isTrue,
+      );
+      await tester.tap(find.byType(ListTile).last);
+      await tester.pumpAndSettle();
+      expect(tester.element(find.byType(TokenView)), same(token));
+      expect(await repository.watchCurrentAddress().first, second.address);
+      await tester.tap(find.byTooltip('Account menu'));
+      await tester.pumpAndSettle();
+      expect(find.text('Add account'), findsNothing);
+      await tester.tap(find.text('Switch account'));
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<ListTile>(find.byType(ListTile).last).selected,
+        isTrue,
+      );
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      expect(tester.element(find.byType(TokenView)), same(token));
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('uses English for all system languages', (tester) async {
     final dispatcher = tester.binding.platformDispatcher;
