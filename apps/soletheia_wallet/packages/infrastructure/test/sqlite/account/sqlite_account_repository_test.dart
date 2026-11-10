@@ -23,6 +23,7 @@ void main() {
         mnemonicDerivation: derivation,
       );
       final updated = account.copyWith(mnemonicDerivation: null);
+      final other = Account(address: AccountAddress(Uint8List(32)..[0] = 1));
       final repo = SqliteAccountRepository(directory: root);
       final stream = StreamIterator(repo.watchAll());
       try {
@@ -34,13 +35,45 @@ void main() {
         await repo.save(updated);
         expect(await stream.moveNext(), isTrue);
         expect(stream.current, [updated]);
+        await repo.save(other);
+        await repo.selectAccount(other.address);
+        expect(await repo.watchCurrentAddress().first, other.address);
+        await expectLater(
+          repo.selectAccount(AccountAddress(Uint8List(32)..[0] = 2)),
+          throwsStateError,
+        );
       } finally {
         await stream.cancel();
         await repo.close();
       }
       final reopened = SqliteAccountRepository(directory: root);
       addTearDown(reopened.close);
-      expect(await reopened.watchAll().first, [updated]);
+      expect(await reopened.watchAll().first, [updated, other]);
+      expect(await reopened.watchCurrentAddress().first, other.address);
+    },
+  );
+
+  test(
+    'upgrades an existing wallet and restores its selected account',
+    () async {
+      final root = await Directory.systemTemp.createTemp('wallet-upgrade-test');
+      addTearDown(() => root.delete(recursive: true));
+      final address = AccountAddress(Uint8List(32));
+      final db = WalletDatabase(directory: root);
+      try {
+        await db.customStatement('ALTER TABLE accounts DROP COLUMN is_current');
+        await db.customStatement('INSERT INTO accounts (address) VALUES (?)', [
+          address.bytes,
+        ]);
+        await db.customStatement('PRAGMA user_version = 1');
+      } finally {
+        await db.close();
+      }
+      final repo = SqliteAccountRepository(directory: root);
+      addTearDown(repo.close);
+      expect(await repo.watchCurrentAddress().first, address);
+      await repo.selectAccount(address);
+      expect(await repo.watchAll().first, [Account(address: address)]);
     },
   );
 

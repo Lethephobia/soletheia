@@ -9,13 +9,18 @@ class OnboardingView extends StatelessWidget {
   static const double _contentPadding = 24;
   static const double _optionSpacing = 2;
 
-  const OnboardingView({super.key});
+  const OnboardingView({super.key, this.isAddingAccount = false});
+
+  final bool isAddingAccount;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
     return Scaffold(
+      appBar: isAddingAccount
+          ? AppBar(title: Text(l10n.accountAddLabel))
+          : null,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(

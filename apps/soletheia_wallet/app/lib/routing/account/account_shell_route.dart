@@ -7,7 +7,16 @@ part of '../router.dart';
         TypedGoRoute<TokenRoute>(
           path: '/tokens',
           routes: [
-            TypedRelativeGoRoute<AccountCreationRoute>(path: 'create-account'),
+            TypedRelativeGoRoute<AccountSwitchRoute>(path: 'accounts'),
+            TypedRelativeGoRoute<AddAccountRoute>(
+              path: 'add-account',
+              routes: [
+                TypedRelativeGoRoute<AccountCreationRoute>(
+                  path: 'create-account',
+                ),
+                TypedRelativeGoRoute<LicensesRoute>(path: 'licenses'),
+              ],
+            ),
           ],
         ),
       ],
@@ -16,7 +25,19 @@ part of '../router.dart';
       routes: [
         TypedGoRoute<SettingsRoute>(
           path: '/settings',
-          routes: [TypedRelativeGoRoute<LicensesRoute>(path: 'licenses')],
+          routes: [
+            TypedRelativeGoRoute<LicensesRoute>(path: 'licenses'),
+            TypedRelativeGoRoute<AccountSwitchRoute>(path: 'accounts'),
+            TypedRelativeGoRoute<AddAccountRoute>(
+              path: 'add-account',
+              routes: [
+                TypedRelativeGoRoute<AccountCreationRoute>(
+                  path: 'create-account',
+                ),
+                TypedRelativeGoRoute<LicensesRoute>(path: 'licenses'),
+              ],
+            ),
+          ],
         ),
       ],
     ),
@@ -30,11 +51,6 @@ class AccountShellRoute extends StatefulShellRouteData {
     GoRouterState state,
     StatefulNavigationShell navigationShell,
   ) {
-    return AccountShell(
-      navigationShell: navigationShell,
-      onAddAccount: state.uri.path == const TokenRoute().location
-          ? () => const AccountCreationRoute().goRelative(context)
-          : null,
-    );
+    return AccountShell(navigationShell: navigationShell);
   }
 }

@@ -21,6 +21,24 @@ class TestAccountRepository implements AccountRepository {
     _changes.add(_accounts.values.toList());
   }
 
+  AccountAddress? _selected;
+
+  @override
+  Stream<AccountAddress?> watchCurrentAddress() {
+    return watchAll().map(
+      (accounts) => _selected ?? accounts.firstOrNull?.address,
+    );
+  }
+
+  @override
+  Future<void> selectAccount(AccountAddress address) async {
+    if (!_accounts.containsKey(address)) {
+      throw StateError('Account does not exist');
+    }
+    _selected = address;
+    _changes.add(_accounts.values.toList());
+  }
+
   Future<void> close() => _changes.close();
 }
 

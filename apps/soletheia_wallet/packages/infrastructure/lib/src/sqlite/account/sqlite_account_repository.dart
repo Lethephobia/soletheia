@@ -44,5 +44,32 @@ class SqliteAccountRepository implements AccountRepository {
         );
   }
 
+  @override
+  Stream<AccountAddress?> watchCurrentAddress() {
+    final query = _db.select(_db.accounts)
+      ..orderBy([
+        (row) => OrderingTerm.desc(row.isCurrent),
+        (row) => OrderingTerm.asc(row.address),
+      ])
+      ..limit(1);
+    return query.watchSingleOrNull().map(
+      (row) => row == null ? null : AccountAddress(row.address),
+    );
+  }
+
+  @override
+  Future<void> selectAccount(AccountAddress address) {
+    return _db.transaction(() async {
+      await (_db.update(_db.accounts)..where((row) => row.isCurrent)).write(
+        const AccountsCompanion(isCurrent: Value(false)),
+      );
+      final count =
+          await (_db.update(_db.accounts)
+                ..where((row) => row.address.equals(address.bytes)))
+              .write(const AccountsCompanion(isCurrent: Value(true)));
+      if (count == 0) throw StateError('Account does not exist');
+    });
+  }
+
   Future<void> close() => _db.close();
 }

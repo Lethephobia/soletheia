@@ -124,6 +124,7 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
     }
     try {
       await repository.save(account);
+      await repository.selectAccount(account.address);
     } catch (_) {
       if (ref.mounted) {
         state = state.copyWith(

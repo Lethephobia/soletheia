@@ -152,6 +152,8 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     final repository = TestAccountRepository();
     await repository.save(Account(address: AccountAddress(Uint8List(32))));
+    final second = Account(address: AccountAddress(Uint8List(32)..[31] = 1));
+    await repository.save(second);
     final container = await accountTestContainer(repository: repository);
     await tester.pumpWidget(
       UncontrolledProviderScope(container: container, child: const App()),
@@ -219,24 +221,33 @@ void main() {
     await tester.tap(find.byIcon(Icons.token_outlined));
     await tester.pumpAndSettle();
     expect(tester.element(find.byType(TokenView)), same(token));
-    final fab = find.byType(FloatingActionButton);
-    final collapsedWidth = tester.getSize(fab).width;
-    expect(find.text('Add account'), findsNothing);
-    await tester.tap(find.byTooltip('Expand navigation'));
+    await tester.tap(find.byTooltip('Account menu'));
     await tester.pumpAndSettle();
-    expect(
-      find.widgetWithText(FloatingActionButton, 'Add account'),
-      findsOneWidget,
-    );
-    expect(tester.getSize(fab).width, greaterThan(collapsedWidth));
-    await tester.tap(find.byTooltip('Add account'));
+    await tester.tap(find.text('Switch account'));
     await tester.pumpAndSettle();
-    expect(find.byType(AccountCreationView), findsOneWidget);
     expect(find.byType(NavigationRail), findsNothing);
-    expect(find.byTooltip('Add account'), findsNothing);
-    await tester.tap(find.byTooltip('Back'));
+    expect(
+      tester.widget<ListTile>(find.byType(ListTile).first).selected,
+      isTrue,
+    );
+    await tester.tap(find.byType(ListTile).last);
     await tester.pumpAndSettle();
     expect(tester.element(find.byType(TokenView)), same(token));
+    expect(await repository.watchCurrentAddress().first, second.address);
+    await tester.tap(find.byIcon(Icons.settings_outlined));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Account menu'));
+    await tester.pumpAndSettle();
+    expect(find.text('Add account'), findsNothing);
+    await tester.tap(find.text('Switch account'));
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<ListTile>(find.byType(ListTile).last).selected,
+      isTrue,
+    );
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    expect(tester.element(find.byType(SettingsView)), same(settings));
     expect(tester.takeException(), isNull);
   });
 

@@ -15,3 +15,8 @@ AccountRepository accountRepository(Ref ref) {
 Stream<List<Account>> accounts(Ref ref) {
   return ref.watch(accountRepositoryProvider).watchAll();
 }
+
+@Riverpod(keepAlive: true)
+Stream<AccountAddress?> currentAccountAddress(Ref ref) {
+  return ref.watch(accountRepositoryProvider).watchCurrentAddress();
+}

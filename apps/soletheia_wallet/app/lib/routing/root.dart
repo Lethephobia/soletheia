@@ -1,1 +1,7 @@
-export 'router.dart' show LicensesRoute, OnboardingRoute, AccountCreationRoute;
+export 'router.dart'
+    show
+        AccountSwitchRoute,
+        AddAccountRoute,
+        LicensesRoute,
+        OnboardingRoute,
+        AccountCreationRoute;

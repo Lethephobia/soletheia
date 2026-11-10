@@ -9,13 +9,11 @@ class AccountLayout extends StatefulWidget {
     required this.selectedIndex,
     required this.onDestinationSelected,
     required this.child,
-    this.primaryActionBuilder,
   });
 
   final int selectedIndex;
   final ValueChanged<int> onDestinationSelected;
   final Widget child;
-  final Widget Function({required bool extended})? primaryActionBuilder;
 
   @override
   State<AccountLayout> createState() => _AccountLayoutState();
@@ -23,7 +21,6 @@ class AccountLayout extends StatefulWidget {
 
 class _AccountLayoutState extends State<AccountLayout> {
   static const _collapsedRailWidth = 80.0;
-  static const _railFabInset = 12.0;
 
   bool _isExtended = false;
 
@@ -66,16 +63,6 @@ class _AccountLayoutState extends State<AccountLayout> {
                           ),
                         ),
                       ),
-                      if (widget.primaryActionBuilder case final buildAction?)
-                        Align(
-                          alignment: AlignmentDirectional.centerStart,
-                          child: Padding(
-                            padding: const EdgeInsetsDirectional.only(
-                              start: _railFabInset,
-                            ),
-                            child: buildAction(extended: _isExtended),
-                          ),
-                        ),
                     ],
                   ),
                   destinations: [
@@ -99,9 +86,6 @@ class _AccountLayoutState extends State<AccountLayout> {
           Expanded(key: const ValueKey('account-content'), child: widget.child),
         ],
       ),
-      floatingActionButton: showsNavigationRail
-          ? null
-          : widget.primaryActionBuilder?.call(extended: false),
       bottomNavigationBar: showsNavigationRail
           ? null
           : NavigationBar(

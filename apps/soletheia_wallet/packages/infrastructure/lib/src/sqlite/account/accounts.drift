@@ -1,5 +1,6 @@
 CREATE TABLE accounts (
   address BLOB NOT NULL PRIMARY KEY,
+  is_current BOOLEAN NOT NULL DEFAULT FALSE,
   mnemonic_id BLOB,
   derivation_path TEXT,
   CHECK ((mnemonic_id IS NULL) = (derivation_path IS NULL))
