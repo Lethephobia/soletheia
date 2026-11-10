@@ -36,6 +36,18 @@
   "@settingsTitle": {
     "description": "App bar title of the settings screen."
   },
+  "settingsWalletSection": "Wallet",
+  "@settingsWalletSection": {"description": "Heading for wallet configuration settings."},
+  "settingsNetworkSection": "Network",
+  "@settingsNetworkSection": {"description": "Heading for Solana network settings."},
+  "settingsClusterLabel": "Cluster",
+  "@settingsClusterLabel": {"description": "Settings item for selecting the active Solana cluster."},
+  "settingsRpcEndpointsLabel": "RPC endpoints",
+  "@settingsRpcEndpointsLabel": {"description": "Settings item for configuring RPC endpoints for each cluster."},
+  "settingsAccountsLabel": "Accounts",
+  "@settingsAccountsLabel": {"description": "Settings item for wallet account management."},
+  "settingsAboutSection": "About",
+  "@settingsAboutSection": {"description": "Heading for application information in settings."},
   "navigationExpandLabel": "Expand navigation",
   "@navigationExpandLabel": {
     "description": "Tooltip for expanding the navigation rail."
