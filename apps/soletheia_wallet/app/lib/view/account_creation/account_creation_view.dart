@@ -76,6 +76,7 @@ class AccountCreationView extends ConsumerWidget {
                 onPressed: cancel,
               ),
         title: Text(l10n.accountCreationTitle),
+        titleSpacing: isWide ? _contentPadding : null,
         actions: isWide ? null : [createButton],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(_progressHeight),
