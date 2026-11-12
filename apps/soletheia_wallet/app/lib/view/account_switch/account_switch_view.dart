@@ -53,7 +53,7 @@ class AccountSwitchView extends ConsumerWidget {
             ],
           ),
           AsyncError() => Center(child: Text(l10n.accountsLoadFailure)),
-          _ => const Center(child: CircularProgressIndicator()),
+          AsyncLoading() => const Center(child: CircularProgressIndicator()),
         },
       ),
     );

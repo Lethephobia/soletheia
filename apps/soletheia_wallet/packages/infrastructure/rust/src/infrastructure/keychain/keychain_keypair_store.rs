@@ -28,6 +28,14 @@ impl KeychainKeypairStore {
 }
 
 impl KeypairStore for KeychainKeypairStore {
+    fn delete_keypair(
+        &self,
+        address: crate::application::account::AccountAddress,
+    ) -> Result<(), KeypairStoreError> {
+        let account = solana_keypair::Address::new_from_array(*address.value()).to_string();
+        KeychainItem::delete(Self::SERVICE, &account).map_err(KeypairStoreError::Keychain)
+    }
+
     fn save_keypair(&self, keypair: &AccountKeypair) -> Result<(), KeypairStoreError> {
         let account =
             solana_keypair::Address::new_from_array(*keypair.address().value()).to_string();

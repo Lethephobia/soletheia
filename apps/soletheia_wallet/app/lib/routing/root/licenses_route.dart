@@ -11,3 +11,5 @@ class LicensesRoute extends RelativeGoRouteData with $LicensesRoute {
     return const LicensePage();
   }
 }
+
+const _licensesRoute = TypedRelativeGoRoute<LicensesRoute>(path: 'licenses');

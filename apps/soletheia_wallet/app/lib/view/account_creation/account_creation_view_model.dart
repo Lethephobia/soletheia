@@ -63,7 +63,10 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
     if (!state.canSubmit) return;
     final pending = state;
     if (pending.status case AccountSaveFailed(:final account)) {
-      await _saveAccount(ref.read(accountRepositoryProvider), account);
+      state = pending.copyWith(status: AccountCreationStatus.saving(account));
+      await _completeCreation(
+        () => ref.read(accountCreatorProvider).retrySave(account),
+      );
       return;
     }
     final entropyError = pending.validateEntropy();
@@ -78,14 +81,12 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
       state = pending.copyWith(entropyError: entropyError);
       return;
     }
-    final repository = ref.read(accountRepositoryProvider);
     state = pending.copyWith(status: const AccountCreationStatus.creating());
-    final CreatedAccount created;
-    try {
+    await _completeCreation(() async {
       final source = pending.entropy.isNotEmpty
           ? MnemonicGenerationSource.entropy(_parseEntropy(pending))
           : MnemonicGenerationSource.random(pending.wordCount);
-      created = await ref
+      await ref
           .read(accountCreatorProvider)
           .create(
             wordlist: pending.wordlist,
@@ -93,48 +94,30 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
             passphrase: MnemonicPassphrase(pending.passphrase),
             derivationPath: path,
           );
-    } on Exception {
-      if (ref.mounted) {
-        state = state.copyWith(
-          status: const AccountCreationStatus.creationFailed(),
-        );
-      }
-      return;
-    }
-    final account = Account(
-      address: created.address,
-      mnemonicDerivation: MnemonicDerivation(
-        mnemonicId: created.mnemonicId,
-        derivationPath: path,
-      ),
-    );
-    await _saveAccount(repository, account);
+    });
   }
 
-  Future<void> _saveAccount(
-    AccountRepository repository,
-    Account account,
-  ) async {
-    if (ref.mounted) {
+  Future<void> _completeCreation(Future<void> Function() operation) async {
+    try {
+      await operation();
+      if (!ref.mounted) return;
       state = state.copyWith(
-        status: AccountCreationStatus.saving(account),
+        status: const AccountCreationStatus.succeeded(),
         passphrase: '',
         entropy: '',
       );
-    }
-    try {
-      await repository.save(account);
-      await repository.selectAccount(account.address);
+    } on AccountSaveException catch (error) {
+      if (!ref.mounted) return;
+      state = state.copyWith(
+        status: AccountCreationStatus.saveFailed(error.account),
+        passphrase: '',
+        entropy: '',
+      );
     } on Exception {
-      if (ref.mounted) {
-        state = state.copyWith(
-          status: AccountCreationStatus.saveFailed(account),
-        );
-      }
-      return;
-    }
-    if (ref.mounted) {
-      state = state.copyWith(status: const AccountCreationStatus.succeeded());
+      if (!ref.mounted) return;
+      state = state.copyWith(
+        status: const AccountCreationStatus.creationFailed(),
+      );
     }
   }
 

@@ -6,25 +6,7 @@ part of '../router.dart';
       routes: [
         TypedGoRoute<TokenRoute>(
           path: '/tokens',
-          routes: [
-            TypedRelativeGoRoute<SettingsRoute>(
-              path: 'settings',
-              routes: [
-                TypedRelativeGoRoute<AccountListRoute>(path: 'accounts'),
-                TypedRelativeGoRoute<LicensesRoute>(path: 'licenses'),
-              ],
-            ),
-            TypedRelativeGoRoute<AccountSwitchRoute>(path: 'accounts'),
-            TypedRelativeGoRoute<AddAccountRoute>(
-              path: 'add-account',
-              routes: [
-                TypedRelativeGoRoute<AccountCreationRoute>(
-                  path: 'create-account',
-                ),
-                TypedRelativeGoRoute<LicensesRoute>(path: 'licenses'),
-              ],
-            ),
-          ],
+          routes: [_settingsRoute, _accountSwitchRoute, _addAccountRoute],
         ),
       ],
     ),
@@ -32,16 +14,7 @@ part of '../router.dart';
       routes: [
         TypedGoRoute<TradeRoute>(
           path: '/trade',
-          routes: [
-            TypedRelativeGoRoute<SettingsRoute>(
-              path: 'settings',
-              routes: [
-                TypedRelativeGoRoute<AccountListRoute>(path: 'accounts'),
-                TypedRelativeGoRoute<LicensesRoute>(path: 'licenses'),
-              ],
-            ),
-            TypedRelativeGoRoute<AccountSwitchRoute>(path: 'accounts'),
-          ],
+          routes: [_settingsRoute, _accountSwitchRoute],
         ),
       ],
     ),
@@ -49,16 +22,7 @@ part of '../router.dart';
       routes: [
         TypedGoRoute<ScanRoute>(
           path: '/scan',
-          routes: [
-            TypedRelativeGoRoute<SettingsRoute>(
-              path: 'settings',
-              routes: [
-                TypedRelativeGoRoute<AccountListRoute>(path: 'accounts'),
-                TypedRelativeGoRoute<LicensesRoute>(path: 'licenses'),
-              ],
-            ),
-            TypedRelativeGoRoute<AccountSwitchRoute>(path: 'accounts'),
-          ],
+          routes: [_settingsRoute, _accountSwitchRoute],
         ),
       ],
     ),

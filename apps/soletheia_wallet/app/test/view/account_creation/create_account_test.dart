@@ -4,13 +4,14 @@ import 'dart:typed_data';
 import 'package:application/application.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:infrastructure/rust.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:soletheia/app.dart';
 
 import '../../support/account_test_container.dart';
 import '../../support/pump_wallet_widget.dart';
 
-class _Creator implements AccountCreator {
+class _TestKeys {
   final calls =
       <
         (
@@ -22,7 +23,6 @@ class _Creator implements AccountCreator {
       >[];
   late Completer<CreatedAccount> response;
 
-  @override
   Future<CreatedAccount> create({
     required MnemonicWordlist wordlist,
     required MnemonicGenerationSource source,
@@ -80,12 +80,12 @@ void main() {
   testWidgets(
     'Create passes the options to Rust and retries metadata without creating another key',
     (tester) async {
-      final creator = _Creator();
+      final keys = _TestKeys();
       final store = _FailingRepository();
       await tester.pumpWalletWidget(
         UncontrolledProviderScope(
           container: await accountTestContainer(
-            creator: creator,
+            creator: RustAccountCreator(store, createKeys: keys.create),
             repository: store,
           ),
           child: const App(),
@@ -97,14 +97,14 @@ void main() {
       await tester.ensureVisible(submit);
       await tester.tap(submit);
       await tester.pump();
-      expect(creator.calls.single, (
+      expect(keys.calls.single, (
         MnemonicWordlist.english,
         const MnemonicGenerationSource.random(MnemonicWordCount.words12),
         const MnemonicPassphrase.empty(),
         DerivationPath.parse("m/44'/501'/0'/0'"),
       ));
       expect(tester.widget<FilledButton>(submit).onPressed, isNull);
-      creator.response.completeError(Exception('test failure'));
+      keys.response.completeError(Exception('test failure'));
       await tester.pumpAndSettle();
       expect(
         find.widgetWithText(
@@ -124,7 +124,7 @@ void main() {
       await tester.tap(submit);
       await tester.pump();
       expect(invalidPath, findsOneWidget);
-      expect(creator.calls, hasLength(1));
+      expect(keys.calls, hasLength(1));
       await tester.enterText(path, "m/44/501/7/0");
       await tester.pump();
       expect(invalidPath, findsNothing);
@@ -145,7 +145,7 @@ void main() {
       await tester.tap(submit);
       await tester.pump();
       expect(invalidEntropy, findsOneWidget);
-      expect(creator.calls, hasLength(1));
+      expect(keys.calls, hasLength(1));
       final invalidHex = find.text('Use only hexadecimal digits (0–9, A–F).');
       await tester.enterText(
         find.widgetWithText(TextFormField, 'Custom entropy (optional)'),
@@ -159,7 +159,7 @@ void main() {
       await tester.pump();
       expect(invalidHex, findsOneWidget);
       expect(invalidEntropy, findsNothing);
-      expect(creator.calls, hasLength(1));
+      expect(keys.calls, hasLength(1));
       await tester.enterText(
         find.widgetWithText(TextFormField, 'Custom entropy (optional)'),
         '0102030405060708090A0b0c0d0e0f10',
@@ -181,15 +181,15 @@ void main() {
       }
 
       expectFormEnabled(false);
-      expect(creator.calls.last.$3.value, ' test ');
-      expect(creator.calls.last.$4.value, "m/44'/501'/7'/0'");
-      final source = creator.calls.last.$2 as EntropyMnemonicGenerationSource;
+      expect(keys.calls.last.$3.value, ' test ');
+      expect(keys.calls.last.$4.value, "m/44'/501'/7'/0'");
+      final source = keys.calls.last.$2 as EntropyMnemonicGenerationSource;
       expect(source.entropy.bytes, List.generate(16, (i) => i + 1));
       final created = CreatedAccount(
         address: AccountAddress(Uint8List(32)),
         mnemonicId: MnemonicId(Uint8List(16)),
       );
-      creator.response.complete(created);
+      keys.response.complete(created);
       await tester.pumpAndSettle();
       expect(
         find.widgetWithText(
@@ -203,7 +203,7 @@ void main() {
       await tester.ensureVisible(retry);
       await tester.tap(retry);
       await tester.pumpAndSettle();
-      expect(creator.calls, hasLength(2));
+      expect(keys.calls, hasLength(2));
       expect(store.attempts, hasLength(2));
       expect(store.attempts.last, same(store.attempts.first));
       expect(find.text('Token'), findsWidgets);

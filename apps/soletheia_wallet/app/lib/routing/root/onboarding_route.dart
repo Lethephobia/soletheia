@@ -2,10 +2,7 @@ part of '../router.dart';
 
 @TypedGoRoute<OnboardingRoute>(
   path: '/onboarding',
-  routes: [
-    TypedRelativeGoRoute<AccountCreationRoute>(path: 'create-account'),
-    TypedRelativeGoRoute<LicensesRoute>(path: 'licenses'),
-  ],
+  routes: [_accountCreationRoute, _licensesRoute],
 )
 class OnboardingRoute extends GoRouteData with $OnboardingRoute {
   const OnboardingRoute();

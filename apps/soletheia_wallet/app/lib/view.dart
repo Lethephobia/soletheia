@@ -1,4 +1,5 @@
 export 'view/account_list.dart';
+export 'view/account_detail.dart';
 export 'view/account_switch.dart';
 export 'view/account_creation.dart';
 export 'view/scan.dart';

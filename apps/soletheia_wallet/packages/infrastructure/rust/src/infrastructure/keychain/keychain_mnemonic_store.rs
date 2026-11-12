@@ -3,7 +3,6 @@ use crate::application::{
     mnemonic::{Mnemonic, MnemonicWordlist},
     storage::{MnemonicId, MnemonicStore, MnemonicStoreError},
 };
-use security_framework::passwords::{delete_generic_password_options, PasswordOptions};
 use zeroize::Zeroizing;
 
 pub struct KeychainMnemonicStore;
@@ -58,11 +57,8 @@ impl MnemonicStore for KeychainMnemonicStore {
     }
 
     fn delete_mnemonic(&self, id: MnemonicId) -> Result<(), MnemonicStoreError> {
-        let mut options =
-            PasswordOptions::new_generic_password(Self::SERVICE, &Self::account_name(id));
-        options.use_protected_keychain();
-        delete_generic_password_options(options)
-            .map_err(|error| MnemonicStoreError::Keychain(error.code()))
+        KeychainItem::delete(Self::SERVICE, &Self::account_name(id))
+            .map_err(MnemonicStoreError::Keychain)
     }
 }
 

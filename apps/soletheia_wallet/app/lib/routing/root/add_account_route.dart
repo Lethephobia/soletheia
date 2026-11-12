@@ -11,3 +11,8 @@ class AddAccountRoute extends RelativeGoRouteData with $AddAccountRoute {
     return const OnboardingView(isAddingAccount: true);
   }
 }
+
+const _addAccountRoute = TypedRelativeGoRoute<AddAccountRoute>(
+  path: 'add-account',
+  routes: [_accountCreationRoute, _licensesRoute],
+);

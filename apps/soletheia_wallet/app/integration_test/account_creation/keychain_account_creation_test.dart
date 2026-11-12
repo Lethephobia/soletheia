@@ -14,7 +14,12 @@ void main() {
     'creates an Apple Keychain account and reloads its public metadata',
     (tester) async {
       await initializeRust();
-      const creator = RustAccountCreator();
+      final dir = await Directory.systemTemp.createTemp('account-test');
+      addTearDown(() => dir.delete(recursive: true));
+      final store = SqliteAccountRepository(directory: dir);
+      addTearDown(store.close);
+      final creator = RustAccountCreator(store);
+      final deleter = RustAccountDeleter(store);
       final path = DerivationPath.parse("m/44'/501'/0'/0'");
       final random = Random.secure();
       final entropy = Uint8List.fromList(
@@ -23,7 +28,7 @@ void main() {
       final source = MnemonicGenerationSource.entropy(MnemonicEntropy(entropy));
       // Each test run derives a different address, then retries that exact address.
       final passphrase = const MnemonicPassphrase('integration test');
-      Future<CreatedAccount> create() {
+      Future<Account> create() {
         return creator.create(
           wordlist: MnemonicWordlist.english,
           source: source,
@@ -33,23 +38,11 @@ void main() {
       }
 
       final account = await create();
-      final dir = await Directory.systemTemp.createTemp('account-test');
-      addTearDown(() => dir.delete(recursive: true));
-      final store = SqliteAccountRepository(directory: dir);
-      addTearDown(store.close);
-      await store.save(
-        Account(
-          address: account.address,
-          mnemonicDerivation: MnemonicDerivation(
-            mnemonicId: account.mnemonicId,
-            derivationPath: path,
-          ),
-        ),
-      );
       final saved = (await store.watchAll().first).singleWhere(
         (entry) => entry.address == account.address,
       );
-      expect(saved.mnemonicDerivation!.mnemonicId, account.mnemonicId);
+      expect(saved, account);
+      expect(await store.watchCurrentAddress().first, account.address);
       expect(saved.mnemonicDerivation!.derivationPath, path);
       await expectLater(
         create(),
@@ -59,6 +52,10 @@ void main() {
           ),
         ),
       );
+      expect(await deleter.delete(account.address), isTrue);
+      final recreated = await create();
+      expect(recreated.address, account.address);
+      expect(await deleter.delete(recreated.address), isTrue);
     },
   );
 }

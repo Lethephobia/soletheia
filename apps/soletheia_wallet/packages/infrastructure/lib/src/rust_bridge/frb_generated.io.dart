@@ -4,8 +4,10 @@
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
 import 'api/account/create_account.dart';
+import 'api/account/delete_account.dart';
 import 'application/account/account_address.dart';
 import 'application/account/account_creator_error.dart';
+import 'application/account/account_deleter_error.dart';
 import 'application/account/created_account.dart';
 import 'application/keypair/derivation_path.dart';
 import 'application/keypair/keypair_deriver_error.dart';
@@ -94,6 +96,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AccountCreatorError dco_decode_account_creator_error(dynamic raw);
 
   @protected
+  AccountDeleterError dco_decode_account_deleter_error(dynamic raw);
+
+  @protected
+  AccountAddress dco_decode_box_autoadd_account_address(dynamic raw);
+
+  @protected
   KeypairStoreError dco_decode_box_autoadd_keypair_store_error(dynamic raw);
 
   @protected
@@ -147,6 +155,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   MnemonicWordlist dco_decode_mnemonic_wordlist(dynamic raw);
+
+  @protected
+  MnemonicId? dco_decode_opt_box_autoadd_mnemonic_id(dynamic raw);
 
   @protected
   int dco_decode_u_8(dynamic raw);
@@ -207,6 +218,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   AccountCreatorError sse_decode_account_creator_error(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  AccountDeleterError sse_decode_account_deleter_error(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  AccountAddress sse_decode_box_autoadd_account_address(
     SseDeserializer deserializer,
   );
 
@@ -282,6 +303,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   MnemonicWordlist sse_decode_mnemonic_wordlist(SseDeserializer deserializer);
 
   @protected
+  MnemonicId? sse_decode_opt_box_autoadd_mnemonic_id(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   int sse_decode_u_8(SseDeserializer deserializer);
 
   @protected
@@ -353,6 +379,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_account_creator_error(
     AccountCreatorError self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_account_deleter_error(
+    AccountDeleterError self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_account_address(
+    AccountAddress self,
     SseSerializer serializer,
   );
 
@@ -446,6 +484,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_mnemonic_wordlist(
     MnemonicWordlist self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_opt_box_autoadd_mnemonic_id(
+    MnemonicId? self,
     SseSerializer serializer,
   );
 

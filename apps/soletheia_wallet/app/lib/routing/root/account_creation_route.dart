@@ -12,3 +12,7 @@ class AccountCreationRoute extends RelativeGoRouteData
     return const AccountCreationView();
   }
 }
+
+const _accountCreationRoute = TypedRelativeGoRoute<AccountCreationRoute>(
+  path: 'create-account',
+);

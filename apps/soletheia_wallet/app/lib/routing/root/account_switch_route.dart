@@ -11,3 +11,7 @@ class AccountSwitchRoute extends RelativeGoRouteData with $AccountSwitchRoute {
     return const AccountSwitchView();
   }
 }
+
+const _accountSwitchRoute = TypedRelativeGoRoute<AccountSwitchRoute>(
+  path: 'accounts',
+);

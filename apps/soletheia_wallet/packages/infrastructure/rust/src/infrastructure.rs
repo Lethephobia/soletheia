@@ -22,11 +22,29 @@ impl Default
     }
 }
 
+#[cfg(any(target_os = "ios", target_os = "macos"))]
+impl Default
+    for crate::application::account::DefaultAccountDeleter<
+        keychain::KeychainMnemonicStore,
+        keychain::KeychainKeypairStore,
+    >
+{
+    fn default() -> Self {
+        Self::new(
+            keychain::KeychainMnemonicStore,
+            keychain::KeychainKeypairStore,
+        )
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::application::keypair::KeypairDeriverError;
     use crate::application::{
-        account::{AccountCreator, AccountCreatorError, CreatedAccount, DefaultAccountCreator},
+        account::{
+            AccountAddress, AccountCreator, AccountCreatorError, CreatedAccount,
+            DefaultAccountCreator,
+        },
         keypair::{AccountKeypair, DerivationPath, KeypairDeriver},
         mnemonic::{Mnemonic, MnemonicGenerationSource, MnemonicPassphrase, MnemonicWordlist},
         storage::{KeypairStore, KeypairStoreError, MnemonicId, MnemonicStore, MnemonicStoreError},
@@ -68,6 +86,9 @@ mod tests {
     struct TestKeys<F>(F);
 
     impl<F: Fn(&AccountKeypair) -> Result<(), KeypairStoreError>> KeypairStore for TestKeys<F> {
+        fn delete_keypair(&self, _: AccountAddress) -> Result<(), KeypairStoreError> {
+            panic!("unexpected delete")
+        }
         fn save_keypair(&self, keypair: &AccountKeypair) -> Result<(), KeypairStoreError> {
             (self.0)(keypair)
         }
@@ -85,6 +106,9 @@ mod tests {
     }
 
     impl KeypairStore for UnexpectedStorage {
+        fn delete_keypair(&self, _: AccountAddress) -> Result<(), KeypairStoreError> {
+            panic!("unexpected delete")
+        }
         fn save_keypair(&self, _: &AccountKeypair) -> Result<(), KeypairStoreError> {
             panic!("unexpected save")
         }

@@ -1,6 +1,7 @@
 rust_input: >-
   crate::api::init,
   crate::api::account::create_account,
+  crate::api::account::delete_account,
   crate::application::account::created_account,
   crate::application::account::account_address,
   crate::application::storage::mnemonic_id,

@@ -2,6 +2,8 @@ export 'rust/account.dart';
 export 'rust/initialize_rust.dart';
 export 'rust_bridge/application/account/account_creator_error.dart'
     show AccountCreatorError;
+export 'rust_bridge/application/account/account_deleter_error.dart'
+    show AccountDeleterError;
 export 'rust_bridge/application/keypair/keypair_deriver_error.dart'
     show KeypairDeriverError;
 export 'rust_bridge/application/mnemonic/mnemonic_generator_error.dart'

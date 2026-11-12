@@ -142,3 +142,29 @@ final textStyle = Theme.of(context).textTheme.bodyMedium;
 Each View invents different width thresholds and font-loading configuration.
 A new screen silently introduces a light theme despite the dark-only direction.
 ```
+
+### DO use an exhaustive switch to render Riverpod AsyncValue states
+
+Match AsyncData, AsyncError, and AsyncLoading explicitly so the analyzer checks coverage.
+When migrating a view with custom refresh, reload, or error handling, preserve the intended
+display of previous data with pattern guards where needed.
+
+**Good**
+
+```dart
+return switch (accounts) {
+  AsyncData(:final value) => buildAccounts(value),
+  AsyncError() => buildFailure(),
+  AsyncLoading() => buildLoading(),
+};
+```
+
+**Bad**
+
+```dart
+return accounts.when(
+  data: buildAccounts,
+  error: (_, _) => buildFailure(),
+  loading: buildLoading,
+);
+```

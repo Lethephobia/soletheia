@@ -37,6 +37,7 @@ dependencies:
     path: ../packages/application
   infrastructure:
     path: ../packages/infrastructure
+  cupertino_ui: ^1.1.6
   material_ui: ^1.10.0
   flutter_localizations:
     sdk: flutter

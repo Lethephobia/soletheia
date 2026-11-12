@@ -13,6 +13,10 @@ class SqliteAccountRepository implements AccountRepository {
   final WalletDatabase _db;
 
   @override
+  Future<T> transaction<T>(Future<T> Function() operation) =>
+      _db.transaction(operation);
+
+  @override
   Stream<List<Account>> watchAll() {
     final query = _db.select(_db.accounts)
       ..orderBy([(row) => OrderingTerm.asc(row.address)]);
@@ -42,6 +46,33 @@ class SqliteAccountRepository implements AccountRepository {
             ),
           ),
         );
+  }
+
+  @override
+  Future<({MnemonicId? unusedMnemonic, bool isEmpty})> deleteAccount(
+    AccountAddress address,
+  ) {
+    return _db.transaction(() async {
+      final removed = await (_db.delete(
+        _db.accounts,
+      )..where((row) => row.address.equals(address.bytes))).goAndReturn();
+      if (removed.isEmpty) throw const AccountNotFoundException();
+      final id = removed.single.mnemonicId;
+      MnemonicId? unusedMnemonic;
+      if (id != null) {
+        final shared =
+            await (_db.select(_db.accounts)
+                  ..where((row) => row.mnemonicId.equals(id))
+                  ..limit(1))
+                .getSingleOrNull();
+        if (shared == null) unusedMnemonic = MnemonicId(id);
+      }
+      final remaining = await (_db.select(
+        _db.accounts,
+      )..limit(1)).getSingleOrNull();
+
+      return (unusedMnemonic: unusedMnemonic, isEmpty: remaining == null);
+    });
   }
 
   @override

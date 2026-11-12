@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:application/account.dart';
 import 'package:application/mnemonic.dart';
+import 'package:infrastructure/rust.dart';
 import 'package:infrastructure/sqlite.dart';
 import 'package:infrastructure/src/sqlite/wallet_database.dart';
 import 'package:test/test.dart';
@@ -54,6 +55,44 @@ void main() {
   );
 
   test(
+    'deletes only unshared secrets and can retry after a Keychain failure',
+    () async {
+      final root = await Directory.systemTemp.createTemp('wallet-delete-test');
+      addTearDown(() => root.delete(recursive: true));
+      final derivation = MnemonicDerivation(
+        mnemonicId: MnemonicId(Uint8List(16)),
+        derivationPath: DerivationPath.parse('m/44/501/0/0'),
+      );
+      final first = Account(
+        address: AccountAddress(Uint8List(32)),
+        mnemonicDerivation: derivation,
+      );
+      final second = first.copyWith(
+        address: AccountAddress(Uint8List(32)..[0] = 1),
+      );
+      final repo = SqliteAccountRepository(directory: root);
+      final keys = _TestKeys()..fail = true;
+      final deleter = RustAccountDeleter(repo, deleteKeys: keys.delete);
+      addTearDown(repo.close);
+      await repo.save(first);
+      await repo.save(second);
+      await repo.selectAccount(first.address);
+      await expectLater(deleter.delete(first.address), throwsException);
+      expect(await repo.watchCurrentAddress().first, first.address);
+      keys.fail = false;
+      expect(await deleter.delete(first.address), isFalse);
+      expect(await repo.watchCurrentAddress().first, second.address);
+      expect(await deleter.delete(second.address), isTrue);
+      expect(await repo.watchAll().first, isEmpty);
+      expect(keys.calls, [
+        (first.address, null),
+        (first.address, null),
+        (second.address, derivation.mnemonicId),
+      ]);
+    },
+  );
+
+  test(
     'upgrades an existing wallet and restores its selected account',
     () async {
       final root = await Directory.systemTemp.createTemp('wallet-upgrade-test');
@@ -100,4 +139,17 @@ void main() {
       }
     },
   );
+}
+
+class _TestKeys {
+  final calls = <(AccountAddress, MnemonicId?)>[];
+  var fail = false;
+
+  Future<void> delete(
+    AccountAddress address, {
+    MnemonicId? unusedMnemonic,
+  }) async {
+    calls.add((address, unusedMnemonic));
+    if (fail) throw Exception('Keychain unavailable');
+  }
 }

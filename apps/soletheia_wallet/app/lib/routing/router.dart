@@ -1,10 +1,16 @@
+import 'package:cupertino_ui/cupertino_ui.dart'
+    show CupertinoRouteTransitionMixin;
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../account.dart';
+import '../l10n.dart';
+import '../responsive.dart';
 import '../shell/account.dart';
+import '../shell/account_list.dart';
 import '../view/account_creation.dart';
+import '../view/account_detail.dart';
 import '../view/account_list.dart';
 import '../view/account_switch.dart';
 import '../view/onboarding.dart';
@@ -21,7 +27,9 @@ part 'account/token_route.dart';
 part 'account/trade_branch.dart';
 part 'account/trade_route.dart';
 part 'root/account_creation_route.dart';
+part 'root/account_detail_route.dart';
 part 'root/account_list_route.dart';
+part 'root/account_list_shell_route.dart';
 part 'root/account_switch_route.dart';
 part 'root/add_account_route.dart';
 part 'root/licenses_route.dart';

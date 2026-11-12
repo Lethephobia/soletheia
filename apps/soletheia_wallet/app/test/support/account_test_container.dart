@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:application/account.dart';
+import 'package:application/application.dart';
+import 'package:infrastructure/rust.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soletheia/account.dart';
@@ -19,6 +20,24 @@ class TestAccountRepository implements AccountRepository {
   Future<void> save(Account account) async {
     _accounts[account.address] = account;
     _changes.add(_accounts.values.toList());
+  }
+
+  @override
+  Future<T> transaction<T>(Future<T> Function() operation) => operation();
+
+  @override
+  Future<({MnemonicId? unusedMnemonic, bool isEmpty})> deleteAccount(
+    AccountAddress address,
+  ) async {
+    final removed = _accounts.remove(address);
+    if (removed == null) throw const AccountNotFoundException();
+    final id = removed.mnemonicDerivation?.mnemonicId;
+    if (_selected == address) _selected = null;
+    _changes.add(_accounts.values.toList());
+    final shared = _accounts.values.any(
+      (account) => account.mnemonicDerivation?.mnemonicId == id,
+    );
+    return (unusedMnemonic: shared ? null : id, isEmpty: _accounts.isEmpty);
   }
 
   AccountAddress? _selected;
@@ -51,6 +70,9 @@ Future<ProviderContainer> accountTestContainer({
   final container = ProviderContainer.test(
     overrides: [
       accountRepositoryProvider.overrideWithValue(store),
+      accountDeleterProvider.overrideWithValue(
+        RustAccountDeleter(store, deleteKeys: (_, {unusedMnemonic}) async {}),
+      ),
       if (creator != null) accountCreatorProvider.overrideWithValue(creator),
     ],
   );
