@@ -6,6 +6,7 @@ import 'package:soletheia/app.dart';
 import 'package:soletheia/view.dart';
 
 import '../support/account_test_container.dart';
+import '../support/pump_wallet_widget.dart';
 
 void main() {
   testWidgets('stays dark regardless of system brightness', (tester) async {
@@ -18,14 +19,12 @@ void main() {
     addTearDown(dispatcher.clearPlatformBrightnessTestValue);
     dispatcher.platformBrightnessTestValue = Brightness.light;
 
-    await tester.pumpWidget(
+    await tester.pumpWalletWidget(
       UncontrolledProviderScope(
         container: await accountTestContainer(),
         child: const App(),
       ),
     );
-    await tester.runAsync(() => GoogleFonts.pendingFonts());
-    await tester.pumpAndSettle();
 
     final theme = Theme.of(tester.element(find.byType(OnboardingView)));
     expect(theme.textTheme.bodyMedium?.fontFamily, startsWith('NotoSansJP'));

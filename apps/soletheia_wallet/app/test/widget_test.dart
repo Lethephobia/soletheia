@@ -11,18 +11,18 @@ import 'package:soletheia/shell.dart';
 import 'package:soletheia/view.dart';
 
 import 'support/account_test_container.dart';
+import 'support/pump_wallet_widget.dart';
 
 void main() {
   testWidgets('starts in onboarding without account navigation', (
     tester,
   ) async {
-    await tester.pumpWidget(
+    await tester.pumpWalletWidget(
       UncontrolledProviderScope(
         container: await accountTestContainer(),
         child: const App(),
       ),
     );
-    await tester.pumpAndSettle();
     expect(find.byType(OnboardingView), findsOneWidget);
     expect(find.byType(AccountShell), findsNothing);
     expect(find.byType(AppBar), findsNothing);
@@ -67,13 +67,12 @@ void main() {
     tester.view.physicalSize = const Size(390, 844);
     addTearDown(tester.view.resetDevicePixelRatio);
     addTearDown(tester.view.resetPhysicalSize);
-    await tester.pumpWidget(
+    await tester.pumpWalletWidget(
       UncontrolledProviderScope(
         container: await accountTestContainer(),
         child: const App(),
       ),
     );
-    await tester.pumpAndSettle();
     await tester.tap(find.text('Create account'));
     await tester.pumpAndSettle();
     expect(find.byType(AccountCreationView), findsOneWidget);
@@ -155,10 +154,9 @@ void main() {
       final second = Account(address: AccountAddress(Uint8List(32)..[31] = 1));
       await repository.save(second);
       final container = await accountTestContainer(repository: repository);
-      await tester.pumpWidget(
+      await tester.pumpWalletWidget(
         UncontrolledProviderScope(container: container, child: const App()),
       );
-      await tester.pumpAndSettle();
       expect(find.byType(AccountShell), findsOneWidget);
       expect(find.byType(NavigationBar), findsOneWidget);
       await tester.tap(find.text('Scan'));
@@ -274,13 +272,12 @@ void main() {
     final dispatcher = tester.binding.platformDispatcher;
     addTearDown(dispatcher.clearLocalesTestValue);
     dispatcher.localesTestValue = [const Locale('ja', 'JP')];
-    await tester.pumpWidget(
+    await tester.pumpWalletWidget(
       UncontrolledProviderScope(
         container: await accountTestContainer(),
         child: const App(),
       ),
     );
-    await tester.pumpAndSettle();
     expect(find.text('Create account'), findsOneWidget);
     expect(
       Localizations.localeOf(tester.element(find.byType(OnboardingView))),

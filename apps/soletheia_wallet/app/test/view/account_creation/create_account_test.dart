@@ -8,6 +8,7 @@ import 'package:material_ui/material_ui.dart';
 import 'package:soletheia/app.dart';
 
 import '../../support/account_test_container.dart';
+import '../../support/pump_wallet_widget.dart';
 
 class _Creator implements AccountCreator {
   final calls =
@@ -48,13 +49,12 @@ class _FailingRepository extends TestAccountRepository {
 
 void main() {
   testWidgets('reopening the creation screen resets its form', (tester) async {
-    await tester.pumpWidget(
+    await tester.pumpWalletWidget(
       UncontrolledProviderScope(
         container: await accountTestContainer(),
         child: const App(),
       ),
     );
-    await tester.pumpAndSettle();
     await tester.tap(find.text('Create account'));
     await tester.pumpAndSettle();
     await tester.enterText(
@@ -82,7 +82,7 @@ void main() {
     (tester) async {
       final creator = _Creator();
       final store = _FailingRepository();
-      await tester.pumpWidget(
+      await tester.pumpWalletWidget(
         UncontrolledProviderScope(
           container: await accountTestContainer(
             creator: creator,
@@ -91,7 +91,6 @@ void main() {
           child: const App(),
         ),
       );
-      await tester.pumpAndSettle();
       await tester.tap(find.text('Create account'));
       await tester.pumpAndSettle();
       final submit = find.widgetWithText(FilledButton, 'Create');

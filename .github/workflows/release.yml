@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  FLUTTER_VERSION: '3.47.9'
+  FLUTTER_VERSION: '3.50.0'
   RELEASE_TAG: ${{ inputs.tag || github.event.release.tag_name }}
   CARGO_TERM_COLOR: always
 

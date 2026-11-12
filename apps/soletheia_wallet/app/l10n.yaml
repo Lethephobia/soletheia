@@ -4,3 +4,5 @@ output-localization-file: app_localizations.dart
 nullable-getter: false
 required-resource-attributes: true
 preferred-supported-locales: [en]
+# Flutter 3.50 gen-l10n still emits the deprecated SDK localization delegates.
+header: '// ignore_for_file: deprecated_member_use'
