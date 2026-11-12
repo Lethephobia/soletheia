@@ -6,7 +6,10 @@ abstract final class AppTheme {
     final base = ThemeData(
       brightness: Brightness.dark,
       colorSchemeSeed: Colors.deepPurple,
-      appBarTheme: const AppBarThemeData(centerTitle: false),
+      appBarTheme: const AppBarThemeData(
+        centerTitle: false,
+        actionsPadding: EdgeInsetsDirectional.only(end: 8),
+      ),
       inputDecorationTheme: const InputDecorationThemeData(
         border: OutlineInputBorder(),
       ),
