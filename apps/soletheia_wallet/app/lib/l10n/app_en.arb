@@ -86,6 +86,10 @@
   "@accountCreationTitle": {
     "description": "App bar title of the account creation screen."
   },
+  "accountCreationRequiredHelper": "*required",
+  "@accountCreationRequiredHelper": {
+    "description": "Supporting text explaining the required-field asterisk on the account creation form."
+  },
   "accountCreationWordlistLabel": "Wordlist",
   "@accountCreationWordlistLabel": {
     "description": "Label for the BIP-39 wordlist language selector."
@@ -94,7 +98,7 @@
   "@accountCreationWordCountLabel": {
     "description": "Label for the BIP-39 mnemonic length selector."
   },
-  "accountCreationCustomEntropyLabel": "Custom entropy (optional)",
+  "accountCreationCustomEntropyLabel": "Custom entropy",
   "@accountCreationCustomEntropyLabel": {
     "description": "Label for the optional hexadecimal entropy input."
   },
@@ -198,11 +202,11 @@
   "@accountDetailAddress": { "description": "Label for the Solana account address." },
   "accountDetailNotFound": "Account not found.",
   "@accountDetailNotFound": { "description": "Shown when the address has no saved account." },
-  "accountCreationPassphraseLabel": "Passphrase (optional)",
+  "accountCreationPassphraseLabel": "Passphrase",
   "@accountCreationPassphraseLabel": {
     "description": "Label for the optional passphrase used in seed derivation."
   },
-  "accountCreationDerivationPathLabel": "Derivation path",
+  "accountCreationDerivationPathLabel": "Derivation path*",
   "@accountCreationDerivationPathLabel": {
     "description": "Label for the absolute Solana derivation path."
   },

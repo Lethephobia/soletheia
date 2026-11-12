@@ -49,6 +49,10 @@ class _FailingRepository extends TestAccountRepository {
 
 void main() {
   testWidgets('reopening the creation screen resets its form', (tester) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(1280, 800);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
     await tester.pumpWalletWidget(
       UncontrolledProviderScope(
         container: await accountTestContainer(),
@@ -58,19 +62,17 @@ void main() {
     await tester.tap(find.text('Create account'));
     await tester.pumpAndSettle();
     await tester.enterText(
-      find.widgetWithText(TextFormField, 'Custom entropy (optional)'),
+      find.widgetWithText(TextFormField, 'Custom entropy'),
       'abcd',
     );
 
-    await tester.pageBack();
+    await tester.tapAt(const Offset(8, 8));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Create account'));
     await tester.pumpAndSettle();
     expect(
       tester
-          .widget<TextField>(
-            find.widgetWithText(TextField, 'Custom entropy (optional)'),
-          )
+          .widget<TextField>(find.widgetWithText(TextField, 'Custom entropy'))
           .controller!
           .text,
       isEmpty,
@@ -80,6 +82,10 @@ void main() {
   testWidgets(
     'Create passes the options to Rust and retries metadata without creating another key',
     (tester) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(390, 844);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(tester.view.resetPhysicalSize);
       final keys = _TestKeys();
       final store = _FailingRepository();
       await tester.pumpWalletWidget(
@@ -93,7 +99,7 @@ void main() {
       );
       await tester.tap(find.text('Create account'));
       await tester.pumpAndSettle();
-      final submit = find.widgetWithText(FilledButton, 'Create');
+      final submit = find.widgetWithText(TextButton, 'Create');
       await tester.ensureVisible(submit);
       await tester.tap(submit);
       await tester.pump();
@@ -103,7 +109,16 @@ void main() {
         const MnemonicPassphrase.empty(),
         DerivationPath.parse("m/44'/501'/0'/0'"),
       ));
-      expect(tester.widget<FilledButton>(submit).onPressed, isNull);
+      expect(tester.widget<TextButton>(submit).onPressed, isNull);
+      tester.view.physicalSize = const Size(1280, 800);
+      await tester.pump();
+      await tester.tapAt(const Offset(8, 8));
+      await tester.pump();
+      await tester.binding.handlePopRoute();
+      await tester.pump();
+      expect(submit, findsOneWidget);
+      tester.view.physicalSize = const Size(390, 844);
+      await tester.pump();
       keys.response.completeError(Exception('test failure'));
       await tester.pumpAndSettle();
       expect(
@@ -114,12 +129,27 @@ void main() {
         findsOneWidget,
       );
 
-      final path = find.widgetWithText(TextFormField, 'Derivation path');
+      final path = find.widgetWithText(TextFormField, 'Derivation path*');
+      await tester.ensureVisible(path);
+      await tester.tap(path);
+      await tester.pumpAndSettle();
+      expect(find.text("m/44'/501'/1'/0'"), findsOneWidget);
+      expect(find.text("m/44'/501'/2'/0'"), findsOneWidget);
+      await tester.enterText(path, 'm/44/501/2');
+      await tester.pumpAndSettle();
+      expect(find.text("m/44'/501'/1'/0'"), findsNothing);
+      const suggestedPath = "m/44'/501'/2'/0'";
+      await tester.tap(find.text(suggestedPath));
+      await tester.pumpAndSettle();
+      final input = tester.widget<TextField>(
+        find.descendant(of: path, matching: find.byType(TextField)),
+      );
+      expect(input.controller!.text, suggestedPath);
       await tester.enterText(path, 'invalid');
       await tester.pump();
       final invalidPath = find.text('Enter an absolute derivation path.');
       expect(invalidPath, findsNothing);
-      expect(tester.widget<FilledButton>(submit).onPressed, isNotNull);
+      expect(tester.widget<TextButton>(submit).onPressed, isNotNull);
       await tester.ensureVisible(submit);
       await tester.tap(submit);
       await tester.pump();
@@ -129,11 +159,11 @@ void main() {
       await tester.pump();
       expect(invalidPath, findsNothing);
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'Passphrase (optional)'),
+        find.widgetWithText(TextFormField, 'Passphrase'),
         ' test ',
       );
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'Custom entropy (optional)'),
+        find.widgetWithText(TextFormField, 'Custom entropy'),
         '0f',
       );
       await tester.pumpAndSettle();
@@ -148,7 +178,7 @@ void main() {
       expect(keys.calls, hasLength(1));
       final invalidHex = find.text('Use only hexadecimal digits (0–9, A–F).');
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'Custom entropy (optional)'),
+        find.widgetWithText(TextFormField, 'Custom entropy'),
         '   ',
       );
       await tester.pumpAndSettle();
@@ -161,7 +191,7 @@ void main() {
       expect(invalidEntropy, findsNothing);
       expect(keys.calls, hasLength(1));
       await tester.enterText(
-        find.widgetWithText(TextFormField, 'Custom entropy (optional)'),
+        find.widgetWithText(TextFormField, 'Custom entropy'),
         '0102030405060708090A0b0c0d0e0f10',
       );
       await tester.pumpAndSettle();
@@ -174,10 +204,10 @@ void main() {
         );
         expect(menus.map((menu) => menu.enabled), [enabled, enabled]);
         final entropy = tester.widget<TextField>(
-          find.widgetWithText(TextField, 'Custom entropy (optional)'),
+          find.widgetWithText(TextField, 'Custom entropy'),
         );
         expect(entropy.enabled, enabled);
-        expect(tester.widget<FilledButton>(submit).onPressed != null, enabled);
+        expect(tester.widget<TextButton>(submit).onPressed != null, enabled);
       }
 
       expectFormEnabled(false);
@@ -199,7 +229,13 @@ void main() {
         findsOneWidget,
       );
       store.fail = false;
-      final retry = find.widgetWithText(FilledButton, 'Retry saving');
+      tester.view.physicalSize = const Size(1280, 800);
+      await tester.pumpAndSettle();
+      final retry = find.widgetWithText(TextButton, 'Retry saving');
+      await tester.tapAt(const Offset(8, 8));
+      await tester.pumpAndSettle();
+      tester.view.physicalSize = const Size(390, 844);
+      await tester.pumpAndSettle();
       await tester.ensureVisible(retry);
       await tester.tap(retry);
       await tester.pumpAndSettle();

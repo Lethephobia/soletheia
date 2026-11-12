@@ -93,7 +93,7 @@ void main() {
     expect(find.text('0/32'), findsOneWidget);
     final entropy = 'a' * 33;
     await tester.enterText(
-      find.widgetWithText(TextFormField, 'Custom entropy (optional)'),
+      find.widgetWithText(TextFormField, 'Custom entropy'),
       entropy,
     );
     await tester.pumpAndSettle();
@@ -107,9 +107,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(
       tester
-          .widget<TextField>(
-            find.widgetWithText(TextField, 'Custom entropy (optional)'),
-          )
+          .widget<TextField>(find.widgetWithText(TextField, 'Custom entropy'))
           .decoration
           ?.helperText,
       'Leave blank for random entropy, or enter 64 hex digits.',
@@ -117,13 +115,11 @@ void main() {
     expect(find.text('Enter exactly 64 hexadecimal characters.'), findsNothing);
     tester.view.physicalSize = const Size(1280, 800);
     await tester.pumpAndSettle();
-    expect(tester.getSize(find.byType(AppBar)).width, 1280);
+    expect(tester.getSize(find.byType(AppBar)).width, 560);
     expect(tester.getTopLeft(wordlist).dx, greaterThan(300));
     expect(
       tester
-          .widget<TextField>(
-            find.widgetWithText(TextField, 'Custom entropy (optional)'),
-          )
+          .widget<TextField>(find.widgetWithText(TextField, 'Custom entropy'))
           .decoration
           ?.helperText,
       'Leave blank for random entropy, or enter 64 hex digits.',
@@ -131,14 +127,16 @@ void main() {
     expect(find.text(entropy), findsOneWidget);
     expect(find.text('33/64'), findsOneWidget);
     expect(
-      tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+      tester
+          .widget<TextButton>(find.widgetWithText(TextButton, 'Create'))
+          .onPressed,
       isNotNull,
     );
     tester.view.physicalSize = const Size(320, 568);
     await tester.pumpAndSettle();
     expect(tester.getTopLeft(wordlist).dy, tester.getTopLeft(count).dy);
     expect(tester.takeException(), isNull);
-    await tester.tap(find.byTooltip('Back'));
+    await tester.tap(find.byTooltip('Close'));
     await tester.pumpAndSettle();
     expect(find.byType(OnboardingView), findsOneWidget);
   });
