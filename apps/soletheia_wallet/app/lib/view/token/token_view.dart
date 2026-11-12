@@ -1,7 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 
-import '../../l10n.dart';
 import '../../account/account_menu_button.dart';
+import '../../l10n.dart';
 
 class TokenView extends StatelessWidget {
   const TokenView({super.key});

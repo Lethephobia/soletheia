@@ -33,7 +33,7 @@ class TestAccountRepository implements AccountRepository {
   @override
   Future<void> selectAccount(AccountAddress address) async {
     if (!_accounts.containsKey(address)) {
-      throw StateError('Account does not exist');
+      throw const AccountNotFoundException();
     }
     _selected = address;
     _changes.add(_accounts.values.toList());

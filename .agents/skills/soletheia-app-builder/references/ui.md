@@ -37,14 +37,14 @@ installed API and current official support before relying on Expressive features
 widgets when they have a concrete purpose, not to recreate standard controls.
 
 The agreed product flow sends users with zero accounts through creation of their first account.
-Existing accounts lead to AccountShell. Startup awaits the first account list before choosing
-the initial screen, as described in the [routing guide](routing.md).
+Existing accounts lead to AccountShell. Resolve the persisted account state before choosing the initial screen, as described in the
+[routing guide](routing.md).
 
 **Good**
 
 ```text
 Onboarding: localized first-account setup content; normal shell after creation.
-Accounts: the branch action opens the same creation form on the root navigator.
+A shared workflow opens on the navigator that owns its presentation.
 ```
 
 **Bad**

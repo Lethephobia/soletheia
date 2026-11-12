@@ -3,6 +3,7 @@ export 'account/account_address.dart';
 export 'account/account_address_exception.dart';
 export 'account/account_creator.dart';
 export 'account/account_repository.dart';
+export 'account/account_repository_exception.dart';
 export 'account/bip44_account_index.dart';
 export 'account/bip44_change_index.dart';
 export 'account/created_account.dart';

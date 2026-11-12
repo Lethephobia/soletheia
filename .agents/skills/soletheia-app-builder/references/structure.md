@@ -111,3 +111,29 @@ final class InvalidEntropyLengthException extends MnemonicEntropyException {
 // Callers must interpret the message to identify this input failure.
 throw ArgumentError('Invalid entropy length.');
 ```
+
+### DO name the exception type when handling failures
+
+Use an `on` clause in hand-written Dart. Catch the specific recoverable exception when the
+interface exposes one. At a UI operation boundary that offers the same recovery for all
+operational exceptions, use `on Exception` so programming errors still surface.
+
+**Good**
+
+```dart
+try {
+  await save();
+} on Exception {
+  showSaveFailure();
+}
+```
+
+**Bad**
+
+```dart
+try {
+  await save();
+} catch (_) {
+  showSaveFailure();
+}
+```

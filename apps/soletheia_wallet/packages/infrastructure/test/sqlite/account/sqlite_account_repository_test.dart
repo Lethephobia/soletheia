@@ -40,7 +40,7 @@ void main() {
         expect(await repo.watchCurrentAddress().first, other.address);
         await expectLater(
           repo.selectAccount(AccountAddress(Uint8List(32)..[0] = 2)),
-          throwsStateError,
+          throwsA(isA<AccountNotFoundException>()),
         );
       } finally {
         await stream.cancel();

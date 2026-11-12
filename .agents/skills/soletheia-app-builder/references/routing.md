@@ -1,51 +1,53 @@
 # Routing
 
-Use for the onboarding flow and normal account navigation.
+### DO let the parent define each typed route's path and navigator
 
-### DO separate onboarding from the normal account shell
-
-`OnboardingRoute` is a standalone root route at `/onboarding`. `AccountShellRoute`
-hosts the account list and settings branches. Parent route annotations define the paths.
-Share the relative account creation route between onboarding and accounts, and the
-relative licenses route between onboarding and settings. Both use the root navigator.
-
-Startup awaits the first list from `AccountRepository.watchAll()` before creating
-the router. The router uses that list to choose its initial location. Direct navigation has no
-account-count redirect. After account creation and metadata persistence succeed,
-navigate to the account list with `go`.
+Keep route declarations grouped by their owning navigator. Use relative route data for destinations
+shared by multiple parents. Place a destination on the root navigator when it should cover the
+shell. Register the generated `$appRoutes` once and regenerate bindings after declaration changes.
 
 **Good**
 
 ```text
-Startup with an empty account list -> /onboarding
-Startup with stored accounts -> /accounts
-/onboarding/create-account or /accounts/create-account -> save -> /accounts
+Both parent annotations reference the same typed relative child declaration.
 ```
 
 **Bad**
 
 ```text
-Hard-code zero accounts in a fake repository and claim automatic gating works.
-A setup completion button navigates without creating or persisting an account.
+A shared destination hard-codes a URL that assumes one particular parent.
 ```
 
-### DO keep router mechanics in Shell and presentation in Layout
+### DO choose the initial location from resolved application state
 
-Use goBranch to preserve branch locations. Keep content mounted across responsive changes.
-Shell can supply a branch-specific action to Layout; Layout must not inspect child View types.
-Keep route declarations under routing/root or routing/account as parts of router.dart.
-Use the single generated $appRoutes list and regenerate bindings after route changes.
+When startup navigation depends on persisted data, await the initial read before choosing the
+location. For a flow that writes data, navigate on successful completion.
 
 **Good**
 
 ```text
-AccountShell: currentIndex, goBranch, current branch action
-AccountLayout: navigation presentation, rail expansion, responsive action placement
+Read persisted state -> choose initial typed destination.
 ```
 
 **Bad**
 
 ```text
-AccountLayout reads a child's runtimeType to choose a route or callback.
-Resizing reconstructs a new navigation stack and loses the selected branch state.
+Treat loading as empty and briefly show the wrong flow.
+```
+
+### DO keep router mechanics in the shell and presentation in the layout
+
+Use `goBranch` for stateful branches. Preserve their navigation stacks when switching branches
+or resizing. Let the shell supply branch actions and the layout choose their placement.
+
+**Good**
+
+```text
+The shell passes the current branch and its action to the responsive layout.
+```
+
+**Bad**
+
+```text
+The layout inspects the child widget's runtime type to decide where to navigate.
 ```

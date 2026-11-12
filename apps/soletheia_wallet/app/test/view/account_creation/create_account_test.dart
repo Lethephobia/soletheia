@@ -42,7 +42,7 @@ class _FailingRepository extends TestAccountRepository {
   @override
   Future<void> save(Account account) async {
     attempts.add(account);
-    if (fail) throw StateError('storage unavailable');
+    if (fail) throw Exception('storage unavailable');
     await super.save(account);
   }
 }
@@ -104,7 +104,7 @@ void main() {
         DerivationPath.parse("m/44'/501'/0'/0'"),
       ));
       expect(tester.widget<FilledButton>(submit).onPressed, isNull);
-      creator.response.completeError(StateError('test failure'));
+      creator.response.completeError(Exception('test failure'));
       await tester.pumpAndSettle();
       expect(
         find.widgetWithText(

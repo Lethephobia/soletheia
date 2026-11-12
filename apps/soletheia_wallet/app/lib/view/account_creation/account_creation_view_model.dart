@@ -93,7 +93,7 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
             passphrase: MnemonicPassphrase(pending.passphrase),
             derivationPath: path,
           );
-    } catch (_) {
+    } on Exception {
       if (ref.mounted) {
         state = state.copyWith(
           status: const AccountCreationStatus.creationFailed(),
@@ -125,7 +125,7 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
     try {
       await repository.save(account);
       await repository.selectAccount(account.address);
-    } catch (_) {
+    } on Exception {
       if (ref.mounted) {
         state = state.copyWith(
           status: AccountCreationStatus.saveFailed(account),

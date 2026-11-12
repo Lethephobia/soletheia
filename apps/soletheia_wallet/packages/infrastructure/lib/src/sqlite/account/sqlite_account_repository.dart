@@ -67,7 +67,7 @@ class SqliteAccountRepository implements AccountRepository {
           await (_db.update(_db.accounts)
                 ..where((row) => row.address.equals(address.bytes)))
               .write(const AccountsCompanion(isCurrent: Value(true)));
-      if (count == 0) throw StateError('Account does not exist');
+      if (count == 0) throw const AccountNotFoundException();
     });
   }
 

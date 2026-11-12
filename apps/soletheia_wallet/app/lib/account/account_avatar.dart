@@ -53,6 +53,7 @@ class _IdenticonPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_IdenticonPainter oldDelegate) =>
-      oldDelegate.address != address;
+  bool shouldRepaint(_IdenticonPainter oldDelegate) {
+    return oldDelegate.address != address;
+  }
 }

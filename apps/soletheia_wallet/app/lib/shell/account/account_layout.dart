@@ -75,8 +75,9 @@ class _AccountLayoutState extends State<AccountLayout> {
                               tooltip: _isExtended
                                   ? l10n.navigationCollapseLabel
                                   : l10n.navigationExpandLabel,
-                              onPressed: () =>
-                                  setState(() => _isExtended = !_isExtended),
+                              onPressed: () {
+                                setState(() => _isExtended = !_isExtended);
+                              },
                               icon: Icon(
                                 _isExtended ? Icons.menu_open : Icons.menu,
                               ),

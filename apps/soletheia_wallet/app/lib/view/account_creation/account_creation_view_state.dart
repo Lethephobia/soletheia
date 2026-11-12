@@ -25,8 +25,9 @@ abstract class AccountCreationViewState with _$AccountCreationViewState {
 
   int get hexLength => wordCount.entropyBytes * 2;
 
-  bool get isFormLocked =>
-      status is! AccountCreationIdle && status is! AccountCreationFailed;
+  bool get isFormLocked {
+    return status is! AccountCreationIdle && status is! AccountCreationFailed;
+  }
 
   bool get canSubmit => !isFormLocked || status is AccountSaveFailed;
 

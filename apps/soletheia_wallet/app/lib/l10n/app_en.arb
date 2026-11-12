@@ -20,6 +20,8 @@
   "@switchAccountLabel": {"description": "Menu action that opens the account picker."},
   "accountsTitle": "Accounts",
   "@accountsTitle": {"description": "Title of the account picker."},
+  "accountSwitchTitle": "Accounts",
+  "@accountSwitchTitle": {"description": "Title of the picker for switching the active account."},
   "accountSwitchFailure": "Could not switch accounts.",
   "@accountSwitchFailure": {"description": "Shown when selecting an account fails."},
   "accountsLoadFailure": "Could not load accounts.",
