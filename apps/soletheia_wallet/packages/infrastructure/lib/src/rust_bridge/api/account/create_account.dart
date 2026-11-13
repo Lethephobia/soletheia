@@ -4,8 +4,8 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../../application/account/account_address.dart';
-import '../../application/account/account_creator_error.dart';
-import '../../application/account/created_account.dart';
+import '../../application/account/mnemonic_account.dart';
+import '../../application/account/mnemonic_account_creator_error.dart';
 import '../../application/keypair/derivation_path.dart';
 import '../../application/keypair/keypair_deriver_error.dart';
 import '../../application/mnemonic/mnemonic_entropy.dart';
@@ -22,7 +22,7 @@ import '../../lib.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-Future<CreatedAccount> createAccount({
+Future<MnemonicAccount> createAccount({
   required MnemonicWordlist wordlist,
   required MnemonicGenerationSource source,
   required MnemonicPassphrase passphrase,

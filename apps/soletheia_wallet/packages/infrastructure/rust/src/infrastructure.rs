@@ -5,7 +5,7 @@ pub mod solana;
 
 #[cfg(any(target_os = "ios", target_os = "macos"))]
 impl Default
-    for crate::application::account::DefaultAccountCreator<
+    for crate::application::account::DefaultMnemonicAccountCreator<
         crate::infrastructure::bip39::Bip39MnemonicGenerator,
         crate::infrastructure::solana::SolanaKeypairDeriver,
         crate::infrastructure::keychain::KeychainMnemonicStore,
@@ -15,6 +15,25 @@ impl Default
     fn default() -> Self {
         Self::new(
             crate::infrastructure::bip39::Bip39MnemonicGenerator,
+            crate::infrastructure::solana::SolanaKeypairDeriver,
+            crate::infrastructure::keychain::KeychainMnemonicStore,
+            crate::infrastructure::keychain::KeychainKeypairStore,
+        )
+    }
+}
+
+#[cfg(any(target_os = "ios", target_os = "macos"))]
+impl Default
+    for crate::application::account::DefaultMnemonicAccountImporter<
+        crate::infrastructure::bip39::Bip39MnemonicParser,
+        crate::infrastructure::solana::SolanaKeypairDeriver,
+        crate::infrastructure::keychain::KeychainMnemonicStore,
+        crate::infrastructure::keychain::KeychainKeypairStore,
+    >
+{
+    fn default() -> Self {
+        Self::new(
+            crate::infrastructure::bip39::Bip39MnemonicParser,
             crate::infrastructure::solana::SolanaKeypairDeriver,
             crate::infrastructure::keychain::KeychainMnemonicStore,
             crate::infrastructure::keychain::KeychainKeypairStore,
@@ -42,8 +61,8 @@ mod tests {
     use crate::application::keypair::KeypairDeriverError;
     use crate::application::{
         account::{
-            AccountAddress, AccountCreator, AccountCreatorError, CreatedAccount,
-            DefaultAccountCreator,
+            AccountAddress, DefaultMnemonicAccountCreator, MnemonicAccount, MnemonicAccountCreator,
+            MnemonicAccountCreatorError,
         },
         keypair::{AccountKeypair, DerivationPath, KeypairDeriver},
         mnemonic::{Mnemonic, MnemonicGenerationSource, MnemonicPassphrase, MnemonicWordlist},
@@ -114,11 +133,11 @@ mod tests {
         }
     }
 
-    impl<G, D, M, K> DefaultAccountCreator<G, D, M, K>
+    impl<G, D, M, K> DefaultMnemonicAccountCreator<G, D, M, K>
     where
-        Self: AccountCreator,
+        Self: MnemonicAccountCreator,
     {
-        fn create_test_account(&self) -> Result<CreatedAccount, AccountCreatorError> {
+        fn create_test_account(&self) -> Result<MnemonicAccount, MnemonicAccountCreatorError> {
             self.create(
                 MnemonicWordlist::English,
                 MnemonicGenerationSource::Entropy(vec![0; 16].try_into().unwrap()),
@@ -139,13 +158,13 @@ mod tests {
             saved.set(Some(keypair.address()));
             Ok(())
         });
-        let creator = DefaultAccountCreator::new(
+        let creator = DefaultMnemonicAccountCreator::new(
             Bip39MnemonicGenerator,
             SolanaKeypairDeriver,
             &mnemonics,
             keys,
         );
-        let CreatedAccount {
+        let MnemonicAccount {
             address,
             mnemonic_id,
         } = creator.create_test_account().unwrap();
@@ -158,7 +177,7 @@ mod tests {
         assert_eq!(saved.get(), Some(address));
         assert!(matches!(
             creator.create_test_account(),
-            Err(AccountCreatorError::KeypairStorage(
+            Err(MnemonicAccountCreatorError::KeypairStorage(
                 KeypairStoreError::AlreadyExists
             ))
         ));
@@ -167,11 +186,81 @@ mod tests {
     }
 
     #[test]
+    fn imports_the_expected_address_and_rolls_back_only_the_duplicate_mnemonic() {
+        use crate::application::account::{
+            DefaultMnemonicAccountImporter, MnemonicAccountImporter, MnemonicAccountImporterError,
+            MnemonicAccountWriterError,
+        };
+        use crate::infrastructure::bip39::Bip39MnemonicParser;
+
+        let phrase = format!("{} about", ["abandon"; 11].join(" "));
+        let passphrase = MnemonicPassphrase::new("TREZOR".into());
+        let path = "m/44'/501'/0'/0'".parse().unwrap();
+        let mnemonics = TestMnemonics::default();
+        let saved = Cell::new(None);
+        let keys = TestKeys(|keypair: &AccountKeypair| {
+            if saved.get().is_some() {
+                return Err(KeypairStoreError::AlreadyExists);
+            }
+            saved.set(Some(keypair.address()));
+            Ok(())
+        });
+        let importer = DefaultMnemonicAccountImporter::new(
+            Bip39MnemonicParser,
+            SolanaKeypairDeriver,
+            &mnemonics,
+            keys,
+        );
+        let account = importer.import(&phrase, &passphrase, &path).unwrap();
+        assert_eq!(
+            solana_keypair::Address::new_from_array(*account.address.value()).to_string(),
+            "7zSmbu6gKkb6HB7UDPtHYjwCWuBHU1D4TpNZFm4sndQe"
+        );
+        assert!(matches!(
+            importer.import(&phrase, &passphrase, &path),
+            Err(MnemonicAccountImporterError::AccountWrite(
+                MnemonicAccountWriterError::KeypairStorage(KeypairStoreError::AlreadyExists)
+            ))
+        ));
+        assert_eq!(
+            *mnemonics.entries.borrow(),
+            HashSet::from([account.mnemonic_id])
+        );
+        assert_eq!(saved.get(), Some(account.address));
+    }
+
+    #[test]
+    fn rejects_invalid_import_before_storage() {
+        use crate::application::account::{
+            DefaultMnemonicAccountImporter, MnemonicAccountImporter, MnemonicAccountImporterError,
+        };
+        use crate::application::mnemonic::MnemonicParserError;
+        use crate::infrastructure::bip39::Bip39MnemonicParser;
+
+        let importer = DefaultMnemonicAccountImporter::new(
+            Bip39MnemonicParser,
+            SolanaKeypairDeriver,
+            UnexpectedStorage,
+            UnexpectedStorage,
+        );
+        assert!(matches!(
+            importer.import(
+                &["abandon"; 12].join(" "),
+                &MnemonicPassphrase::new(String::new()),
+                &"m/44'/501'/0'/0'".parse().unwrap()
+            ),
+            Err(MnemonicAccountImporterError::MnemonicParsing(
+                MnemonicParserError::InvalidChecksum
+            ))
+        ));
+    }
+
+    #[test]
     fn mnemonic_insert_failure_preserves_existing_entry_and_skips_keypair_save() {
         let mnemonics = TestMnemonics::default();
         let existing = MnemonicId { value: [0; 16] };
         mnemonics.entries.borrow_mut().insert(existing);
-        let creator = DefaultAccountCreator::new(
+        let creator = DefaultMnemonicAccountCreator::new(
             Bip39MnemonicGenerator,
             SolanaKeypairDeriver,
             &mnemonics,
@@ -179,7 +268,7 @@ mod tests {
         );
         assert!(matches!(
             creator.create_test_account(),
-            Err(AccountCreatorError::MnemonicStorage(
+            Err(MnemonicAccountCreatorError::MnemonicStorage(
                 MnemonicStoreError::AlreadyExists
             ))
         ));
@@ -193,7 +282,7 @@ mod tests {
             ..Default::default()
         };
         let keys = TestKeys(|_: &AccountKeypair| Err(KeypairStoreError::AlreadyExists));
-        let creator = DefaultAccountCreator::new(
+        let creator = DefaultMnemonicAccountCreator::new(
             Bip39MnemonicGenerator,
             SolanaKeypairDeriver,
             &mnemonics,
@@ -201,7 +290,7 @@ mod tests {
         );
         let error = creator.create_test_account().unwrap_err();
         assert!(
-            matches!(error, AccountCreatorError::MnemonicCleanup { id, save: KeypairStoreError::AlreadyExists, cleanup: MnemonicStoreError::Keychain(-1) } if mnemonics.entries.borrow().contains(&id))
+            matches!(error, MnemonicAccountCreatorError::MnemonicCleanup { id, save: KeypairStoreError::AlreadyExists, cleanup: MnemonicStoreError::Keychain(-1) } if mnemonics.entries.borrow().contains(&id))
         );
     }
 
@@ -220,7 +309,7 @@ mod tests {
                 Err(MnemonicGeneratorError::Randomness)
             }
         }
-        let creator = DefaultAccountCreator::new(
+        let creator = DefaultMnemonicAccountCreator::new(
             FailingGenerator,
             SolanaKeypairDeriver,
             UnexpectedStorage,
@@ -228,7 +317,7 @@ mod tests {
         );
         assert!(matches!(
             creator.create_test_account(),
-            Err(AccountCreatorError::MnemonicGeneration(
+            Err(MnemonicAccountCreatorError::MnemonicGeneration(
                 MnemonicGeneratorError::Randomness
             ))
         ));
@@ -248,7 +337,7 @@ mod tests {
                 Err(KeypairDeriverError::DerivationFailed)
             }
         }
-        let creator = DefaultAccountCreator::new(
+        let creator = DefaultMnemonicAccountCreator::new(
             Bip39MnemonicGenerator,
             FailingDeriver,
             UnexpectedStorage,
@@ -256,7 +345,7 @@ mod tests {
         );
         assert!(matches!(
             creator.create_test_account(),
-            Err(AccountCreatorError::KeypairDerivation(
+            Err(MnemonicAccountCreatorError::KeypairDerivation(
                 KeypairDeriverError::DerivationFailed
             ))
         ));

@@ -18,7 +18,7 @@ void main() {
       addTearDown(() => dir.delete(recursive: true));
       final store = SqliteAccountRepository(directory: dir);
       addTearDown(store.close);
-      final creator = RustAccountCreator(store);
+      final creator = RustMnemonicAccountCreator(store);
       final deleter = RustAccountDeleter(store);
       final path = DerivationPath.parse("m/44'/501'/0'/0'");
       final random = Random.secure();
@@ -47,7 +47,7 @@ void main() {
       await expectLater(
         create(),
         throwsA(
-          const AccountCreatorError.keypairStorage(
+          const MnemonicAccountCreatorError.keypairStorage(
             KeypairStoreError.alreadyExists(),
           ),
         ),

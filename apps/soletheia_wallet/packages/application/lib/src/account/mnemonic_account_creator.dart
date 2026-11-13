@@ -4,7 +4,7 @@ import '../mnemonic/mnemonic_wordlist.dart';
 import 'account.dart';
 import 'derivation_path.dart';
 
-abstract interface class AccountCreator {
+abstract interface class MnemonicAccountCreator {
   /// Creates the keys, persists the account and selects it.
   Future<Account> create({
     required MnemonicWordlist wordlist,

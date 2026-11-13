@@ -62,7 +62,7 @@ class TestAccountRepository implements AccountRepository {
 }
 
 Future<ProviderContainer> accountTestContainer({
-  AccountCreator? creator,
+  MnemonicAccountCreator? creator,
   TestAccountRepository? repository,
 }) async {
   final store = repository ?? TestAccountRepository();
@@ -73,7 +73,7 @@ Future<ProviderContainer> accountTestContainer({
       accountDeleterProvider.overrideWithValue(
         RustAccountDeleter(store, deleteKeys: (_, {unusedMnemonic}) async {}),
       ),
-      if (creator != null) accountCreatorProvider.overrideWithValue(creator),
+      if (creator != null) mnemonicAccountCreatorProvider.overrideWithValue(creator),
     ],
   );
   final subscription = container.listen(accountsProvider.future, (_, _) {});

@@ -65,7 +65,7 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
     if (pending.status case AccountSaveFailed(:final account)) {
       state = pending.copyWith(status: AccountCreationStatus.saving(account));
       await _completeCreation(
-        () => ref.read(accountCreatorProvider).retrySave(account),
+        () => ref.read(mnemonicAccountCreatorProvider).retrySave(account),
       );
       return;
     }
@@ -87,7 +87,7 @@ class AccountCreationViewModel extends _$AccountCreationViewModel {
           ? MnemonicGenerationSource.entropy(_parseEntropy(pending))
           : MnemonicGenerationSource.random(pending.wordCount);
       await ref
-          .read(accountCreatorProvider)
+          .read(mnemonicAccountCreatorProvider)
           .create(
             wordlist: pending.wordlist,
             source: source,

@@ -21,16 +21,16 @@ class _TestKeys {
           DerivationPath,
         )
       >[];
-  late Completer<CreatedAccount> response;
+  late Completer<MnemonicAccount> response;
 
-  Future<CreatedAccount> create({
+  Future<MnemonicAccount> create({
     required MnemonicWordlist wordlist,
     required MnemonicGenerationSource source,
     required MnemonicPassphrase passphrase,
     required DerivationPath derivationPath,
   }) {
     calls.add((wordlist, source, passphrase, derivationPath));
-    response = Completer<CreatedAccount>();
+    response = Completer<MnemonicAccount>();
     return response.future;
   }
 }
@@ -91,7 +91,7 @@ void main() {
       await tester.pumpWalletWidget(
         UncontrolledProviderScope(
           container: await accountTestContainer(
-            creator: RustAccountCreator(store, createKeys: keys.create),
+            creator: RustMnemonicAccountCreator(store, createKeys: keys.create),
             repository: store,
           ),
           child: const App(),
@@ -215,7 +215,7 @@ void main() {
       expect(keys.calls.last.$4.value, "m/44'/501'/7'/0'");
       final source = keys.calls.last.$2 as EntropyMnemonicGenerationSource;
       expect(source.entropy.bytes, List.generate(16, (i) => i + 1));
-      final created = CreatedAccount(
+      final created = MnemonicAccount(
         address: AccountAddress(Uint8List(32)),
         mnemonicId: MnemonicId(Uint8List(16)),
       );

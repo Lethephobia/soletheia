@@ -4,9 +4,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'account_repository.dart';
 
-part 'account_creator.g.dart';
+part 'mnemonic_account_creator.g.dart';
 
 @riverpod
-AccountCreator accountCreator(Ref ref) {
-  return RustAccountCreator(ref.watch(accountRepositoryProvider));
+MnemonicAccountCreator mnemonicAccountCreator(Ref ref) {
+  return RustMnemonicAccountCreator(ref.watch(accountRepositoryProvider));
 }

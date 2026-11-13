@@ -6,9 +6,9 @@
 import 'api/account/create_account.dart';
 import 'api/account/delete_account.dart';
 import 'application/account/account_address.dart';
-import 'application/account/account_creator_error.dart';
 import 'application/account/account_deleter_error.dart';
-import 'application/account/created_account.dart';
+import 'application/account/mnemonic_account.dart';
+import 'application/account/mnemonic_account_creator_error.dart';
 import 'application/keypair/derivation_path.dart';
 import 'application/keypair/keypair_deriver_error.dart';
 import 'application/mnemonic/mnemonic_entropy.dart';
@@ -93,9 +93,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AccountAddress dco_decode_account_address(dynamic raw);
 
   @protected
-  AccountCreatorError dco_decode_account_creator_error(dynamic raw);
-
-  @protected
   AccountDeleterError dco_decode_account_deleter_error(dynamic raw);
 
   @protected
@@ -121,9 +118,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   MnemonicStoreError dco_decode_box_autoadd_mnemonic_store_error(dynamic raw);
 
   @protected
-  CreatedAccount dco_decode_created_account(dynamic raw);
-
-  @protected
   int dco_decode_i_32(dynamic raw);
 
   @protected
@@ -137,6 +131,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
+
+  @protected
+  MnemonicAccount dco_decode_mnemonic_account(dynamic raw);
+
+  @protected
+  MnemonicAccountCreatorError dco_decode_mnemonic_account_creator_error(
+    dynamic raw,
+  );
 
   @protected
   MnemonicGenerationSource dco_decode_mnemonic_generation_source(dynamic raw);
@@ -217,11 +219,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AccountAddress sse_decode_account_address(SseDeserializer deserializer);
 
   @protected
-  AccountCreatorError sse_decode_account_creator_error(
-    SseDeserializer deserializer,
-  );
-
-  @protected
   AccountDeleterError sse_decode_account_deleter_error(
     SseDeserializer deserializer,
   );
@@ -255,9 +252,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  CreatedAccount sse_decode_created_account(SseDeserializer deserializer);
-
-  @protected
   int sse_decode_i_32(SseDeserializer deserializer);
 
   @protected
@@ -275,6 +269,14 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
+
+  @protected
+  MnemonicAccount sse_decode_mnemonic_account(SseDeserializer deserializer);
+
+  @protected
+  MnemonicAccountCreatorError sse_decode_mnemonic_account_creator_error(
+    SseDeserializer deserializer,
+  );
 
   @protected
   MnemonicGenerationSource sse_decode_mnemonic_generation_source(
@@ -377,12 +379,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  void sse_encode_account_creator_error(
-    AccountCreatorError self,
-    SseSerializer serializer,
-  );
-
-  @protected
   void sse_encode_account_deleter_error(
     AccountDeleterError self,
     SseSerializer serializer,
@@ -425,12 +421,6 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  void sse_encode_created_account(
-    CreatedAccount self,
-    SseSerializer serializer,
-  );
-
-  @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
 
   @protected
@@ -451,6 +441,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_list_prim_u_8_strict(
     Uint8List self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_mnemonic_account(
+    MnemonicAccount self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_mnemonic_account_creator_error(
+    MnemonicAccountCreatorError self,
     SseSerializer serializer,
   );
 

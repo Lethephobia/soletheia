@@ -11,13 +11,13 @@ import '../../rust_bridge/application/mnemonic/mnemonic_word_count.dart'
     as rust;
 import '../../rust_bridge/application/mnemonic/mnemonic_wordlist.dart' as rust;
 
-final class RustAccountCreator implements AccountCreator {
-  const RustAccountCreator(
+final class RustMnemonicAccountCreator implements MnemonicAccountCreator {
+  const RustMnemonicAccountCreator(
     this._repository, {
     this._createKeys = _createInKeychain,
   });
   final AccountRepository _repository;
-  final Future<CreatedAccount> Function({
+  final Future<MnemonicAccount> Function({
     required MnemonicWordlist wordlist,
     required MnemonicGenerationSource source,
     required MnemonicPassphrase passphrase,
@@ -61,7 +61,7 @@ final class RustAccountCreator implements AccountCreator {
     }
   }
 
-  static Future<CreatedAccount> _createInKeychain({
+  static Future<MnemonicAccount> _createInKeychain({
     required MnemonicWordlist wordlist,
     required MnemonicGenerationSource source,
     required MnemonicPassphrase passphrase,
@@ -73,7 +73,7 @@ final class RustAccountCreator implements AccountCreator {
       passphrase: rust.MnemonicPassphrase(value: passphrase.value),
       derivationPath: rust.DerivationPath.parse(value: derivationPath.value),
     );
-    return CreatedAccount(
+    return MnemonicAccount(
       address: AccountAddress(account.address.value.inner),
       mnemonicId: MnemonicId(account.mnemonicId.value.inner),
     );

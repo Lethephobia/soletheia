@@ -12,11 +12,11 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_fields_are_eq`, `eq`, `fmt`
 
-class CreatedAccount {
+class MnemonicAccount {
   final AccountAddress address;
   final MnemonicId mnemonicId;
 
-  const CreatedAccount({required this.address, required this.mnemonicId});
+  const MnemonicAccount({required this.address, required this.mnemonicId});
 
   @override
   int get hashCode => address.hashCode ^ mnemonicId.hashCode;
@@ -24,7 +24,7 @@ class CreatedAccount {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CreatedAccount &&
+      other is MnemonicAccount &&
           runtimeType == other.runtimeType &&
           address == other.address &&
           mnemonicId == other.mnemonicId;

@@ -5,7 +5,7 @@ use crate::application::{
 };
 
 #[derive(Debug, thiserror::Error)]
-pub enum AccountCreatorError {
+pub enum MnemonicAccountCreatorError {
     #[error("account creation requires Apple Keychain")]
     UnsupportedPlatform,
     #[error(transparent)]
@@ -22,4 +22,16 @@ pub enum AccountCreatorError {
         save: KeypairStoreError,
         cleanup: MnemonicStoreError,
     },
+}
+
+impl From<super::MnemonicAccountWriterError> for MnemonicAccountCreatorError {
+    fn from(error: super::MnemonicAccountWriterError) -> Self {
+        use super::MnemonicAccountWriterError as E;
+        match error {
+            E::KeypairDerivation(error) => Self::KeypairDerivation(error),
+            E::MnemonicStorage(error) => Self::MnemonicStorage(error),
+            E::KeypairStorage(error) => Self::KeypairStorage(error),
+            E::MnemonicCleanup { id, save, cleanup } => Self::MnemonicCleanup { id, save, cleanup },
+        }
+    }
 }
