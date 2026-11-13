@@ -45,7 +45,7 @@ impl KeychainMnemonicStore {
 }
 
 impl MnemonicStore for KeychainMnemonicStore {
-    fn save_mnemonic(&self, mnemonic: &Mnemonic) -> Result<MnemonicId, MnemonicStoreError> {
+    fn save(&self, mnemonic: &Mnemonic) -> Result<MnemonicId, MnemonicStoreError> {
         let id = MnemonicId::new();
         KeychainItem::insert(
             Self::SERVICE,
@@ -56,7 +56,7 @@ impl MnemonicStore for KeychainMnemonicStore {
         Ok(id)
     }
 
-    fn delete_mnemonic(&self, id: MnemonicId) -> Result<(), MnemonicStoreError> {
+    fn delete(&self, id: MnemonicId) -> Result<(), MnemonicStoreError> {
         KeychainItem::delete(Self::SERVICE, &Self::account_name(id))
             .map_err(MnemonicStoreError::Keychain)
     }

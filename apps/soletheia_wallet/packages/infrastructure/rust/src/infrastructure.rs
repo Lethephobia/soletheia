@@ -61,7 +61,7 @@ mod tests {
     }
 
     impl MnemonicStore for &TestMnemonics {
-        fn save_mnemonic(&self, mnemonic: &Mnemonic) -> Result<MnemonicId, MnemonicStoreError> {
+        fn save(&self, mnemonic: &Mnemonic) -> Result<MnemonicId, MnemonicStoreError> {
             assert!(mnemonic.words().last().unwrap().value() == "about");
             let id = MnemonicId {
                 value: [self.next.get(); 16],
@@ -74,7 +74,7 @@ mod tests {
             }
         }
 
-        fn delete_mnemonic(&self, id: MnemonicId) -> Result<(), MnemonicStoreError> {
+        fn delete(&self, id: MnemonicId) -> Result<(), MnemonicStoreError> {
             if self.fail_delete {
                 return Err(MnemonicStoreError::Keychain(-1));
             }
@@ -86,10 +86,10 @@ mod tests {
     struct TestKeys<F>(F);
 
     impl<F: Fn(&AccountKeypair) -> Result<(), KeypairStoreError>> KeypairStore for TestKeys<F> {
-        fn delete_keypair(&self, _: AccountAddress) -> Result<(), KeypairStoreError> {
+        fn delete(&self, _: AccountAddress) -> Result<(), KeypairStoreError> {
             panic!("unexpected delete")
         }
-        fn save_keypair(&self, keypair: &AccountKeypair) -> Result<(), KeypairStoreError> {
+        fn save(&self, keypair: &AccountKeypair) -> Result<(), KeypairStoreError> {
             (self.0)(keypair)
         }
     }
@@ -97,19 +97,19 @@ mod tests {
     struct UnexpectedStorage;
 
     impl MnemonicStore for UnexpectedStorage {
-        fn save_mnemonic(&self, _: &Mnemonic) -> Result<MnemonicId, MnemonicStoreError> {
+        fn save(&self, _: &Mnemonic) -> Result<MnemonicId, MnemonicStoreError> {
             panic!("unexpected save")
         }
-        fn delete_mnemonic(&self, _: MnemonicId) -> Result<(), MnemonicStoreError> {
+        fn delete(&self, _: MnemonicId) -> Result<(), MnemonicStoreError> {
             panic!("unexpected delete")
         }
     }
 
     impl KeypairStore for UnexpectedStorage {
-        fn delete_keypair(&self, _: AccountAddress) -> Result<(), KeypairStoreError> {
+        fn delete(&self, _: AccountAddress) -> Result<(), KeypairStoreError> {
             panic!("unexpected delete")
         }
-        fn save_keypair(&self, _: &AccountKeypair) -> Result<(), KeypairStoreError> {
+        fn save(&self, _: &AccountKeypair) -> Result<(), KeypairStoreError> {
             panic!("unexpected save")
         }
     }

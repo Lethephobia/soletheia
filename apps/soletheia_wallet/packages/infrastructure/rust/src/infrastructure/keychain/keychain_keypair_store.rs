@@ -28,7 +28,7 @@ impl KeychainKeypairStore {
 }
 
 impl KeypairStore for KeychainKeypairStore {
-    fn delete_keypair(
+    fn delete(
         &self,
         address: crate::application::account::AccountAddress,
     ) -> Result<(), KeypairStoreError> {
@@ -36,7 +36,7 @@ impl KeypairStore for KeychainKeypairStore {
         KeychainItem::delete(Self::SERVICE, &account).map_err(KeypairStoreError::Keychain)
     }
 
-    fn save_keypair(&self, keypair: &AccountKeypair) -> Result<(), KeypairStoreError> {
+    fn save(&self, keypair: &AccountKeypair) -> Result<(), KeypairStoreError> {
         let account =
             solana_keypair::Address::new_from_array(*keypair.address().value()).to_string();
         KeychainItem::insert(Self::SERVICE, &account, &Self::encode_keypair(keypair))
@@ -84,8 +84,8 @@ mod tests {
             options.use_protected_keychain();
             options
         };
-        KeychainKeypairStore.save_keypair(&key).unwrap();
-        let duplicate = KeychainKeypairStore.save_keypair(&key);
+        KeychainKeypairStore.save(&key).unwrap();
+        let duplicate = KeychainKeypairStore.save(&key);
         let stored = generic_password(options()).map(Zeroizing::new);
         delete_generic_password_options(options()).unwrap();
 

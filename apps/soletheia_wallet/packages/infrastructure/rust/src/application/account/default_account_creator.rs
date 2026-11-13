@@ -41,11 +41,11 @@ impl<G: MnemonicGenerator, D: KeypairDeriver, M: MnemonicStore, K: KeypairStore>
 
         let id = self
             .mnemonic_store
-            .save_mnemonic(&mnemonic)
+            .save(&mnemonic)
             .map_err(AccountCreatorError::MnemonicStorage)?;
 
-        if let Err(save) = self.keypair_store.save_keypair(&keypair) {
-            if let Err(cleanup) = self.mnemonic_store.delete_mnemonic(id) {
+        if let Err(save) = self.keypair_store.save(&keypair) {
+            if let Err(cleanup) = self.mnemonic_store.delete(id) {
                 return Err(AccountCreatorError::MnemonicCleanup { id, save, cleanup });
             }
             return Err(AccountCreatorError::KeypairStorage(save));

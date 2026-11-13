@@ -22,11 +22,11 @@ impl<M: MnemonicStore, K: KeypairStore> AccountDeleter for DefaultAccountDeleter
         unused_mnemonic: Option<MnemonicId>,
     ) -> Result<(), AccountDeleterError> {
         self.keypair_store
-            .delete_keypair(address)
+            .delete(address)
             .map_err(AccountDeleterError::KeypairStorage)?;
         if let Some(id) = unused_mnemonic {
             self.mnemonic_store
-                .delete_mnemonic(id)
+                .delete(id)
                 .map_err(AccountDeleterError::MnemonicStorage)?;
         }
         Ok(())
