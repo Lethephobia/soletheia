@@ -66,6 +66,7 @@ void main() {
       tester.widget<MnemonicPhraseField>(field).phrase,
       'あい two three four',
     );
+    expect(find.widgetWithText(InputChip, 'four'), findsOneWidget);
     await tester.tap(find.widgetWithText(InputChip, 'two'));
     await tester.pump();
     expect(tester.widget<TextField>(editor).controller!.text, 'two');
@@ -105,6 +106,11 @@ void main() {
       tester.widget<MnemonicPhraseField>(field).phrase,
       'あい second three four five',
     );
+    expect(find.widgetWithText(InputChip, 'five'), findsNothing);
+    await tester.tap(find.widgetWithText(TextFormField, 'Passphrase'));
+    await tester.pump();
+    expect(find.widgetWithText(InputChip, 'five'), findsOneWidget);
+    expect(tester.widget<TextField>(editor).focusNode!.hasFocus, isFalse);
   });
 
   testWidgets('validates the form and retries saving without importing twice', (

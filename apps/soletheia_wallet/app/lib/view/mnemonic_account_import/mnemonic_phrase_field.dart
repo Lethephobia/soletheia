@@ -79,7 +79,15 @@ class _MnemonicPhraseFieldState extends State<MnemonicPhraseField> {
     _updating = false;
   }
 
-  void _onFocus() => setState(() {});
+  void _onFocus() {
+    if (!_focus.hasFocus && _draft.isNotEmpty) {
+      _commitDraft();
+      _index = _words.length;
+      _setDraft('');
+      if (_phrase != widget.phrase) widget.onChanged(_phrase);
+    }
+    setState(() {});
+  }
 
   void _onEdit() {
     if (_updating || !widget.enabled) return;
@@ -91,11 +99,9 @@ class _MnemonicPhraseFieldState extends State<MnemonicPhraseField> {
     if (value.composing.isCollapsed || !value.composing.isValid) {
       final parts = _draft.split(_separator);
       if (parts.length > 1) {
-        final draft = parts.removeLast();
-        final completed = parts.where((word) => word.isNotEmpty).toList();
-        _words.insertAll(_index, completed);
-        _index += completed.length;
-        _setDraft(draft);
+        // A multi-word edit (such as a pasted phrase) completes the last word too.
+        _index += _commitDraft();
+        _setDraft('');
       } else if (_draft.isEmpty && _index > 0 && value.text.isEmpty) {
         _setDraft('');
       }
