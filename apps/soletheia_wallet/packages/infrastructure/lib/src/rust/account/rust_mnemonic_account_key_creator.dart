@@ -1,6 +1,7 @@
 import 'package:application/application.dart';
 
-import '../../rust_bridge/api/account/create_account.dart' as rust;
+import '../../rust_bridge/api/account/create_mnemonic_account_keys.dart'
+    as rust;
 import '../../rust_bridge/application/keypair/derivation_path.dart' as rust;
 import '../../rust_bridge/application/mnemonic/mnemonic_entropy.dart' as rust;
 import '../../rust_bridge/application/mnemonic/mnemonic_generation_source.dart'
@@ -11,63 +12,17 @@ import '../../rust_bridge/application/mnemonic/mnemonic_word_count.dart'
     as rust;
 import '../../rust_bridge/application/mnemonic/mnemonic_wordlist.dart' as rust;
 
-final class RustMnemonicAccountCreator implements MnemonicAccountCreator {
-  const RustMnemonicAccountCreator(
-    this._repository, {
-    this._createKeys = _createInKeychain,
-  });
-  final AccountRepository _repository;
-  final Future<MnemonicAccount> Function({
-    required MnemonicWordlist wordlist,
-    required MnemonicGenerationSource source,
-    required MnemonicPassphrase passphrase,
-    required DerivationPath derivationPath,
-  })
-  _createKeys;
+final class RustMnemonicAccountKeyCreator implements MnemonicAccountKeyCreator {
+  const RustMnemonicAccountKeyCreator();
 
   @override
-  Future<Account> create({
+  Future<MnemonicAccount> create({
     required MnemonicWordlist wordlist,
     required MnemonicGenerationSource source,
     required MnemonicPassphrase passphrase,
     required DerivationPath derivationPath,
   }) async {
-    final keys = await _createKeys(
-      wordlist: wordlist,
-      source: source,
-      passphrase: passphrase,
-      derivationPath: derivationPath,
-    );
-    final account = Account(
-      address: keys.address,
-      mnemonicDerivation: MnemonicDerivation(
-        mnemonicId: keys.mnemonicId,
-        derivationPath: derivationPath,
-      ),
-    );
-    await retrySave(account);
-    return account;
-  }
-
-  @override
-  Future<void> retrySave(Account account) async {
-    try {
-      await _repository.transaction(() async {
-        await _repository.save(account);
-        await _repository.select(account.address);
-      });
-    } on Exception catch (error) {
-      throw AccountSaveException(account, error);
-    }
-  }
-
-  static Future<MnemonicAccount> _createInKeychain({
-    required MnemonicWordlist wordlist,
-    required MnemonicGenerationSource source,
-    required MnemonicPassphrase passphrase,
-    required DerivationPath derivationPath,
-  }) async {
-    final account = await rust.createAccount(
+    final account = await rust.createMnemonicAccountKeys(
       wordlist: _toRustWordlist(wordlist),
       source: _toRustSource(source),
       passphrase: rust.MnemonicPassphrase(value: passphrase.value),

@@ -1,10 +1,10 @@
-use super::{AccountAddress, AccountDeleterError};
+use super::{AccountAddress, AccountKeyDeleterError};
 use crate::application::storage::MnemonicId;
 
-pub trait AccountDeleter {
+pub trait AccountKeyDeleter {
     fn delete(
         &self,
         address: AccountAddress,
         unused_mnemonic: Option<MnemonicId>,
-    ) -> Result<(), AccountDeleterError>;
+    ) -> Result<(), AccountKeyDeleterError>;
 }

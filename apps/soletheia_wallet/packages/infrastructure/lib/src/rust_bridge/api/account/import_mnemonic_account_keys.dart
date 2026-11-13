@@ -5,15 +5,12 @@
 
 import '../../application/account/account_address.dart';
 import '../../application/account/mnemonic_account.dart';
-import '../../application/account/mnemonic_account_creator_error.dart';
+import '../../application/account/mnemonic_account_key_importer_error.dart';
+import '../../application/account/mnemonic_account_key_writer_error.dart';
 import '../../application/keypair/derivation_path.dart';
 import '../../application/keypair/keypair_deriver_error.dart';
-import '../../application/mnemonic/mnemonic_entropy.dart';
-import '../../application/mnemonic/mnemonic_generation_source.dart';
-import '../../application/mnemonic/mnemonic_generator_error.dart';
+import '../../application/mnemonic/mnemonic_parser_error.dart';
 import '../../application/mnemonic/mnemonic_passphrase.dart';
-import '../../application/mnemonic/mnemonic_word_count.dart';
-import '../../application/mnemonic/mnemonic_wordlist.dart';
 import '../../application/storage/keypair_store_error.dart';
 import '../../application/storage/mnemonic_id.dart';
 import '../../application/storage/mnemonic_store_error.dart';
@@ -22,14 +19,13 @@ import '../../lib.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-Future<MnemonicAccount> createAccount({
-  required MnemonicWordlist wordlist,
-  required MnemonicGenerationSource source,
+Future<MnemonicAccount> importMnemonicAccountKeys({
+  required String phrase,
   required MnemonicPassphrase passphrase,
   required DerivationPath derivationPath,
-}) => RustLib.instance.api.crateApiAccountCreateAccountCreateAccount(
-  wordlist: wordlist,
-  source: source,
-  passphrase: passphrase,
-  derivationPath: derivationPath,
-);
+}) => RustLib.instance.api
+    .crateApiAccountImportMnemonicAccountKeysImportMnemonicAccountKeys(
+      phrase: phrase,
+      passphrase: passphrase,
+      derivationPath: derivationPath,
+    );

@@ -3,17 +3,21 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
-import 'api/account/create_account.dart';
-import 'api/account/delete_account.dart';
+import 'api/account/create_mnemonic_account_keys.dart';
+import 'api/account/delete_account_keys.dart';
+import 'api/account/import_mnemonic_account_keys.dart';
 import 'application/account/account_address.dart';
-import 'application/account/account_deleter_error.dart';
+import 'application/account/account_key_deleter_error.dart';
 import 'application/account/mnemonic_account.dart';
-import 'application/account/mnemonic_account_creator_error.dart';
+import 'application/account/mnemonic_account_key_creator_error.dart';
+import 'application/account/mnemonic_account_key_importer_error.dart';
+import 'application/account/mnemonic_account_key_writer_error.dart';
 import 'application/keypair/derivation_path.dart';
 import 'application/keypair/keypair_deriver_error.dart';
 import 'application/mnemonic/mnemonic_entropy.dart';
 import 'application/mnemonic/mnemonic_generation_source.dart';
 import 'application/mnemonic/mnemonic_generator_error.dart';
+import 'application/mnemonic/mnemonic_parser_error.dart';
 import 'application/mnemonic/mnemonic_passphrase.dart';
 import 'application/mnemonic/mnemonic_word_count.dart';
 import 'application/mnemonic/mnemonic_wordlist.dart';
@@ -86,7 +90,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.13.0';
 
   @override
-  int get rustContentHash => -214424291;
+  int get rustContentHash => -1746458644;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -114,16 +118,24 @@ abstract class RustLibApi extends BaseApi {
     required String value,
   });
 
-  Future<MnemonicAccount> crateApiAccountCreateAccountCreateAccount({
+  Future<MnemonicAccount>
+  crateApiAccountCreateMnemonicAccountKeysCreateMnemonicAccountKeys({
     required MnemonicWordlist wordlist,
     required MnemonicGenerationSource source,
     required MnemonicPassphrase passphrase,
     required DerivationPath derivationPath,
   });
 
-  Future<void> crateApiAccountDeleteAccountDeleteAccount({
+  Future<void> crateApiAccountDeleteAccountKeysDeleteAccountKeys({
     required AccountAddress address,
     MnemonicId? unusedMnemonic,
+  });
+
+  Future<MnemonicAccount>
+  crateApiAccountImportMnemonicAccountKeysImportMnemonicAccountKeys({
+    required String phrase,
+    required MnemonicPassphrase passphrase,
+    required DerivationPath derivationPath,
   });
 
   Future<void> crateApiInitInit();
@@ -293,7 +305,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
-  Future<MnemonicAccount> crateApiAccountCreateAccountCreateAccount({
+  Future<MnemonicAccount>
+  crateApiAccountCreateMnemonicAccountKeysCreateMnemonicAccountKeys({
     required MnemonicWordlist wordlist,
     required MnemonicGenerationSource source,
     required MnemonicPassphrase passphrase,
@@ -322,23 +335,25 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_mnemonic_account,
-          decodeErrorData: sse_decode_mnemonic_account_creator_error,
+          decodeErrorData: sse_decode_mnemonic_account_key_creator_error,
         ),
-        constMeta: kCrateApiAccountCreateAccountCreateAccountConstMeta,
+        constMeta:
+            kCrateApiAccountCreateMnemonicAccountKeysCreateMnemonicAccountKeysConstMeta,
         argValues: [wordlist, source, passphrase, derivationPath],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiAccountCreateAccountCreateAccountConstMeta =>
+  TaskConstMeta
+  get kCrateApiAccountCreateMnemonicAccountKeysCreateMnemonicAccountKeysConstMeta =>
       const TaskConstMeta(
-        debugName: "create_account",
+        debugName: "create_mnemonic_account_keys",
         argNames: ["wordlist", "source", "passphrase", "derivationPath"],
       );
 
   @override
-  Future<void> crateApiAccountDeleteAccountDeleteAccount({
+  Future<void> crateApiAccountDeleteAccountKeysDeleteAccountKeys({
     required AccountAddress address,
     MnemonicId? unusedMnemonic,
   }) {
@@ -357,19 +372,66 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         },
         codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
-          decodeErrorData: sse_decode_account_deleter_error,
+          decodeErrorData: sse_decode_account_key_deleter_error,
         ),
-        constMeta: kCrateApiAccountDeleteAccountDeleteAccountConstMeta,
+        constMeta: kCrateApiAccountDeleteAccountKeysDeleteAccountKeysConstMeta,
         argValues: [address, unusedMnemonic],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiAccountDeleteAccountDeleteAccountConstMeta =>
+  TaskConstMeta
+  get kCrateApiAccountDeleteAccountKeysDeleteAccountKeysConstMeta =>
       const TaskConstMeta(
-        debugName: "delete_account",
+        debugName: "delete_account_keys",
         argNames: ["address", "unusedMnemonic"],
+      );
+
+  @override
+  Future<MnemonicAccount>
+  crateApiAccountImportMnemonicAccountKeysImportMnemonicAccountKeys({
+    required String phrase,
+    required MnemonicPassphrase passphrase,
+    required DerivationPath derivationPath,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(phrase, serializer);
+          sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerMnemonicPassphrase(
+            passphrase,
+            serializer,
+          );
+          sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerDerivationPath(
+            derivationPath,
+            serializer,
+          );
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 7,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_mnemonic_account,
+          decodeErrorData: sse_decode_mnemonic_account_key_importer_error,
+        ),
+        constMeta:
+            kCrateApiAccountImportMnemonicAccountKeysImportMnemonicAccountKeysConstMeta,
+        argValues: [phrase, passphrase, derivationPath],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kCrateApiAccountImportMnemonicAccountKeysImportMnemonicAccountKeysConstMeta =>
+      const TaskConstMeta(
+        debugName: "import_mnemonic_account_keys",
+        argNames: ["phrase", "passphrase", "derivationPath"],
       );
 
   @override
@@ -381,7 +443,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 7,
+            funcId: 8,
             port: port_,
           );
         },
@@ -493,19 +555,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  AccountDeleterError dco_decode_account_deleter_error(dynamic raw) {
+  AccountKeyDeleterError dco_decode_account_key_deleter_error(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     switch (raw[0]) {
       case 0:
-        return AccountDeleterError_KeypairStorage(
+        return AccountKeyDeleterError_KeypairStorage(
           dco_decode_box_autoadd_keypair_store_error(raw[1]),
         );
       case 1:
-        return AccountDeleterError_MnemonicStorage(
+        return AccountKeyDeleterError_MnemonicStorage(
           dco_decode_box_autoadd_mnemonic_store_error(raw[1]),
         );
       case 2:
-        return AccountDeleterError_UnsupportedPlatform();
+        return AccountKeyDeleterError_UnsupportedPlatform();
       default:
         throw Exception("unreachable");
     }
@@ -521,6 +583,13 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   KeypairStoreError dco_decode_box_autoadd_keypair_store_error(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_keypair_store_error(raw);
+  }
+
+  @protected
+  MnemonicAccountKeyWriterError
+  dco_decode_box_autoadd_mnemonic_account_key_writer_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_mnemonic_account_key_writer_error(raw);
   }
 
   @protected
@@ -543,6 +612,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   MnemonicId dco_decode_box_autoadd_mnemonic_id(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_mnemonic_id(raw);
+  }
+
+  @protected
+  MnemonicParserError dco_decode_box_autoadd_mnemonic_parser_error(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_mnemonic_parser_error(raw);
   }
 
   @protected
@@ -601,31 +678,80 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  MnemonicAccountCreatorError dco_decode_mnemonic_account_creator_error(
+  MnemonicAccountKeyCreatorError dco_decode_mnemonic_account_key_creator_error(
     dynamic raw,
   ) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     switch (raw[0]) {
       case 0:
-        return MnemonicAccountCreatorError_UnsupportedPlatform();
+        return MnemonicAccountKeyCreatorError_UnsupportedPlatform();
       case 1:
-        return MnemonicAccountCreatorError_MnemonicGeneration(
+        return MnemonicAccountKeyCreatorError_MnemonicGeneration(
           dco_decode_box_autoadd_mnemonic_generator_error(raw[1]),
         );
       case 2:
-        return MnemonicAccountCreatorError_KeypairDerivation(
+        return MnemonicAccountKeyCreatorError_KeypairDerivation(
           dco_decode_keypair_deriver_error(raw[1]),
         );
       case 3:
-        return MnemonicAccountCreatorError_MnemonicStorage(
+        return MnemonicAccountKeyCreatorError_MnemonicStorage(
           dco_decode_box_autoadd_mnemonic_store_error(raw[1]),
         );
       case 4:
-        return MnemonicAccountCreatorError_KeypairStorage(
+        return MnemonicAccountKeyCreatorError_KeypairStorage(
           dco_decode_box_autoadd_keypair_store_error(raw[1]),
         );
       case 5:
-        return MnemonicAccountCreatorError_MnemonicCleanup(
+        return MnemonicAccountKeyCreatorError_MnemonicCleanup(
+          id: dco_decode_box_autoadd_mnemonic_id(raw[1]),
+          save: dco_decode_box_autoadd_keypair_store_error(raw[2]),
+          cleanup: dco_decode_box_autoadd_mnemonic_store_error(raw[3]),
+        );
+      default:
+        throw Exception("unreachable");
+    }
+  }
+
+  @protected
+  MnemonicAccountKeyImporterError
+  dco_decode_mnemonic_account_key_importer_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return MnemonicAccountKeyImporterError_UnsupportedPlatform();
+      case 1:
+        return MnemonicAccountKeyImporterError_MnemonicParsing(
+          dco_decode_box_autoadd_mnemonic_parser_error(raw[1]),
+        );
+      case 2:
+        return MnemonicAccountKeyImporterError_AccountWrite(
+          dco_decode_box_autoadd_mnemonic_account_key_writer_error(raw[1]),
+        );
+      default:
+        throw Exception("unreachable");
+    }
+  }
+
+  @protected
+  MnemonicAccountKeyWriterError dco_decode_mnemonic_account_key_writer_error(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return MnemonicAccountKeyWriterError_KeypairDerivation(
+          dco_decode_keypair_deriver_error(raw[1]),
+        );
+      case 1:
+        return MnemonicAccountKeyWriterError_MnemonicStorage(
+          dco_decode_box_autoadd_mnemonic_store_error(raw[1]),
+        );
+      case 2:
+        return MnemonicAccountKeyWriterError_KeypairStorage(
+          dco_decode_box_autoadd_keypair_store_error(raw[1]),
+        );
+      case 3:
+        return MnemonicAccountKeyWriterError_MnemonicCleanup(
           id: dco_decode_box_autoadd_mnemonic_id(raw[1]),
           save: dco_decode_box_autoadd_keypair_store_error(raw[2]),
           cleanup: dco_decode_box_autoadd_mnemonic_store_error(raw[3]),
@@ -676,6 +802,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     if (arr.length != 1)
       throw Exception('unexpected arr length: expect 1 but see ${arr.length}');
     return MnemonicId(value: dco_decode_u_8_array_16(arr[0]));
+  }
+
+  @protected
+  MnemonicParserError dco_decode_mnemonic_parser_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return MnemonicParserError_InvalidWordCount(
+          actual: dco_decode_usize(raw[1]),
+        );
+      case 1:
+        return MnemonicParserError_NoMatchingWordlist();
+      case 2:
+        return MnemonicParserError_InvalidChecksum();
+      default:
+        throw Exception("unreachable");
+    }
   }
 
   @protected
@@ -826,7 +969,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  AccountDeleterError sse_decode_account_deleter_error(
+  AccountKeyDeleterError sse_decode_account_key_deleter_error(
     SseDeserializer deserializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -837,14 +980,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         var var_field0 = sse_decode_box_autoadd_keypair_store_error(
           deserializer,
         );
-        return AccountDeleterError_KeypairStorage(var_field0);
+        return AccountKeyDeleterError_KeypairStorage(var_field0);
       case 1:
         var var_field0 = sse_decode_box_autoadd_mnemonic_store_error(
           deserializer,
         );
-        return AccountDeleterError_MnemonicStorage(var_field0);
+        return AccountKeyDeleterError_MnemonicStorage(var_field0);
       case 2:
-        return AccountDeleterError_UnsupportedPlatform();
+        return AccountKeyDeleterError_UnsupportedPlatform();
       default:
         throw UnimplementedError('');
     }
@@ -867,6 +1010,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  MnemonicAccountKeyWriterError
+  sse_decode_box_autoadd_mnemonic_account_key_writer_error(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_mnemonic_account_key_writer_error(deserializer));
+  }
+
+  @protected
   MnemonicGenerationSource sse_decode_box_autoadd_mnemonic_generation_source(
     SseDeserializer deserializer,
   ) {
@@ -886,6 +1038,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   MnemonicId sse_decode_box_autoadd_mnemonic_id(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_mnemonic_id(deserializer));
+  }
+
+  @protected
+  MnemonicParserError sse_decode_box_autoadd_mnemonic_parser_error(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_mnemonic_parser_error(deserializer));
   }
 
   @protected
@@ -952,7 +1112,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  MnemonicAccountCreatorError sse_decode_mnemonic_account_creator_error(
+  MnemonicAccountKeyCreatorError sse_decode_mnemonic_account_key_creator_error(
     SseDeserializer deserializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
@@ -960,32 +1120,94 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     var tag_ = sse_decode_i_32(deserializer);
     switch (tag_) {
       case 0:
-        return MnemonicAccountCreatorError_UnsupportedPlatform();
+        return MnemonicAccountKeyCreatorError_UnsupportedPlatform();
       case 1:
         var var_field0 = sse_decode_box_autoadd_mnemonic_generator_error(
           deserializer,
         );
-        return MnemonicAccountCreatorError_MnemonicGeneration(var_field0);
+        return MnemonicAccountKeyCreatorError_MnemonicGeneration(var_field0);
       case 2:
         var var_field0 = sse_decode_keypair_deriver_error(deserializer);
-        return MnemonicAccountCreatorError_KeypairDerivation(var_field0);
+        return MnemonicAccountKeyCreatorError_KeypairDerivation(var_field0);
       case 3:
         var var_field0 = sse_decode_box_autoadd_mnemonic_store_error(
           deserializer,
         );
-        return MnemonicAccountCreatorError_MnemonicStorage(var_field0);
+        return MnemonicAccountKeyCreatorError_MnemonicStorage(var_field0);
       case 4:
         var var_field0 = sse_decode_box_autoadd_keypair_store_error(
           deserializer,
         );
-        return MnemonicAccountCreatorError_KeypairStorage(var_field0);
+        return MnemonicAccountKeyCreatorError_KeypairStorage(var_field0);
       case 5:
         var var_id = sse_decode_box_autoadd_mnemonic_id(deserializer);
         var var_save = sse_decode_box_autoadd_keypair_store_error(deserializer);
         var var_cleanup = sse_decode_box_autoadd_mnemonic_store_error(
           deserializer,
         );
-        return MnemonicAccountCreatorError_MnemonicCleanup(
+        return MnemonicAccountKeyCreatorError_MnemonicCleanup(
+          id: var_id,
+          save: var_save,
+          cleanup: var_cleanup,
+        );
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  MnemonicAccountKeyImporterError
+  sse_decode_mnemonic_account_key_importer_error(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        return MnemonicAccountKeyImporterError_UnsupportedPlatform();
+      case 1:
+        var var_field0 = sse_decode_box_autoadd_mnemonic_parser_error(
+          deserializer,
+        );
+        return MnemonicAccountKeyImporterError_MnemonicParsing(var_field0);
+      case 2:
+        var var_field0 =
+            sse_decode_box_autoadd_mnemonic_account_key_writer_error(
+              deserializer,
+            );
+        return MnemonicAccountKeyImporterError_AccountWrite(var_field0);
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  MnemonicAccountKeyWriterError sse_decode_mnemonic_account_key_writer_error(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        var var_field0 = sse_decode_keypair_deriver_error(deserializer);
+        return MnemonicAccountKeyWriterError_KeypairDerivation(var_field0);
+      case 1:
+        var var_field0 = sse_decode_box_autoadd_mnemonic_store_error(
+          deserializer,
+        );
+        return MnemonicAccountKeyWriterError_MnemonicStorage(var_field0);
+      case 2:
+        var var_field0 = sse_decode_box_autoadd_keypair_store_error(
+          deserializer,
+        );
+        return MnemonicAccountKeyWriterError_KeypairStorage(var_field0);
+      case 3:
+        var var_id = sse_decode_box_autoadd_mnemonic_id(deserializer);
+        var var_save = sse_decode_box_autoadd_keypair_store_error(deserializer);
+        var var_cleanup = sse_decode_box_autoadd_mnemonic_store_error(
+          deserializer,
+        );
+        return MnemonicAccountKeyWriterError_MnemonicCleanup(
           id: var_id,
           save: var_save,
           cleanup: var_cleanup,
@@ -1042,6 +1264,26 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     var var_value = sse_decode_u_8_array_16(deserializer);
     return MnemonicId(value: var_value);
+  }
+
+  @protected
+  MnemonicParserError sse_decode_mnemonic_parser_error(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        var var_actual = sse_decode_usize(deserializer);
+        return MnemonicParserError_InvalidWordCount(actual: var_actual);
+      case 1:
+        return MnemonicParserError_NoMatchingWordlist();
+      case 2:
+        return MnemonicParserError_InvalidChecksum();
+      default:
+        throw UnimplementedError('');
+    }
   }
 
   @protected
@@ -1222,19 +1464,19 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_account_deleter_error(
-    AccountDeleterError self,
+  void sse_encode_account_key_deleter_error(
+    AccountKeyDeleterError self,
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     switch (self) {
-      case AccountDeleterError_KeypairStorage(field0: final field0):
+      case AccountKeyDeleterError_KeypairStorage(field0: final field0):
         sse_encode_i_32(0, serializer);
         sse_encode_box_autoadd_keypair_store_error(field0, serializer);
-      case AccountDeleterError_MnemonicStorage(field0: final field0):
+      case AccountKeyDeleterError_MnemonicStorage(field0: final field0):
         sse_encode_i_32(1, serializer);
         sse_encode_box_autoadd_mnemonic_store_error(field0, serializer);
-      case AccountDeleterError_UnsupportedPlatform():
+      case AccountKeyDeleterError_UnsupportedPlatform():
         sse_encode_i_32(2, serializer);
     }
   }
@@ -1255,6 +1497,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_keypair_store_error(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_mnemonic_account_key_writer_error(
+    MnemonicAccountKeyWriterError self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_mnemonic_account_key_writer_error(self, serializer);
   }
 
   @protected
@@ -1282,6 +1533,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_mnemonic_id(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_mnemonic_parser_error(
+    MnemonicParserError self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_mnemonic_parser_error(self, serializer);
   }
 
   @protected
@@ -1356,32 +1616,89 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  void sse_encode_mnemonic_account_creator_error(
-    MnemonicAccountCreatorError self,
+  void sse_encode_mnemonic_account_key_creator_error(
+    MnemonicAccountKeyCreatorError self,
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     switch (self) {
-      case MnemonicAccountCreatorError_UnsupportedPlatform():
+      case MnemonicAccountKeyCreatorError_UnsupportedPlatform():
         sse_encode_i_32(0, serializer);
-      case MnemonicAccountCreatorError_MnemonicGeneration(field0: final field0):
+      case MnemonicAccountKeyCreatorError_MnemonicGeneration(
+        field0: final field0,
+      ):
         sse_encode_i_32(1, serializer);
         sse_encode_box_autoadd_mnemonic_generator_error(field0, serializer);
-      case MnemonicAccountCreatorError_KeypairDerivation(field0: final field0):
+      case MnemonicAccountKeyCreatorError_KeypairDerivation(
+        field0: final field0,
+      ):
         sse_encode_i_32(2, serializer);
         sse_encode_keypair_deriver_error(field0, serializer);
-      case MnemonicAccountCreatorError_MnemonicStorage(field0: final field0):
+      case MnemonicAccountKeyCreatorError_MnemonicStorage(field0: final field0):
         sse_encode_i_32(3, serializer);
         sse_encode_box_autoadd_mnemonic_store_error(field0, serializer);
-      case MnemonicAccountCreatorError_KeypairStorage(field0: final field0):
+      case MnemonicAccountKeyCreatorError_KeypairStorage(field0: final field0):
         sse_encode_i_32(4, serializer);
         sse_encode_box_autoadd_keypair_store_error(field0, serializer);
-      case MnemonicAccountCreatorError_MnemonicCleanup(
+      case MnemonicAccountKeyCreatorError_MnemonicCleanup(
         id: final id,
         save: final save,
         cleanup: final cleanup,
       ):
         sse_encode_i_32(5, serializer);
+        sse_encode_box_autoadd_mnemonic_id(id, serializer);
+        sse_encode_box_autoadd_keypair_store_error(save, serializer);
+        sse_encode_box_autoadd_mnemonic_store_error(cleanup, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_mnemonic_account_key_importer_error(
+    MnemonicAccountKeyImporterError self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case MnemonicAccountKeyImporterError_UnsupportedPlatform():
+        sse_encode_i_32(0, serializer);
+      case MnemonicAccountKeyImporterError_MnemonicParsing(
+        field0: final field0,
+      ):
+        sse_encode_i_32(1, serializer);
+        sse_encode_box_autoadd_mnemonic_parser_error(field0, serializer);
+      case MnemonicAccountKeyImporterError_AccountWrite(field0: final field0):
+        sse_encode_i_32(2, serializer);
+        sse_encode_box_autoadd_mnemonic_account_key_writer_error(
+          field0,
+          serializer,
+        );
+    }
+  }
+
+  @protected
+  void sse_encode_mnemonic_account_key_writer_error(
+    MnemonicAccountKeyWriterError self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case MnemonicAccountKeyWriterError_KeypairDerivation(
+        field0: final field0,
+      ):
+        sse_encode_i_32(0, serializer);
+        sse_encode_keypair_deriver_error(field0, serializer);
+      case MnemonicAccountKeyWriterError_MnemonicStorage(field0: final field0):
+        sse_encode_i_32(1, serializer);
+        sse_encode_box_autoadd_mnemonic_store_error(field0, serializer);
+      case MnemonicAccountKeyWriterError_KeypairStorage(field0: final field0):
+        sse_encode_i_32(2, serializer);
+        sse_encode_box_autoadd_keypair_store_error(field0, serializer);
+      case MnemonicAccountKeyWriterError_MnemonicCleanup(
+        id: final id,
+        save: final save,
+        cleanup: final cleanup,
+      ):
+        sse_encode_i_32(3, serializer);
         sse_encode_box_autoadd_mnemonic_id(id, serializer);
         sse_encode_box_autoadd_keypair_store_error(save, serializer);
         sse_encode_box_autoadd_mnemonic_store_error(cleanup, serializer);
@@ -1428,6 +1745,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   void sse_encode_mnemonic_id(MnemonicId self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_u_8_array_16(self.value, serializer);
+  }
+
+  @protected
+  void sse_encode_mnemonic_parser_error(
+    MnemonicParserError self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case MnemonicParserError_InvalidWordCount(actual: final actual):
+        sse_encode_i_32(0, serializer);
+        sse_encode_usize(actual, serializer);
+      case MnemonicParserError_NoMatchingWordlist():
+        sse_encode_i_32(1, serializer);
+      case MnemonicParserError_InvalidChecksum():
+        sse_encode_i_32(2, serializer);
+    }
   }
 
   @protected

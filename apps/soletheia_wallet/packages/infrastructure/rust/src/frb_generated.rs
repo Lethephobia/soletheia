@@ -42,7 +42,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.13.0";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -214424291;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1746458644;
 
 // Section: executor
 
@@ -169,25 +169,25 @@ fn wire__crate__application__mnemonic__mnemonic_passphrase__MnemonicPassphrase_n
         },
     )
 }
-fn wire__crate__api__account__create_account__create_account_impl(
+fn wire__crate__api__account__create_mnemonic_account_keys__create_mnemonic_account_keys_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
     data_len_: i32,
 ) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "create_account", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "create_mnemonic_account_keys", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || {
             let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
             let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
             let api_wordlist = <crate::application::mnemonic::mnemonic_wordlist::MnemonicWordlist>::sse_decode(&mut deserializer);
 let api_source = <crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource>::sse_decode(&mut deserializer);
 let api_passphrase = <MnemonicPassphrase>::sse_decode(&mut deserializer);
 let api_derivation_path = <DerivationPath>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
-                    transform_result_sse::<_, crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError>((move ||  {
-                         let output_ok = crate::api::account::create_account::create_account(api_wordlist, api_source, api_passphrase, api_derivation_path)?;   std::result::Result::Ok(output_ok)
+                    transform_result_sse::<_, crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError>((move ||  {
+                         let output_ok = crate::api::account::create_mnemonic_account_keys::create_mnemonic_account_keys(api_wordlist, api_source, api_passphrase, api_derivation_path)?;   std::result::Result::Ok(output_ok)
                     })())
                 } })
 }
-fn wire__crate__api__account__delete_account__delete_account_impl(
+fn wire__crate__api__account__delete_account_keys__delete_account_keys_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -195,7 +195,7 @@ fn wire__crate__api__account__delete_account__delete_account_impl(
 ) {
     FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
         flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "delete_account",
+            debug_name: "delete_account_keys",
             port: Some(port_),
             mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
         },
@@ -221,9 +221,9 @@ fn wire__crate__api__account__delete_account__delete_account_impl(
             move |context| {
                 transform_result_sse::<
                     _,
-                    crate::application::account::account_deleter_error::AccountDeleterError,
+                    crate::application::account::account_key_deleter_error::AccountKeyDeleterError,
                 >((move || {
-                    let output_ok = crate::api::account::delete_account::delete_account(
+                    let output_ok = crate::api::account::delete_account_keys::delete_account_keys(
                         api_address,
                         api_unused_mnemonic,
                     )?;
@@ -232,6 +232,23 @@ fn wire__crate__api__account__delete_account__delete_account_impl(
             }
         },
     )
+}
+fn wire__crate__api__account__import_mnemonic_account_keys__import_mnemonic_account_keys_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec,_,_>(flutter_rust_bridge::for_generated::TaskInfo{ debug_name: "import_mnemonic_account_keys", port: Some(port_), mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal }, move || {
+            let message = unsafe { flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(ptr_, rust_vec_len_, data_len_) };
+            let mut deserializer = flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_phrase = <String>::sse_decode(&mut deserializer);
+let api_passphrase = <MnemonicPassphrase>::sse_decode(&mut deserializer);
+let api_derivation_path = <DerivationPath>::sse_decode(&mut deserializer);deserializer.end(); move |context|  {
+                    transform_result_sse::<_, crate::application::account::mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError>((move ||  {
+                         let output_ok = crate::api::account::import_mnemonic_account_keys::import_mnemonic_account_keys(api_phrase, api_passphrase, api_derivation_path)?;   std::result::Result::Ok(output_ok)
+                    })())
+                } })
 }
 fn wire__crate__api__init__init_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
@@ -358,21 +375,21 @@ impl SseDecode for crate::application::account::account_address::AccountAddress 
     }
 }
 
-impl SseDecode for crate::application::account::account_deleter_error::AccountDeleterError {
+impl SseDecode for crate::application::account::account_key_deleter_error::AccountKeyDeleterError {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut tag_ = <i32>::sse_decode(deserializer);
         match tag_ {
             0 => {
                 let mut var_field0 = <crate::application::storage::keypair_store_error::KeypairStoreError>::sse_decode(deserializer);
-                return crate::application::account::account_deleter_error::AccountDeleterError::KeypairStorage(var_field0);
+                return crate::application::account::account_key_deleter_error::AccountKeyDeleterError::KeypairStorage(var_field0);
             }
             1 => {
                 let mut var_field0 = <crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_decode(deserializer);
-                return crate::application::account::account_deleter_error::AccountDeleterError::MnemonicStorage(var_field0);
+                return crate::application::account::account_key_deleter_error::AccountKeyDeleterError::MnemonicStorage(var_field0);
             }
             2 => {
-                return crate::application::account::account_deleter_error::AccountDeleterError::UnsupportedPlatform;
+                return crate::application::account::account_key_deleter_error::AccountKeyDeleterError::UnsupportedPlatform;
             }
             _ => {
                 unimplemented!("");
@@ -447,46 +464,51 @@ impl SseDecode for crate::application::account::mnemonic_account::MnemonicAccoun
     }
 }
 
-impl SseDecode
-    for crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError
-{
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        let mut tag_ = <i32>::sse_decode(deserializer);
-        match tag_ {
-            0 => {
-                return crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::UnsupportedPlatform;
-            }
-            1 => {
-                let mut var_field0 = <crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError>::sse_decode(deserializer);
-                return crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::MnemonicGeneration(var_field0);
-            }
-            2 => {
-                let mut var_field0 = <crate::application::keypair::keypair_deriver_error::KeypairDeriverError>::sse_decode(deserializer);
-                return crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::KeypairDerivation(var_field0);
-            }
-            3 => {
-                let mut var_field0 = <crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_decode(deserializer);
-                return crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::MnemonicStorage(var_field0);
-            }
-            4 => {
-                let mut var_field0 = <crate::application::storage::keypair_store_error::KeypairStoreError>::sse_decode(deserializer);
-                return crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::KeypairStorage(var_field0);
-            }
-            5 => {
-                let mut var_id = <crate::application::storage::mnemonic_id::MnemonicId>::sse_decode(
-                    deserializer,
-                );
-                let mut var_save = <crate::application::storage::keypair_store_error::KeypairStoreError>::sse_decode(deserializer);
-                let mut var_cleanup = <crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_decode(deserializer);
-                return crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::MnemonicCleanup{id: var_id, save: var_save, cleanup: var_cleanup};
-            }
-            _ => {
-                unimplemented!("");
-            }
-        }
-    }
-}
+impl SseDecode for crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError {
+                    // Codec=Sse (Serialization based), see doc to use other codecs
+                    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {let mut tag_ = <i32>::sse_decode(deserializer);
+            match tag_ {0 => { return crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::UnsupportedPlatform; }
+1 => { let mut var_field0 = <crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError>::sse_decode(deserializer);
+return crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::MnemonicGeneration(var_field0); }
+2 => { let mut var_field0 = <crate::application::keypair::keypair_deriver_error::KeypairDeriverError>::sse_decode(deserializer);
+return crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::KeypairDerivation(var_field0); }
+3 => { let mut var_field0 = <crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_decode(deserializer);
+return crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::MnemonicStorage(var_field0); }
+4 => { let mut var_field0 = <crate::application::storage::keypair_store_error::KeypairStoreError>::sse_decode(deserializer);
+return crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::KeypairStorage(var_field0); }
+5 => { let mut var_id = <crate::application::storage::mnemonic_id::MnemonicId>::sse_decode(deserializer);
+let mut var_save = <crate::application::storage::keypair_store_error::KeypairStoreError>::sse_decode(deserializer);
+let mut var_cleanup = <crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_decode(deserializer);
+return crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::MnemonicCleanup{id: var_id, save: var_save, cleanup: var_cleanup}; }
+ _ => { unimplemented!(""); }}}
+                }
+
+impl SseDecode for crate::application::account::mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError {
+                    // Codec=Sse (Serialization based), see doc to use other codecs
+                    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {let mut tag_ = <i32>::sse_decode(deserializer);
+            match tag_ {0 => { return crate::application::account::mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError::UnsupportedPlatform; }
+1 => { let mut var_field0 = <crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError>::sse_decode(deserializer);
+return crate::application::account::mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError::MnemonicParsing(var_field0); }
+2 => { let mut var_field0 = <crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError>::sse_decode(deserializer);
+return crate::application::account::mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError::AccountWrite(var_field0); }
+ _ => { unimplemented!(""); }}}
+                }
+
+impl SseDecode for crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError {
+                    // Codec=Sse (Serialization based), see doc to use other codecs
+                    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {let mut tag_ = <i32>::sse_decode(deserializer);
+            match tag_ {0 => { let mut var_field0 = <crate::application::keypair::keypair_deriver_error::KeypairDeriverError>::sse_decode(deserializer);
+return crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError::KeypairDerivation(var_field0); }
+1 => { let mut var_field0 = <crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_decode(deserializer);
+return crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError::MnemonicStorage(var_field0); }
+2 => { let mut var_field0 = <crate::application::storage::keypair_store_error::KeypairStoreError>::sse_decode(deserializer);
+return crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError::KeypairStorage(var_field0); }
+3 => { let mut var_id = <crate::application::storage::mnemonic_id::MnemonicId>::sse_decode(deserializer);
+let mut var_save = <crate::application::storage::keypair_store_error::KeypairStoreError>::sse_decode(deserializer);
+let mut var_cleanup = <crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_decode(deserializer);
+return crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError::MnemonicCleanup{id: var_id, save: var_save, cleanup: var_cleanup}; }
+ _ => { unimplemented!(""); }}}
+                }
 
 impl SseDecode
     for crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource
@@ -534,6 +556,28 @@ impl SseDecode for crate::application::storage::mnemonic_id::MnemonicId {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_value = <[u8; 16]>::sse_decode(deserializer);
         return crate::application::storage::mnemonic_id::MnemonicId { value: var_value };
+    }
+}
+
+impl SseDecode for crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut tag_ = <i32>::sse_decode(deserializer);
+        match tag_ {
+            0 => {
+                let mut var_actual = <usize>::sse_decode(deserializer);
+                return crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError::InvalidWordCount{actual: var_actual};
+            }
+            1 => {
+                return crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError::NoMatchingWordlist;
+            }
+            2 => {
+                return crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError::InvalidChecksum;
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
     }
 }
 
@@ -655,29 +699,13 @@ fn pde_ffi_dispatcher_primary_impl(
 ) {
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
-        3 => {
-            wire__crate__application__mnemonic__mnemonic_passphrase__MnemonicPassphrase_default_impl(
-                port,
-                ptr,
-                rust_vec_len,
-                data_len,
-            )
-        }
-        5 => wire__crate__api__account__create_account__create_account_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        6 => wire__crate__api__account__delete_account__delete_account_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        7 => wire__crate__api__init__init_impl(port, ptr, rust_vec_len, data_len),
-        _ => unreachable!(),
-    }
+                        3 => wire__crate__application__mnemonic__mnemonic_passphrase__MnemonicPassphrase_default_impl(port, ptr, rust_vec_len, data_len),
+5 => wire__crate__api__account__create_mnemonic_account_keys__create_mnemonic_account_keys_impl(port, ptr, rust_vec_len, data_len),
+6 => wire__crate__api__account__delete_account_keys__delete_account_keys_impl(port, ptr, rust_vec_len, data_len),
+7 => wire__crate__api__account__import_mnemonic_account_keys__import_mnemonic_account_keys_impl(port, ptr, rust_vec_len, data_len),
+8 => wire__crate__api__init__init_impl(port, ptr, rust_vec_len, data_len),
+                        _ => unreachable!(),
+                    }
 }
 
 fn pde_ffi_dispatcher_sync_impl(
@@ -778,29 +806,29 @@ impl flutter_rust_bridge::IntoIntoDart<crate::application::account::account_addr
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart
-    for crate::application::account::account_deleter_error::AccountDeleterError
+    for crate::application::account::account_key_deleter_error::AccountKeyDeleterError
 {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        match self {crate::application::account::account_deleter_error::AccountDeleterError::KeypairStorage(field0) => { [0.into_dart(),
+        match self {crate::application::account::account_key_deleter_error::AccountKeyDeleterError::KeypairStorage(field0) => { [0.into_dart(),
 field0.into_into_dart().into_dart()].into_dart() }
-crate::application::account::account_deleter_error::AccountDeleterError::MnemonicStorage(field0) => { [1.into_dart(),
+crate::application::account::account_key_deleter_error::AccountKeyDeleterError::MnemonicStorage(field0) => { [1.into_dart(),
 field0.into_into_dart().into_dart()].into_dart() }
-crate::application::account::account_deleter_error::AccountDeleterError::UnsupportedPlatform => { [2.into_dart()].into_dart() }
+crate::application::account::account_key_deleter_error::AccountKeyDeleterError::UnsupportedPlatform => { [2.into_dart()].into_dart() }
  _ => { unimplemented!(""); }}
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::application::account::account_deleter_error::AccountDeleterError
+    for crate::application::account::account_key_deleter_error::AccountKeyDeleterError
 {
 }
 impl
     flutter_rust_bridge::IntoIntoDart<
-        crate::application::account::account_deleter_error::AccountDeleterError,
-    > for crate::application::account::account_deleter_error::AccountDeleterError
+        crate::application::account::account_key_deleter_error::AccountKeyDeleterError,
+    > for crate::application::account::account_key_deleter_error::AccountKeyDeleterError
 {
     fn into_into_dart(
         self,
-    ) -> crate::application::account::account_deleter_error::AccountDeleterError {
+    ) -> crate::application::account::account_key_deleter_error::AccountKeyDeleterError {
         self
     }
 }
@@ -888,42 +916,69 @@ impl
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart
-    for crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError
-{
-    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
-        match self {crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::UnsupportedPlatform => { [0.into_dart()].into_dart() }
-crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::MnemonicGeneration(field0) => { [1.into_dart(),
+impl flutter_rust_bridge::IntoDart for crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError {
+                fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+                    match self {crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::UnsupportedPlatform => { [0.into_dart()].into_dart() }
+crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::MnemonicGeneration(field0) => { [1.into_dart(),
 field0.into_into_dart().into_dart()].into_dart() }
-crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::KeypairDerivation(field0) => { [2.into_dart(),
+crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::KeypairDerivation(field0) => { [2.into_dart(),
 field0.into_into_dart().into_dart()].into_dart() }
-crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::MnemonicStorage(field0) => { [3.into_dart(),
+crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::MnemonicStorage(field0) => { [3.into_dart(),
 field0.into_into_dart().into_dart()].into_dart() }
-crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::KeypairStorage(field0) => { [4.into_dart(),
+crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::KeypairStorage(field0) => { [4.into_dart(),
 field0.into_into_dart().into_dart()].into_dart() }
-crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::MnemonicCleanup{id,save,cleanup} => { [5.into_dart(),
+crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::MnemonicCleanup{id,save,cleanup} => { [5.into_dart(),
 id.into_into_dart().into_dart(),
 save.into_into_dart().into_dart(),
 cleanup.into_into_dart().into_dart()].into_dart() }
  _ => { unimplemented!(""); }}
-    }
-}
-impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError
-{
-}
-impl
-    flutter_rust_bridge::IntoIntoDart<
-        crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError,
-    > for crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError
-{
-    fn into_into_dart(
-        self,
-    ) -> crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError
-    {
-        self
-    }
-}
+                }
+            }
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError {}
+impl flutter_rust_bridge::IntoIntoDart<crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError> for crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError {
+            fn into_into_dart(self) -> crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError {
+                self
+            }
+        }
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::application::account::mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError {
+                fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+                    match self {crate::application::account::mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError::UnsupportedPlatform => { [0.into_dart()].into_dart() }
+crate::application::account::mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError::MnemonicParsing(field0) => { [1.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+crate::application::account::mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError::AccountWrite(field0) => { [2.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+ _ => { unimplemented!(""); }}
+                }
+            }
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::application::account::mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError {}
+impl flutter_rust_bridge::IntoIntoDart<crate::application::account::mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError> for crate::application::account::mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError {
+            fn into_into_dart(self) -> crate::application::account::mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError {
+                self
+            }
+        }
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError {
+                fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+                    match self {crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError::KeypairDerivation(field0) => { [0.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError::MnemonicStorage(field0) => { [1.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError::KeypairStorage(field0) => { [2.into_dart(),
+field0.into_into_dart().into_dart()].into_dart() }
+crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError::MnemonicCleanup{id,save,cleanup} => { [3.into_dart(),
+id.into_into_dart().into_dart(),
+save.into_into_dart().into_dart(),
+cleanup.into_into_dart().into_dart()].into_dart() }
+ _ => { unimplemented!(""); }}
+                }
+            }
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive for crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError {}
+impl flutter_rust_bridge::IntoIntoDart<crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError> for crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError {
+            fn into_into_dart(self) -> crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError {
+                self
+            }
+        }
 // Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart
     for crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource
@@ -991,6 +1046,33 @@ impl flutter_rust_bridge::IntoIntoDart<crate::application::storage::mnemonic_id:
     for crate::application::storage::mnemonic_id::MnemonicId
 {
     fn into_into_dart(self) -> crate::application::storage::mnemonic_id::MnemonicId {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart
+    for crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError
+{
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError::InvalidWordCount{actual} => { [0.into_dart(),
+actual.into_into_dart().into_dart()].into_dart() }
+crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError::NoMatchingWordlist => { [1.into_dart()].into_dart() }
+crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError::InvalidChecksum => { [2.into_dart()].into_dart() }
+ _ => { unimplemented!(""); }}
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError
+{
+}
+impl
+    flutter_rust_bridge::IntoIntoDart<
+        crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError,
+    > for crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError
+{
+    fn into_into_dart(
+        self,
+    ) -> crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError {
         self
     }
 }
@@ -1152,14 +1234,14 @@ impl SseEncode for crate::application::account::account_address::AccountAddress 
     }
 }
 
-impl SseEncode for crate::application::account::account_deleter_error::AccountDeleterError {
+impl SseEncode for crate::application::account::account_key_deleter_error::AccountKeyDeleterError {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        match self {crate::application::account::account_deleter_error::AccountDeleterError::KeypairStorage(field0) => { <i32>::sse_encode(0, serializer); <crate::application::storage::keypair_store_error::KeypairStoreError>::sse_encode(field0, serializer);
+        match self {crate::application::account::account_key_deleter_error::AccountKeyDeleterError::KeypairStorage(field0) => { <i32>::sse_encode(0, serializer); <crate::application::storage::keypair_store_error::KeypairStoreError>::sse_encode(field0, serializer);
  }
-crate::application::account::account_deleter_error::AccountDeleterError::MnemonicStorage(field0) => { <i32>::sse_encode(1, serializer); <crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_encode(field0, serializer);
+crate::application::account::account_key_deleter_error::AccountKeyDeleterError::MnemonicStorage(field0) => { <i32>::sse_encode(1, serializer); <crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_encode(field0, serializer);
  }
-crate::application::account::account_deleter_error::AccountDeleterError::UnsupportedPlatform => { <i32>::sse_encode(2, serializer);  }
+crate::application::account::account_key_deleter_error::AccountKeyDeleterError::UnsupportedPlatform => { <i32>::sse_encode(2, serializer);  }
  _ => { unimplemented!(""); }}
     }
 }
@@ -1224,27 +1306,48 @@ impl SseEncode for crate::application::account::mnemonic_account::MnemonicAccoun
     }
 }
 
-impl SseEncode
-    for crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError
-{
-    // Codec=Sse (Serialization based), see doc to use other codecs
-    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        match self {crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::UnsupportedPlatform => { <i32>::sse_encode(0, serializer);  }
-crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::MnemonicGeneration(field0) => { <i32>::sse_encode(1, serializer); <crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError>::sse_encode(field0, serializer);
+impl SseEncode for crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError {
+                    // Codec=Sse (Serialization based), see doc to use other codecs
+                    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {match self {crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::UnsupportedPlatform => { <i32>::sse_encode(0, serializer);  }
+crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::MnemonicGeneration(field0) => { <i32>::sse_encode(1, serializer); <crate::application::mnemonic::mnemonic_generator_error::MnemonicGeneratorError>::sse_encode(field0, serializer);
  }
-crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::KeypairDerivation(field0) => { <i32>::sse_encode(2, serializer); <crate::application::keypair::keypair_deriver_error::KeypairDeriverError>::sse_encode(field0, serializer);
+crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::KeypairDerivation(field0) => { <i32>::sse_encode(2, serializer); <crate::application::keypair::keypair_deriver_error::KeypairDeriverError>::sse_encode(field0, serializer);
  }
-crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::MnemonicStorage(field0) => { <i32>::sse_encode(3, serializer); <crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_encode(field0, serializer);
+crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::MnemonicStorage(field0) => { <i32>::sse_encode(3, serializer); <crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_encode(field0, serializer);
  }
-crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::KeypairStorage(field0) => { <i32>::sse_encode(4, serializer); <crate::application::storage::keypair_store_error::KeypairStoreError>::sse_encode(field0, serializer);
+crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::KeypairStorage(field0) => { <i32>::sse_encode(4, serializer); <crate::application::storage::keypair_store_error::KeypairStoreError>::sse_encode(field0, serializer);
  }
-crate::application::account::mnemonic_account_creator_error::MnemonicAccountCreatorError::MnemonicCleanup{id,save,cleanup} => { <i32>::sse_encode(5, serializer); <crate::application::storage::mnemonic_id::MnemonicId>::sse_encode(id, serializer);
+crate::application::account::mnemonic_account_key_creator_error::MnemonicAccountKeyCreatorError::MnemonicCleanup{id,save,cleanup} => { <i32>::sse_encode(5, serializer); <crate::application::storage::mnemonic_id::MnemonicId>::sse_encode(id, serializer);
 <crate::application::storage::keypair_store_error::KeypairStoreError>::sse_encode(save, serializer);
 <crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_encode(cleanup, serializer);
  }
- _ => { unimplemented!(""); }}
-    }
-}
+ _ => { unimplemented!(""); }}}
+                }
+
+impl SseEncode for crate::application::account::mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError {
+                    // Codec=Sse (Serialization based), see doc to use other codecs
+                    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {match self {crate::application::account::mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError::UnsupportedPlatform => { <i32>::sse_encode(0, serializer);  }
+crate::application::account::mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError::MnemonicParsing(field0) => { <i32>::sse_encode(1, serializer); <crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError>::sse_encode(field0, serializer);
+ }
+crate::application::account::mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError::AccountWrite(field0) => { <i32>::sse_encode(2, serializer); <crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError>::sse_encode(field0, serializer);
+ }
+ _ => { unimplemented!(""); }}}
+                }
+
+impl SseEncode for crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError {
+                    // Codec=Sse (Serialization based), see doc to use other codecs
+                    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {match self {crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError::KeypairDerivation(field0) => { <i32>::sse_encode(0, serializer); <crate::application::keypair::keypair_deriver_error::KeypairDeriverError>::sse_encode(field0, serializer);
+ }
+crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError::MnemonicStorage(field0) => { <i32>::sse_encode(1, serializer); <crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_encode(field0, serializer);
+ }
+crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError::KeypairStorage(field0) => { <i32>::sse_encode(2, serializer); <crate::application::storage::keypair_store_error::KeypairStoreError>::sse_encode(field0, serializer);
+ }
+crate::application::account::mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError::MnemonicCleanup{id,save,cleanup} => { <i32>::sse_encode(3, serializer); <crate::application::storage::mnemonic_id::MnemonicId>::sse_encode(id, serializer);
+<crate::application::storage::keypair_store_error::KeypairStoreError>::sse_encode(save, serializer);
+<crate::application::storage::mnemonic_store_error::MnemonicStoreError>::sse_encode(cleanup, serializer);
+ }
+ _ => { unimplemented!(""); }}}
+                }
 
 impl SseEncode
     for crate::application::mnemonic::mnemonic_generation_source::MnemonicGenerationSource
@@ -1273,6 +1376,17 @@ impl SseEncode for crate::application::storage::mnemonic_id::MnemonicId {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <[u8; 16]>::sse_encode(self.value, serializer);
+    }
+}
+
+impl SseEncode for crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        match self {crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError::InvalidWordCount{actual} => { <i32>::sse_encode(0, serializer); <usize>::sse_encode(actual, serializer);
+ }
+crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError::NoMatchingWordlist => { <i32>::sse_encode(1, serializer);  }
+crate::application::mnemonic::mnemonic_parser_error::MnemonicParserError::InvalidChecksum => { <i32>::sse_encode(2, serializer);  }
+ _ => { unimplemented!(""); }}
     }
 }
 

@@ -13,31 +13,31 @@ import '../storage/mnemonic_store_error.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:freezed_annotation/freezed_annotation.dart' hide protected;
-part 'mnemonic_account_creator_error.freezed.dart';
+part 'mnemonic_account_key_creator_error.freezed.dart';
 
 @freezed
-sealed class MnemonicAccountCreatorError
-    with _$MnemonicAccountCreatorError
+sealed class MnemonicAccountKeyCreatorError
+    with _$MnemonicAccountKeyCreatorError
     implements FrbException {
-  const MnemonicAccountCreatorError._();
+  const MnemonicAccountKeyCreatorError._();
 
-  const factory MnemonicAccountCreatorError.unsupportedPlatform() =
-      MnemonicAccountCreatorError_UnsupportedPlatform;
-  const factory MnemonicAccountCreatorError.mnemonicGeneration(
+  const factory MnemonicAccountKeyCreatorError.unsupportedPlatform() =
+      MnemonicAccountKeyCreatorError_UnsupportedPlatform;
+  const factory MnemonicAccountKeyCreatorError.mnemonicGeneration(
     MnemonicGeneratorError field0,
-  ) = MnemonicAccountCreatorError_MnemonicGeneration;
-  const factory MnemonicAccountCreatorError.keypairDerivation(
+  ) = MnemonicAccountKeyCreatorError_MnemonicGeneration;
+  const factory MnemonicAccountKeyCreatorError.keypairDerivation(
     KeypairDeriverError field0,
-  ) = MnemonicAccountCreatorError_KeypairDerivation;
-  const factory MnemonicAccountCreatorError.mnemonicStorage(
+  ) = MnemonicAccountKeyCreatorError_KeypairDerivation;
+  const factory MnemonicAccountKeyCreatorError.mnemonicStorage(
     MnemonicStoreError field0,
-  ) = MnemonicAccountCreatorError_MnemonicStorage;
-  const factory MnemonicAccountCreatorError.keypairStorage(
+  ) = MnemonicAccountKeyCreatorError_MnemonicStorage;
+  const factory MnemonicAccountKeyCreatorError.keypairStorage(
     KeypairStoreError field0,
-  ) = MnemonicAccountCreatorError_KeypairStorage;
-  const factory MnemonicAccountCreatorError.mnemonicCleanup({
+  ) = MnemonicAccountKeyCreatorError_KeypairStorage;
+  const factory MnemonicAccountKeyCreatorError.mnemonicCleanup({
     required MnemonicId id,
     required KeypairStoreError save,
     required MnemonicStoreError cleanup,
-  }) = MnemonicAccountCreatorError_MnemonicCleanup;
+  }) = MnemonicAccountKeyCreatorError_MnemonicCleanup;
 }

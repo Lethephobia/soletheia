@@ -13,6 +13,6 @@ abstract interface class MnemonicAccountCreator {
     required DerivationPath derivationPath,
   });
 
-  /// Retries persistence after the keys have already been created.
+  /// Retries metadata persistence after the keys were saved.
   Future<void> retrySave(Account account);
 }

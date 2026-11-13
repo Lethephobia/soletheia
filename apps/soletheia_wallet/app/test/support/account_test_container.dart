@@ -1,10 +1,30 @@
 import 'dart:async';
 
 import 'package:application/application.dart';
-import 'package:infrastructure/rust.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soletheia/account.dart';
+
+class TestUnitOfWork implements UnitOfWork {
+  const TestUnitOfWork();
+}
+
+class TestUnitOfWorkFactory implements UnitOfWorkFactory {
+  const TestUnitOfWorkFactory();
+
+  @override
+  Future<T> run<T>(Future<T> Function(UnitOfWork uow) operation) {
+    return operation(const TestUnitOfWork());
+  }
+}
+
+class _TestAccountKeyDeleter implements AccountKeyDeleter {
+  @override
+  Future<void> delete(
+    AccountAddress address, {
+    MnemonicId? unusedMnemonic,
+  }) async {}
+}
 
 class TestAccountRepository implements AccountRepository {
   final _changes = StreamController<List<Account>>.broadcast();
@@ -17,16 +37,14 @@ class TestAccountRepository implements AccountRepository {
   }
 
   @override
-  Future<void> save(Account account) async {
+  Future<void> save(UnitOfWork uow, Account account) async {
     _accounts[account.address] = account;
     _changes.add(_accounts.values.toList());
   }
 
   @override
-  Future<T> transaction<T>(Future<T> Function() operation) => operation();
-
-  @override
   Future<({MnemonicId? unusedMnemonic, bool isEmpty})> delete(
+    UnitOfWork uow,
     AccountAddress address,
   ) async {
     final removed = _accounts.remove(address);
@@ -50,7 +68,7 @@ class TestAccountRepository implements AccountRepository {
   }
 
   @override
-  Future<void> select(AccountAddress address) async {
+  Future<void> select(UnitOfWork uow, AccountAddress address) async {
     if (!_accounts.containsKey(address)) {
       throw const AccountNotFoundException();
     }
@@ -69,11 +87,19 @@ Future<ProviderContainer> accountTestContainer({
   addTearDown(store.close);
   final container = ProviderContainer.test(
     overrides: [
+      unitOfWorkFactoryProvider.overrideWithValue(
+        const TestUnitOfWorkFactory(),
+      ),
       accountRepositoryProvider.overrideWithValue(store),
       accountDeleterProvider.overrideWithValue(
-        RustAccountDeleter(store, deleteKeys: (_, {unusedMnemonic}) async {}),
+        DefaultAccountDeleter(
+          _TestAccountKeyDeleter(),
+          store,
+          const TestUnitOfWorkFactory(),
+        ),
       ),
-      if (creator != null) mnemonicAccountCreatorProvider.overrideWithValue(creator),
+      if (creator != null)
+        mnemonicAccountCreatorProvider.overrideWithValue(creator),
     ],
   );
   final subscription = container.listen(accountsProvider.future, (_, _) {});

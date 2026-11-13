@@ -16,10 +16,20 @@ void main() {
       await initializeRust();
       final dir = await Directory.systemTemp.createTemp('account-test');
       addTearDown(() => dir.delete(recursive: true));
-      final store = SqliteAccountRepository(directory: dir);
-      addTearDown(store.close);
-      final creator = RustMnemonicAccountCreator(store);
-      final deleter = RustAccountDeleter(store);
+      final database = WalletDatabase(directory: dir);
+      final store = SqliteAccountRepository(database);
+      final factory = SqliteUnitOfWorkFactory(database);
+      addTearDown(database.close);
+      final creator = DefaultMnemonicAccountCreator(
+        const RustMnemonicAccountKeyCreator(),
+        store,
+        factory,
+      );
+      final deleter = DefaultAccountDeleter(
+        const RustAccountKeyDeleter(),
+        store,
+        factory,
+      );
       final path = DerivationPath.parse("m/44'/501'/0'/0'");
       final random = Random.secure();
       final entropy = Uint8List.fromList(
@@ -47,7 +57,7 @@ void main() {
       await expectLater(
         create(),
         throwsA(
-          const MnemonicAccountCreatorError.keypairStorage(
+          const MnemonicAccountKeyCreatorError.keypairStorage(
             KeypairStoreError.alreadyExists(),
           ),
         ),

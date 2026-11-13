@@ -149,9 +149,12 @@ void main() {
       addTearDown(tester.view.resetDevicePixelRatio);
       addTearDown(tester.view.resetPhysicalSize);
       final repository = TestAccountRepository();
-      await repository.save(Account(address: AccountAddress(Uint8List(32))));
+      await repository.save(
+        const TestUnitOfWork(),
+        Account(address: AccountAddress(Uint8List(32))),
+      );
       final second = Account(address: AccountAddress(Uint8List(32)..[31] = 1));
-      await repository.save(second);
+      await repository.save(const TestUnitOfWork(), second);
       final container = await accountTestContainer(repository: repository);
       await tester.pumpWalletWidget(
         UncontrolledProviderScope(container: container, child: const App()),
@@ -371,8 +374,8 @@ void main() {
       final repository = TestAccountRepository();
       final first = Account(address: AccountAddress(Uint8List(32)));
       final second = Account(address: AccountAddress(Uint8List(32)..[31] = 1));
-      await repository.save(first);
-      await repository.save(second);
+      await repository.save(const TestUnitOfWork(), first);
+      await repository.save(const TestUnitOfWork(), second);
       final container = await accountTestContainer(repository: repository);
       await tester.pumpWalletWidget(
         UncontrolledProviderScope(container: container, child: const App()),
@@ -425,6 +428,7 @@ void main() {
       final repository = TestAccountRepository();
       for (var index = 0; index < 40; index++) {
         await repository.save(
+          const TestUnitOfWork(),
           Account(address: AccountAddress(Uint8List(32)..[31] = index)),
         );
       }
@@ -471,7 +475,10 @@ void main() {
       addTearDown(tester.view.resetDevicePixelRatio);
       addTearDown(tester.view.resetPhysicalSize);
       final repository = TestAccountRepository();
-      await repository.save(Account(address: AccountAddress(Uint8List(32))));
+      await repository.save(
+        const TestUnitOfWork(),
+        Account(address: AccountAddress(Uint8List(32))),
+      );
       final container = await accountTestContainer(repository: repository);
       await tester.pumpWalletWidget(
         UncontrolledProviderScope(container: container, child: const App()),

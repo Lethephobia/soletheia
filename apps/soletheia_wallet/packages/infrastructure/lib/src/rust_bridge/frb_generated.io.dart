@@ -3,17 +3,21 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
-import 'api/account/create_account.dart';
-import 'api/account/delete_account.dart';
+import 'api/account/create_mnemonic_account_keys.dart';
+import 'api/account/delete_account_keys.dart';
+import 'api/account/import_mnemonic_account_keys.dart';
 import 'application/account/account_address.dart';
-import 'application/account/account_deleter_error.dart';
+import 'application/account/account_key_deleter_error.dart';
 import 'application/account/mnemonic_account.dart';
-import 'application/account/mnemonic_account_creator_error.dart';
+import 'application/account/mnemonic_account_key_creator_error.dart';
+import 'application/account/mnemonic_account_key_importer_error.dart';
+import 'application/account/mnemonic_account_key_writer_error.dart';
 import 'application/keypair/derivation_path.dart';
 import 'application/keypair/keypair_deriver_error.dart';
 import 'application/mnemonic/mnemonic_entropy.dart';
 import 'application/mnemonic/mnemonic_generation_source.dart';
 import 'application/mnemonic/mnemonic_generator_error.dart';
+import 'application/mnemonic/mnemonic_parser_error.dart';
 import 'application/mnemonic/mnemonic_passphrase.dart';
 import 'application/mnemonic/mnemonic_word_count.dart';
 import 'application/mnemonic/mnemonic_wordlist.dart';
@@ -93,13 +97,17 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AccountAddress dco_decode_account_address(dynamic raw);
 
   @protected
-  AccountDeleterError dco_decode_account_deleter_error(dynamic raw);
+  AccountKeyDeleterError dco_decode_account_key_deleter_error(dynamic raw);
 
   @protected
   AccountAddress dco_decode_box_autoadd_account_address(dynamic raw);
 
   @protected
   KeypairStoreError dco_decode_box_autoadd_keypair_store_error(dynamic raw);
+
+  @protected
+  MnemonicAccountKeyWriterError
+  dco_decode_box_autoadd_mnemonic_account_key_writer_error(dynamic raw);
 
   @protected
   MnemonicGenerationSource dco_decode_box_autoadd_mnemonic_generation_source(
@@ -113,6 +121,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   MnemonicId dco_decode_box_autoadd_mnemonic_id(dynamic raw);
+
+  @protected
+  MnemonicParserError dco_decode_box_autoadd_mnemonic_parser_error(dynamic raw);
 
   @protected
   MnemonicStoreError dco_decode_box_autoadd_mnemonic_store_error(dynamic raw);
@@ -136,7 +147,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   MnemonicAccount dco_decode_mnemonic_account(dynamic raw);
 
   @protected
-  MnemonicAccountCreatorError dco_decode_mnemonic_account_creator_error(
+  MnemonicAccountKeyCreatorError dco_decode_mnemonic_account_key_creator_error(
+    dynamic raw,
+  );
+
+  @protected
+  MnemonicAccountKeyImporterError
+  dco_decode_mnemonic_account_key_importer_error(dynamic raw);
+
+  @protected
+  MnemonicAccountKeyWriterError dco_decode_mnemonic_account_key_writer_error(
     dynamic raw,
   );
 
@@ -148,6 +168,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   MnemonicId dco_decode_mnemonic_id(dynamic raw);
+
+  @protected
+  MnemonicParserError dco_decode_mnemonic_parser_error(dynamic raw);
 
   @protected
   MnemonicStoreError dco_decode_mnemonic_store_error(dynamic raw);
@@ -219,7 +242,7 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   AccountAddress sse_decode_account_address(SseDeserializer deserializer);
 
   @protected
-  AccountDeleterError sse_decode_account_deleter_error(
+  AccountKeyDeleterError sse_decode_account_key_deleter_error(
     SseDeserializer deserializer,
   );
 
@@ -230,6 +253,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   KeypairStoreError sse_decode_box_autoadd_keypair_store_error(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  MnemonicAccountKeyWriterError
+  sse_decode_box_autoadd_mnemonic_account_key_writer_error(
     SseDeserializer deserializer,
   );
 
@@ -245,6 +274,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   MnemonicId sse_decode_box_autoadd_mnemonic_id(SseDeserializer deserializer);
+
+  @protected
+  MnemonicParserError sse_decode_box_autoadd_mnemonic_parser_error(
+    SseDeserializer deserializer,
+  );
 
   @protected
   MnemonicStoreError sse_decode_box_autoadd_mnemonic_store_error(
@@ -274,7 +308,16 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   MnemonicAccount sse_decode_mnemonic_account(SseDeserializer deserializer);
 
   @protected
-  MnemonicAccountCreatorError sse_decode_mnemonic_account_creator_error(
+  MnemonicAccountKeyCreatorError sse_decode_mnemonic_account_key_creator_error(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  MnemonicAccountKeyImporterError
+  sse_decode_mnemonic_account_key_importer_error(SseDeserializer deserializer);
+
+  @protected
+  MnemonicAccountKeyWriterError sse_decode_mnemonic_account_key_writer_error(
     SseDeserializer deserializer,
   );
 
@@ -290,6 +333,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   MnemonicId sse_decode_mnemonic_id(SseDeserializer deserializer);
+
+  @protected
+  MnemonicParserError sse_decode_mnemonic_parser_error(
+    SseDeserializer deserializer,
+  );
 
   @protected
   MnemonicStoreError sse_decode_mnemonic_store_error(
@@ -379,8 +427,8 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  void sse_encode_account_deleter_error(
-    AccountDeleterError self,
+  void sse_encode_account_key_deleter_error(
+    AccountKeyDeleterError self,
     SseSerializer serializer,
   );
 
@@ -393,6 +441,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_keypair_store_error(
     KeypairStoreError self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_mnemonic_account_key_writer_error(
+    MnemonicAccountKeyWriterError self,
     SseSerializer serializer,
   );
 
@@ -411,6 +465,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_mnemonic_id(
     MnemonicId self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_box_autoadd_mnemonic_parser_error(
+    MnemonicParserError self,
     SseSerializer serializer,
   );
 
@@ -451,8 +511,20 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
-  void sse_encode_mnemonic_account_creator_error(
-    MnemonicAccountCreatorError self,
+  void sse_encode_mnemonic_account_key_creator_error(
+    MnemonicAccountKeyCreatorError self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_mnemonic_account_key_importer_error(
+    MnemonicAccountKeyImporterError self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_mnemonic_account_key_writer_error(
+    MnemonicAccountKeyWriterError self,
     SseSerializer serializer,
   );
 
@@ -470,6 +542,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_mnemonic_id(MnemonicId self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_mnemonic_parser_error(
+    MnemonicParserError self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_mnemonic_store_error(

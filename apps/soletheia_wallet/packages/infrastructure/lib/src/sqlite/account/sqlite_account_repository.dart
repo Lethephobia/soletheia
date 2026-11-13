@@ -1,20 +1,14 @@
-import 'dart:io';
-
 import 'package:application/application.dart';
 import 'package:drift/drift.dart';
 
+import '../sqlite_unit_of_work_factory.dart';
 import '../wallet_database.dart';
 
 /// Stores account metadata in the local wallet database.
 class SqliteAccountRepository implements AccountRepository {
-  SqliteAccountRepository({Directory? directory})
-    : _db = WalletDatabase(directory: directory);
+  SqliteAccountRepository(this._db);
 
   final WalletDatabase _db;
-
-  @override
-  Future<T> transaction<T>(Future<T> Function() operation) =>
-      _db.transaction(operation);
 
   @override
   Stream<List<Account>> watchAll() {
@@ -34,7 +28,8 @@ class SqliteAccountRepository implements AccountRepository {
   }
 
   @override
-  Future<void> save(Account account) async {
+  Future<void> save(UnitOfWork uow, Account account) async {
+    SqliteUnitOfWorkFactory.check(uow, _db);
     await _db
         .into(_db.accounts)
         .insertOnConflictUpdate(
@@ -50,29 +45,29 @@ class SqliteAccountRepository implements AccountRepository {
 
   @override
   Future<({MnemonicId? unusedMnemonic, bool isEmpty})> delete(
+    UnitOfWork uow,
     AccountAddress address,
-  ) {
-    return _db.transaction(() async {
-      final removed = await (_db.delete(
-        _db.accounts,
-      )..where((row) => row.address.equals(address.bytes))).goAndReturn();
-      if (removed.isEmpty) throw const AccountNotFoundException();
-      final id = removed.single.mnemonicId;
-      MnemonicId? unusedMnemonic;
-      if (id != null) {
-        final shared =
-            await (_db.select(_db.accounts)
-                  ..where((row) => row.mnemonicId.equals(id))
-                  ..limit(1))
-                .getSingleOrNull();
-        if (shared == null) unusedMnemonic = MnemonicId(id);
-      }
-      final remaining = await (_db.select(
-        _db.accounts,
-      )..limit(1)).getSingleOrNull();
+  ) async {
+    SqliteUnitOfWorkFactory.check(uow, _db);
+    final removed = await (_db.delete(
+      _db.accounts,
+    )..where((row) => row.address.equals(address.bytes))).goAndReturn();
+    if (removed.isEmpty) throw const AccountNotFoundException();
+    final id = removed.single.mnemonicId;
+    MnemonicId? unusedMnemonic;
+    if (id != null) {
+      final shared =
+          await (_db.select(_db.accounts)
+                ..where((row) => row.mnemonicId.equals(id))
+                ..limit(1))
+              .getSingleOrNull();
+      if (shared == null) unusedMnemonic = MnemonicId(id);
+    }
+    final remaining = await (_db.select(
+      _db.accounts,
+    )..limit(1)).getSingleOrNull();
 
-      return (unusedMnemonic: unusedMnemonic, isEmpty: remaining == null);
-    });
+    return (unusedMnemonic: unusedMnemonic, isEmpty: remaining == null);
   }
 
   @override
@@ -89,18 +84,15 @@ class SqliteAccountRepository implements AccountRepository {
   }
 
   @override
-  Future<void> select(AccountAddress address) {
-    return _db.transaction(() async {
-      await (_db.update(_db.accounts)..where((row) => row.isCurrent)).write(
-        const AccountsCompanion(isCurrent: Value(false)),
-      );
-      final count =
-          await (_db.update(_db.accounts)
-                ..where((row) => row.address.equals(address.bytes)))
-              .write(const AccountsCompanion(isCurrent: Value(true)));
-      if (count == 0) throw const AccountNotFoundException();
-    });
+  Future<void> select(UnitOfWork uow, AccountAddress address) async {
+    SqliteUnitOfWorkFactory.check(uow, _db);
+    await (_db.update(_db.accounts)..where((row) => row.isCurrent)).write(
+      const AccountsCompanion(isCurrent: Value(false)),
+    );
+    final count =
+        await (_db.update(_db.accounts)
+              ..where((row) => row.address.equals(address.bytes)))
+            .write(const AccountsCompanion(isCurrent: Value(true)));
+    if (count == 0) throw const AccountNotFoundException();
   }
-
-  Future<void> close() => _db.close();
 }

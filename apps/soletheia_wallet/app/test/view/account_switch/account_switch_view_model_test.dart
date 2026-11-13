@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:application/account.dart';
+import 'package:application/application.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soletheia/view/account_switch/account_switch_view_model.dart';
 
@@ -11,7 +11,7 @@ class _PendingRepository extends TestAccountRepository {
   final requests = <Completer<void>>[];
 
   @override
-  Future<void> select(AccountAddress address) {
+  Future<void> select(UnitOfWork uow, AccountAddress address) {
     final request = Completer<void>();
     requests.add(request);
     return request.future;

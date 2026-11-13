@@ -4,12 +4,30 @@ import 'dart:typed_data';
 
 import 'package:application/account.dart';
 import 'package:application/mnemonic.dart';
-import 'package:infrastructure/rust.dart';
 import 'package:infrastructure/sqlite.dart';
-import 'package:infrastructure/src/sqlite/wallet_database.dart';
 import 'package:test/test.dart';
 
 void main() {
+  test('rejects writes with an expired or foreign unit of work', () async {
+    final root = await Directory.systemTemp.createTemp('wallet-uow-test');
+    addTearDown(() => root.delete(recursive: true));
+    final database = WalletDatabase(directory: root);
+    addTearDown(database.close);
+    final otherDatabase = WalletDatabase(directory: root);
+    addTearDown(otherDatabase.close);
+    final repository = SqliteAccountRepository(database);
+    final otherRepository = SqliteAccountRepository(otherDatabase);
+    final factory = SqliteUnitOfWorkFactory(database);
+    final account = Account(address: AccountAddress(Uint8List(32)));
+
+    final expired = await factory.run((uow) async {
+      await expectLater(otherRepository.save(uow, account), throwsStateError);
+      return uow;
+    });
+    await expectLater(repository.save(expired, account), throwsStateError);
+    expect(await repository.watchAll().first, isEmpty);
+  });
+
   test(
     'watches account inserts and updates and persists them across a restart',
     () async {
@@ -25,30 +43,35 @@ void main() {
       );
       final updated = account.copyWith(mnemonicDerivation: null);
       final other = Account(address: AccountAddress(Uint8List(32)..[0] = 1));
-      final repo = SqliteAccountRepository(directory: root);
+      final database = WalletDatabase(directory: root);
+      final repo = SqliteAccountRepository(database);
+      final factory = SqliteUnitOfWorkFactory(database);
       final stream = StreamIterator(repo.watchAll());
       try {
         expect(await stream.moveNext(), isTrue);
         expect(stream.current, isEmpty);
-        await repo.save(account);
+        await factory.run((uow) => repo.save(uow, account));
         expect(await stream.moveNext(), isTrue);
         expect(stream.current, [account]);
-        await repo.save(updated);
+        await factory.run((uow) => repo.save(uow, updated));
         expect(await stream.moveNext(), isTrue);
         expect(stream.current, [updated]);
-        await repo.save(other);
-        await repo.select(other.address);
+        await factory.run((uow) => repo.save(uow, other));
+        await factory.run((uow) => repo.select(uow, other.address));
         expect(await repo.watchCurrentAddress().first, other.address);
         await expectLater(
-          repo.select(AccountAddress(Uint8List(32)..[0] = 2)),
+          factory.run(
+            (uow) => repo.select(uow, AccountAddress(Uint8List(32)..[0] = 2)),
+          ),
           throwsA(isA<AccountNotFoundException>()),
         );
       } finally {
         await stream.cancel();
-        await repo.close();
+        await database.close();
       }
-      final reopened = SqliteAccountRepository(directory: root);
-      addTearDown(reopened.close);
+      final reopenedDb = WalletDatabase(directory: root);
+      final reopened = SqliteAccountRepository(reopenedDb);
+      addTearDown(reopenedDb.close);
       expect(await reopened.watchAll().first, [updated, other]);
       expect(await reopened.watchCurrentAddress().first, other.address);
     },
@@ -70,13 +93,15 @@ void main() {
       final second = first.copyWith(
         address: AccountAddress(Uint8List(32)..[0] = 1),
       );
-      final repo = SqliteAccountRepository(directory: root);
+      final database = WalletDatabase(directory: root);
+      final repo = SqliteAccountRepository(database);
+      final factory = SqliteUnitOfWorkFactory(database);
       final keys = _TestKeys()..fail = true;
-      final deleter = RustAccountDeleter(repo, deleteKeys: keys.delete);
-      addTearDown(repo.close);
-      await repo.save(first);
-      await repo.save(second);
-      await repo.select(first.address);
+      final deleter = DefaultAccountDeleter(keys, repo, factory);
+      addTearDown(database.close);
+      await factory.run((uow) => repo.save(uow, first));
+      await factory.run((uow) => repo.save(uow, second));
+      await factory.run((uow) => repo.select(uow, first.address));
       await expectLater(deleter.delete(first.address), throwsException);
       expect(await repo.watchCurrentAddress().first, first.address);
       keys.fail = false;
@@ -108,10 +133,12 @@ void main() {
       } finally {
         await db.close();
       }
-      final repo = SqliteAccountRepository(directory: root);
-      addTearDown(repo.close);
+      final database = WalletDatabase(directory: root);
+      final repo = SqliteAccountRepository(database);
+      final factory = SqliteUnitOfWorkFactory(database);
+      addTearDown(database.close);
       expect(await repo.watchCurrentAddress().first, address);
-      await repo.select(address);
+      await factory.run((uow) => repo.select(uow, address));
       expect(await repo.watchAll().first, [Account(address: address)]);
     },
   );
@@ -141,10 +168,11 @@ void main() {
   );
 }
 
-class _TestKeys {
+class _TestKeys implements AccountKeyDeleter {
   final calls = <(AccountAddress, MnemonicId?)>[];
   var fail = false;
 
+  @override
   Future<void> delete(
     AccountAddress address, {
     MnemonicId? unusedMnemonic,

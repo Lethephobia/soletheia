@@ -1,4 +1,5 @@
 import '../mnemonic/mnemonic_id.dart';
+import '../unit_of_work/unit_of_work.dart';
 import 'account.dart';
 import 'account_address.dart';
 
@@ -11,16 +12,14 @@ abstract interface class AccountRepository {
   Stream<AccountAddress?> watchCurrentAddress();
 
   /// Selects an existing account on this device.
-  Future<void> select(AccountAddress address);
-
-  /// Runs the operation in one metadata transaction.
-  Future<T> transaction<T>(Future<T> Function() operation);
+  Future<void> select(UnitOfWork uow, AccountAddress address);
 
   /// Removes the metadata and reports which mnemonic lost its last reference.
   Future<({MnemonicId? unusedMnemonic, bool isEmpty})> delete(
+    UnitOfWork uow,
     AccountAddress address,
   );
 
   /// Inserts or updates [account] by its address.
-  Future<void> save(Account account);
+  Future<void> save(UnitOfWork uow, Account account);
 }

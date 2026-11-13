@@ -1,7 +1,7 @@
 use crate::application::storage::{KeypairStoreError, MnemonicStoreError};
 
 #[derive(Debug, PartialEq, Eq, thiserror::Error)]
-pub enum AccountDeleterError {
+pub enum AccountKeyDeleterError {
     #[error("could not delete keypair: {0}")]
     KeypairStorage(#[source] KeypairStoreError),
     #[error("could not delete mnemonic: {0}")]

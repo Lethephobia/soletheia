@@ -8,5 +8,9 @@ part 'account_deleter.g.dart';
 
 @riverpod
 AccountDeleter accountDeleter(Ref ref) {
-  return RustAccountDeleter(ref.watch(accountRepositoryProvider));
+  return DefaultAccountDeleter(
+    const RustAccountKeyDeleter(),
+    ref.watch(accountRepositoryProvider),
+    ref.watch(unitOfWorkFactoryProvider),
+  );
 }

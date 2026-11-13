@@ -1,13 +1,19 @@
 export 'rust/account.dart';
 export 'rust/initialize_rust.dart';
-export 'rust_bridge/application/account/mnemonic_account_creator_error.dart'
-    show MnemonicAccountCreatorError;
-export 'rust_bridge/application/account/account_deleter_error.dart'
-    show AccountDeleterError;
+export 'rust_bridge/application/account/account_key_deleter_error.dart'
+    show AccountKeyDeleterError;
+export 'rust_bridge/application/account/mnemonic_account_key_creator_error.dart'
+    show MnemonicAccountKeyCreatorError;
+export 'rust_bridge/application/account/mnemonic_account_key_importer_error.dart'
+    show MnemonicAccountKeyImporterError;
+export 'rust_bridge/application/account/mnemonic_account_key_writer_error.dart'
+    show MnemonicAccountKeyWriterError;
 export 'rust_bridge/application/keypair/keypair_deriver_error.dart'
     show KeypairDeriverError;
 export 'rust_bridge/application/mnemonic/mnemonic_generator_error.dart'
     show MnemonicGeneratorError;
+export 'rust_bridge/application/mnemonic/mnemonic_parser_error.dart'
+    show MnemonicParserError;
 export 'rust_bridge/application/storage/keypair_store_error.dart'
     show KeypairStoreError;
 export 'rust_bridge/application/storage/mnemonic_store_error.dart'

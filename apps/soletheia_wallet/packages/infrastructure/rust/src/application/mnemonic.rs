@@ -3,7 +3,7 @@ pub(crate) mod mnemonic_generation_source;
 mod mnemonic_generator;
 pub(crate) mod mnemonic_generator_error;
 mod mnemonic_parser;
-mod mnemonic_parser_error;
+pub(crate) mod mnemonic_parser_error;
 pub(crate) mod mnemonic_passphrase;
 mod mnemonic_phrase;
 mod mnemonic_word;

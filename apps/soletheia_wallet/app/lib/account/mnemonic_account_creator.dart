@@ -8,5 +8,9 @@ part 'mnemonic_account_creator.g.dart';
 
 @riverpod
 MnemonicAccountCreator mnemonicAccountCreator(Ref ref) {
-  return RustMnemonicAccountCreator(ref.watch(accountRepositoryProvider));
+  return DefaultMnemonicAccountCreator(
+    const RustMnemonicAccountKeyCreator(),
+    ref.watch(accountRepositoryProvider),
+    ref.watch(unitOfWorkFactoryProvider),
+  );
 }

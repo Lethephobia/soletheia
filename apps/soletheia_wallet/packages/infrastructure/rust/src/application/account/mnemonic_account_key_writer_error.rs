@@ -4,7 +4,7 @@ use crate::application::{
 };
 
 #[derive(Debug, thiserror::Error)]
-pub enum MnemonicAccountWriterError {
+pub enum MnemonicAccountKeyWriterError {
     #[error(transparent)]
     KeypairDerivation(#[from] KeypairDeriverError),
     #[error("could not save mnemonic: {0}")]

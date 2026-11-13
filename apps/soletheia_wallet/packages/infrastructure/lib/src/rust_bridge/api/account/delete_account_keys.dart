@@ -4,7 +4,7 @@
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
 import '../../application/account/account_address.dart';
-import '../../application/account/account_deleter_error.dart';
+import '../../application/account/account_key_deleter_error.dart';
 import '../../application/storage/keypair_store_error.dart';
 import '../../application/storage/mnemonic_id.dart';
 import '../../application/storage/mnemonic_store_error.dart';
@@ -13,10 +13,10 @@ import '../../lib.dart';
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
-Future<void> deleteAccount({
+Future<void> deleteAccountKeys({
   required AccountAddress address,
   MnemonicId? unusedMnemonic,
-}) => RustLib.instance.api.crateApiAccountDeleteAccountDeleteAccount(
+}) => RustLib.instance.api.crateApiAccountDeleteAccountKeysDeleteAccountKeys(
   address: address,
   unusedMnemonic: unusedMnemonic,
 );

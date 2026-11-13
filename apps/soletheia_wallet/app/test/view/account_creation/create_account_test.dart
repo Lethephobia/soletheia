@@ -4,14 +4,13 @@ import 'dart:typed_data';
 import 'package:application/application.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:infrastructure/rust.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:soletheia/app.dart';
 
 import '../../support/account_test_container.dart';
 import '../../support/pump_wallet_widget.dart';
 
-class _TestKeys {
+class _TestKeys implements MnemonicAccountKeyCreator {
   final calls =
       <
         (
@@ -23,6 +22,7 @@ class _TestKeys {
       >[];
   late Completer<MnemonicAccount> response;
 
+  @override
   Future<MnemonicAccount> create({
     required MnemonicWordlist wordlist,
     required MnemonicGenerationSource source,
@@ -40,10 +40,10 @@ class _FailingRepository extends TestAccountRepository {
   final attempts = <Account>[];
 
   @override
-  Future<void> save(Account account) async {
+  Future<void> save(UnitOfWork uow, Account account) async {
     attempts.add(account);
     if (fail) throw Exception('storage unavailable');
-    await super.save(account);
+    await super.save(uow, account);
   }
 }
 
@@ -91,7 +91,11 @@ void main() {
       await tester.pumpWalletWidget(
         UncontrolledProviderScope(
           container: await accountTestContainer(
-            creator: RustMnemonicAccountCreator(store, createKeys: keys.create),
+            creator: DefaultMnemonicAccountCreator(
+              keys,
+              store,
+              const TestUnitOfWorkFactory(),
+            ),
             repository: store,
           ),
           child: const App(),
