@@ -16,7 +16,7 @@ impl<M, K> DefaultAccountDeleter<M, K> {
 }
 
 impl<M: MnemonicStore, K: KeypairStore> AccountDeleter for DefaultAccountDeleter<M, K> {
-    fn delete_account(
+    fn delete(
         &self,
         address: AccountAddress,
         unused_mnemonic: Option<MnemonicId>,

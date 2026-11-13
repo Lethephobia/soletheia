@@ -10,7 +10,7 @@ pub fn delete_account(
     #[cfg(any(target_os = "ios", target_os = "macos"))]
     {
         use crate::application::account::{AccountDeleter, DefaultAccountDeleter};
-        DefaultAccountDeleter::default().delete_account(address, unused_mnemonic)
+        DefaultAccountDeleter::default().delete(address, unused_mnemonic)
     }
 
     #[cfg(not(any(target_os = "ios", target_os = "macos")))]

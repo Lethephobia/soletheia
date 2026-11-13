@@ -22,7 +22,7 @@ impl SolanaKeypairDeriver {
 }
 
 impl KeypairDeriver for SolanaKeypairDeriver {
-    fn derive_keypair(
+    fn derive(
         &self,
         mnemonic: &Mnemonic,
         passphrase: &MnemonicPassphrase,
@@ -55,7 +55,7 @@ mod tests {
         // Public BIP-39 zero-entropy vector. Addresses from solana-keygen pubkey
         // with prompt://?key=0 or prompt://?key=0/0 and the indicated passphrase.
         let mnemonic = Bip39MnemonicGenerator
-            .generate_mnemonic(
+            .generate(
                 MnemonicWordlist::English,
                 MnemonicGenerationSource::Entropy(vec![0; 16].try_into().unwrap()),
             )
@@ -79,7 +79,7 @@ mod tests {
         ] {
             let path = path.parse().unwrap();
             let keypair = SolanaKeypairDeriver
-                .derive_keypair(
+                .derive(
                     &mnemonic,
                     &MnemonicPassphrase::new(passphrase.into()),
                     &path,

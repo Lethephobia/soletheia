@@ -6,7 +6,7 @@ use crate::application::{
 
 pub trait AccountCreator {
     /// Returns the address and mnemonic ID after both secrets have been saved.
-    fn create_account(
+    fn create(
         &self,
         wordlist: MnemonicWordlist,
         source: MnemonicGenerationSource,

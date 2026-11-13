@@ -2,7 +2,7 @@ use super::{AccountKeypair, DerivationPath, KeypairDeriverError};
 use crate::application::mnemonic::{Mnemonic, MnemonicPassphrase};
 
 pub trait KeypairDeriver {
-    fn derive_keypair(
+    fn derive(
         &self,
         mnemonic: &Mnemonic,
         passphrase: &MnemonicPassphrase,

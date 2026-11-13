@@ -25,7 +25,7 @@ impl Bip39MnemonicGenerator {
 }
 
 impl MnemonicGenerator for Bip39MnemonicGenerator {
-    fn generate_mnemonic(
+    fn generate(
         &self,
         wordlist: MnemonicWordlist,
         source: MnemonicGenerationSource,
@@ -78,7 +78,7 @@ mod tests {
             (Japanese, "あいこくしん", "あおぞら"),
         ] {
             let phrase = Bip39MnemonicGenerator
-                .generate_mnemonic(
+                .generate(
                     language,
                     MnemonicGenerationSource::Entropy(vec![0; 16].try_into().unwrap()),
                 )
@@ -113,7 +113,7 @@ mod tests {
                 (Words24, 24),
             ] {
                 let phrase = Bip39MnemonicGenerator
-                    .generate_mnemonic(language, MnemonicGenerationSource::Random(count))
+                    .generate(language, MnemonicGenerationSource::Random(count))
                     .unwrap();
                 let parsed = ::bip39::Mnemonic::parse_in(
                     Bip39MnemonicGenerator::language(language),
@@ -122,7 +122,7 @@ mod tests {
                 .unwrap();
                 assert_eq!(parsed.word_count(), words);
                 let restored = Bip39MnemonicGenerator
-                    .generate_mnemonic(
+                    .generate(
                         language,
                         MnemonicGenerationSource::Entropy(parsed.to_entropy().try_into().unwrap()),
                     )

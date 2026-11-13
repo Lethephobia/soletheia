@@ -71,7 +71,7 @@ mod tests {
     #[test]
     fn stores_original_utf8_words_with_their_wordlist() {
         let mnemonic = Bip39MnemonicGenerator
-            .generate_mnemonic(
+            .generate(
                 MnemonicWordlist::Japanese,
                 MnemonicGenerationSource::Entropy(vec![0; 16].try_into().unwrap()),
             )

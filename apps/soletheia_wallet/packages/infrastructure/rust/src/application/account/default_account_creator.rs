@@ -27,17 +27,17 @@ impl<G, D, M, K> DefaultAccountCreator<G, D, M, K> {
 impl<G: MnemonicGenerator, D: KeypairDeriver, M: MnemonicStore, K: KeypairStore> AccountCreator
     for DefaultAccountCreator<G, D, M, K>
 {
-    fn create_account(
+    fn create(
         &self,
         wordlist: MnemonicWordlist,
         source: MnemonicGenerationSource,
         passphrase: &MnemonicPassphrase,
         derivation_path: &DerivationPath,
     ) -> Result<CreatedAccount, AccountCreatorError> {
-        let mnemonic = self.generator.generate_mnemonic(wordlist, source)?;
+        let mnemonic = self.generator.generate(wordlist, source)?;
         let keypair = self
             .deriver
-            .derive_keypair(&mnemonic, passphrase, derivation_path)?;
+            .derive(&mnemonic, passphrase, derivation_path)?;
 
         let id = self
             .mnemonic_store

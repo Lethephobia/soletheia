@@ -119,7 +119,7 @@ mod tests {
         Self: AccountCreator,
     {
         fn create_test_account(&self) -> Result<CreatedAccount, AccountCreatorError> {
-            self.create_account(
+            self.create(
                 MnemonicWordlist::English,
                 MnemonicGenerationSource::Entropy(vec![0; 16].try_into().unwrap()),
                 &MnemonicPassphrase::new("TREZOR".into()),
@@ -212,7 +212,7 @@ mod tests {
         struct FailingGenerator;
 
         impl MnemonicGenerator for FailingGenerator {
-            fn generate_mnemonic(
+            fn generate(
                 &self,
                 _: MnemonicWordlist,
                 _: MnemonicGenerationSource,
@@ -239,7 +239,7 @@ mod tests {
         struct FailingDeriver;
 
         impl KeypairDeriver for FailingDeriver {
-            fn derive_keypair(
+            fn derive(
                 &self,
                 _: &Mnemonic,
                 _: &MnemonicPassphrase,

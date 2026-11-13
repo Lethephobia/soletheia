@@ -13,12 +13,7 @@ pub fn create_account(
     #[cfg(any(target_os = "ios", target_os = "macos"))]
     {
         use crate::application::account::{AccountCreator, DefaultAccountCreator};
-        DefaultAccountCreator::default().create_account(
-            wordlist,
-            source,
-            &passphrase,
-            &derivation_path,
-        )
+        DefaultAccountCreator::default().create(wordlist, source, &passphrase, &derivation_path)
     }
 
     #[cfg(not(any(target_os = "ios", target_os = "macos")))]

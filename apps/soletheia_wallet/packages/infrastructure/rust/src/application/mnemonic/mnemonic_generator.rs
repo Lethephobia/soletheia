@@ -1,7 +1,7 @@
 use super::{Mnemonic, MnemonicGenerationSource, MnemonicGeneratorError, MnemonicWordlist};
 
 pub trait MnemonicGenerator {
-    fn generate_mnemonic(
+    fn generate(
         &self,
         wordlist: MnemonicWordlist,
         source: MnemonicGenerationSource,
