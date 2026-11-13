@@ -14,8 +14,5 @@ class SettingsRoute extends RelativeGoRouteData with $SettingsRoute {
 
 const _settingsRoute = TypedRelativeGoRoute<SettingsRoute>(
   path: 'settings',
-  routes: [
-    TypedShellRoute<AccountListShellRoute>(routes: [_accountListRoute]),
-    _licensesRoute,
-  ],
+  routes: [_accountListShellRoute, _licensesRoute],
 );

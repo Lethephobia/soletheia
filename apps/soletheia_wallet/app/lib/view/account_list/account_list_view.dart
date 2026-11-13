@@ -6,7 +6,7 @@ import 'package:material_ui/material_ui.dart';
 import '../../account.dart';
 import '../../l10n.dart';
 import '../../responsive.dart';
-import '../../routing/root.dart';
+import '../../routing/account_list.dart';
 import 'account_list_tile.dart';
 
 class AccountListView extends ConsumerWidget {

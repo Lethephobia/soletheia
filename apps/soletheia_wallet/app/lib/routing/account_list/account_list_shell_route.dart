@@ -14,3 +14,7 @@ class AccountListShellRoute extends ShellRouteData {
     );
   }
 }
+
+const _accountListShellRoute = TypedShellRoute<AccountListShellRoute>(
+  routes: [_accountListRoute],
+);
