@@ -5,4 +5,5 @@ export 'router.dart'
         LicensesRoute,
         SettingsRoute,
         OnboardingRoute,
-        AccountCreationRoute;
+        MnemonicAccountCreationRoute,
+        MnemonicAccountImportRoute;

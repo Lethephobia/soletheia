@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../l10n.dart';
-import 'account_creation_view_model.dart';
+import 'mnemonic_account_creation_view_model.dart';
 import 'entropy_validation_error.dart';
 
 class MnemonicCustomEntropyField extends ConsumerWidget {
@@ -12,8 +12,10 @@ class MnemonicCustomEntropyField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final form = ref.watch(accountCreationViewModelProvider);
-    final viewModel = ref.read(accountCreationViewModelProvider.notifier);
+    final form = ref.watch(mnemonicAccountCreationViewModelProvider);
+    final viewModel = ref.read(
+      mnemonicAccountCreationViewModelProvider.notifier,
+    );
     final l10n = AppLocalizations.of(context);
     return TextFormField(
       initialValue: form.entropy,
@@ -26,19 +28,19 @@ class MnemonicCustomEntropyField extends ConsumerWidget {
       enableSuggestions: false,
       spellCheckConfiguration: const SpellCheckConfiguration.disabled(),
       decoration: InputDecoration(
-        labelText: l10n.accountCreationCustomEntropyLabel,
-        counterText: l10n.accountCreationEntropyCounter(
+        labelText: l10n.mnemonicAccountCreationCustomEntropyLabel,
+        counterText: l10n.mnemonicAccountCreationEntropyCounter(
           form.entropy.characters.length,
           form.hexLength,
         ),
         errorText: switch (form.entropyError) {
-          InvalidEntropyHex() => l10n.accountCreationEntropyInvalidHex,
+          InvalidEntropyHex() => l10n.mnemonicAccountCreationEntropyInvalidHex,
           InvalidEntropyLength(:final expectedLength) =>
-            l10n.accountCreationEntropyInvalidLength(expectedLength),
+            l10n.mnemonicAccountCreationEntropyInvalidLength(expectedLength),
           null => null,
         },
         helperMaxLines: 3,
-        helperText: l10n.accountCreationEntropyHint(form.hexLength),
+        helperText: l10n.mnemonicAccountCreationEntropyHint(form.hexLength),
       ),
     );
   }

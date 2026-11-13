@@ -1,23 +1,23 @@
 part of '../router.dart';
 
-class AccountCreationRoute extends RelativeGoRouteData
-    with $AccountCreationRoute {
-  const AccountCreationRoute();
+class MnemonicAccountImportRoute extends RelativeGoRouteData
+    with $MnemonicAccountImportRoute {
+  const MnemonicAccountImportRoute();
 
   static final GlobalKey<NavigatorState> $parentNavigatorKey =
       _rootNavigatorKey;
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return _AccountCreationPage(
+    return _MnemonicAccountImportPage(
       key: state.pageKey,
       restorationId: state.pageKey.value,
     );
   }
 }
 
-class _AccountCreationPage extends Page<void> {
-  const _AccountCreationPage({
+class _MnemonicAccountImportPage extends Page<void> {
+  const _MnemonicAccountImportPage({
     required super.key,
     required super.restorationId,
   });
@@ -28,11 +28,11 @@ class _AccountCreationPage extends Page<void> {
       context: context,
       settings: this,
       useSafeArea: false,
-      builder: (_) => const ScaffoldMessenger(child: AccountCreationView()),
+      builder: (_) =>
+          const ScaffoldMessenger(child: MnemonicAccountImportView()),
     );
   }
 }
 
-const _accountCreationRoute = TypedRelativeGoRoute<AccountCreationRoute>(
-  path: 'create-account',
-);
+const _mnemonicAccountImportRoute =
+    TypedRelativeGoRoute<MnemonicAccountImportRoute>(path: 'import-mnemonic');

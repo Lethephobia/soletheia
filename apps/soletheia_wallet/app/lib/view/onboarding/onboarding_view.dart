@@ -37,7 +37,9 @@ class OnboardingView extends StatelessWidget {
                       title: l10n.onboardingCreateAccountLabel,
                       subtitle: l10n.onboardingCreateAccountDescription,
                       onTap: () {
-                        const AccountCreationRoute().goRelative(context);
+                        const MnemonicAccountCreationRoute().goRelative(
+                          context,
+                        );
                       },
                       isFirst: true,
                     ),
@@ -45,6 +47,9 @@ class OnboardingView extends StatelessWidget {
                       icon: Icons.text_snippet_outlined,
                       title: l10n.onboardingImportMnemonicLabel,
                       subtitle: l10n.onboardingImportMnemonicDescription,
+                      onTap: () {
+                        const MnemonicAccountImportRoute().goRelative(context);
+                      },
                     ),
                     OnboardingOptionTile(
                       icon: Icons.key_outlined,

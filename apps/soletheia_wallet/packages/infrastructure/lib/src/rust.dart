@@ -5,7 +5,9 @@ export 'rust_bridge/application/account/account_key_deleter_error.dart'
 export 'rust_bridge/application/account/mnemonic_account_key_creator_error.dart'
     show MnemonicAccountKeyCreatorError;
 export 'rust_bridge/application/account/mnemonic_account_key_importer_error.dart'
-    show MnemonicAccountKeyImporterError;
+    show
+        MnemonicAccountKeyImporterError,
+        MnemonicAccountKeyImporterError_MnemonicParsing;
 export 'rust_bridge/application/account/mnemonic_account_key_writer_error.dart'
     show MnemonicAccountKeyWriterError;
 export 'rust_bridge/application/keypair/keypair_deriver_error.dart'

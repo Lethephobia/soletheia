@@ -157,7 +157,7 @@ class AccountDetailView extends ConsumerWidget {
         ),
         if (account.mnemonicDerivation case final derivation?)
           ListTile(
-            title: Text(l10n.accountCreationDerivationPathLabel),
+            title: Text(l10n.mnemonicAccountCreationDerivationPathLabel),
             subtitle: Text(derivation.derivationPath.value),
           ),
       ],

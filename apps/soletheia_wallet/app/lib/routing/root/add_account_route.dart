@@ -14,5 +14,9 @@ class AddAccountRoute extends RelativeGoRouteData with $AddAccountRoute {
 
 const _addAccountRoute = TypedRelativeGoRoute<AddAccountRoute>(
   path: 'add-account',
-  routes: [_accountCreationRoute, _licensesRoute],
+  routes: [
+    _mnemonicAccountCreationRoute,
+    _mnemonicAccountImportRoute,
+    _licensesRoute,
+  ],
 );

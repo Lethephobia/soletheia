@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../l10n.dart';
-import 'account_creation_view_model.dart';
+import 'mnemonic_account_import_view_model.dart';
 
-class AccountDerivationPathField extends ConsumerWidget {
-  const AccountDerivationPathField({super.key});
+class MnemonicAccountImportDerivationPathField extends ConsumerWidget {
+  const MnemonicAccountImportDerivationPathField({super.key});
 
   static const _accountIndices = [0, 1, 2];
   static final _paths = [
@@ -19,8 +19,8 @@ class AccountDerivationPathField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final form = ref.watch(accountCreationViewModelProvider);
-    final viewModel = ref.read(accountCreationViewModelProvider.notifier);
+    final form = ref.watch(mnemonicAccountImportViewModelProvider);
+    final viewModel = ref.read(mnemonicAccountImportViewModelProvider.notifier);
     final l10n = AppLocalizations.of(context);
     return Autocomplete<String>(
       initialValue: TextEditingValue(text: form.path),
@@ -46,10 +46,10 @@ class AccountDerivationPathField extends ConsumerWidget {
           onChanged: viewModel.setPath,
           onFieldSubmitted: (_) => onFieldSubmitted(),
           decoration: InputDecoration(
-            labelText: l10n.accountCreationDerivationPathLabel,
-            helperText: l10n.accountCreationRequiredHelper,
+            labelText: l10n.mnemonicAccountCreationDerivationPathLabel,
+            helperText: l10n.mnemonicAccountCreationRequiredHelper,
             errorText: form.pathError != null
-                ? l10n.accountCreationInvalidPath
+                ? l10n.mnemonicAccountCreationInvalidPath
                 : null,
           ),
         );

@@ -37,7 +37,8 @@ void main() {
     expect(find.text('Ed25519 private key'), findsOneWidget);
     final tiles = tester.widgetList<ListTile>(find.byType(ListTile)).toList();
     expect(tiles.first.enabled, isTrue);
-    expect(tiles.skip(1).every((tile) => !tile.enabled), isTrue);
+    expect(tiles[1].enabled, isTrue);
+    expect(tiles[2].enabled, isFalse);
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(320, 240);
     addTearDown(tester.view.resetDevicePixelRatio);
@@ -76,7 +77,7 @@ void main() {
     );
     await tester.tap(find.text('Create account'));
     await tester.pumpAndSettle();
-    expect(find.byType(AccountCreationView), findsOneWidget);
+    expect(find.byType(MnemonicAccountCreationView), findsOneWidget);
     expect(tester.getSize(find.byType(AppBar)).width, 390);
     final wordlist = find.byType(DropdownMenuFormField<MnemonicWordlist>);
     final count = find.byType(DropdownMenuFormField<MnemonicWordCount>);

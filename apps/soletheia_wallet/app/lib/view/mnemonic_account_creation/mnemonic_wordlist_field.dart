@@ -3,15 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 
 import '../../l10n.dart';
-import 'account_creation_view_model.dart';
+import 'mnemonic_account_creation_view_model.dart';
 
 class MnemonicWordlistField extends ConsumerWidget {
   const MnemonicWordlistField({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final form = ref.watch(accountCreationViewModelProvider);
-    final viewModel = ref.read(accountCreationViewModelProvider.notifier);
+    final form = ref.watch(mnemonicAccountCreationViewModelProvider);
+    final viewModel = ref.read(
+      mnemonicAccountCreationViewModelProvider.notifier,
+    );
     final l10n = AppLocalizations.of(context);
     return DropdownMenuFormField<MnemonicWordlist>(
       initialSelection: form.wordlist,
@@ -19,7 +21,7 @@ class MnemonicWordlistField extends ConsumerWidget {
       onSelected: viewModel.selectWordlist,
       expandedInsets: EdgeInsets.zero,
       selectOnly: true,
-      label: Text(l10n.accountCreationWordlistLabel),
+      label: Text(l10n.mnemonicAccountCreationWordlistLabel),
       dropdownMenuEntries: [
         DropdownMenuEntry(
           value: MnemonicWordlist.english,

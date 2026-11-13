@@ -82,36 +82,36 @@
   "@onboardingImportPrivateKeyDescription": {
     "description": "Key type for the planned private key import flow."
   },
-  "accountCreationTitle": "Create account",
-  "@accountCreationTitle": {
+  "mnemonicAccountCreationTitle": "Create account",
+  "@mnemonicAccountCreationTitle": {
     "description": "App bar title of the account creation screen."
   },
-  "accountCreationRequiredHelper": "*required",
-  "@accountCreationRequiredHelper": {
+  "mnemonicAccountCreationRequiredHelper": "*required",
+  "@mnemonicAccountCreationRequiredHelper": {
     "description": "Supporting text explaining the required-field asterisk on the account creation form."
   },
-  "accountCreationWordlistLabel": "Wordlist",
-  "@accountCreationWordlistLabel": {
+  "mnemonicAccountCreationWordlistLabel": "Wordlist",
+  "@mnemonicAccountCreationWordlistLabel": {
     "description": "Label for the BIP-39 wordlist language selector."
   },
-  "accountCreationWordCountLabel": "Word count",
-  "@accountCreationWordCountLabel": {
+  "mnemonicAccountCreationWordCountLabel": "Word count",
+  "@mnemonicAccountCreationWordCountLabel": {
     "description": "Label for the BIP-39 mnemonic length selector."
   },
-  "accountCreationCustomEntropyLabel": "Custom entropy",
-  "@accountCreationCustomEntropyLabel": {
+  "mnemonicAccountCreationCustomEntropyLabel": "Custom entropy",
+  "@mnemonicAccountCreationCustomEntropyLabel": {
     "description": "Label for the optional hexadecimal entropy input."
   },
-  "accountCreationSubmitLabel": "Create",
-  "@accountCreationSubmitLabel": {
+  "mnemonicAccountCreationSubmitLabel": "Create",
+  "@mnemonicAccountCreationSubmitLabel": {
     "description": "Button to create the account using the selected options."
   },
-  "accountCreationSuccess": "Account created.",
-  "@accountCreationSuccess": {
+  "mnemonicAccountCreationSuccess": "Account created.",
+  "@mnemonicAccountCreationSuccess": {
     "description": "Confirmation shown after the account and its details have been saved."
   },
-  "accountCreationFailure": "Could not create the account. Try again.",
-  "@accountCreationFailure": {
+  "mnemonicAccountCreationFailure": "Could not create the account. Try again.",
+  "@mnemonicAccountCreationFailure": {
     "description": "Error displayed when account creation fails."
   },
   "mnemonicWordlistEnglish": "English",
@@ -154,8 +154,8 @@
   "@mnemonicWordlistPortuguese": {
     "description": "Name of the Portuguese BIP-39 wordlist, independent of the app locale."
   },
-  "accountCreationEntropyHint": "Leave blank for random entropy, or enter {length} hex digits.",
-  "@accountCreationEntropyHint": {
+  "mnemonicAccountCreationEntropyHint": "Leave blank for random entropy, or enter {length} hex digits.",
+  "@mnemonicAccountCreationEntropyHint": {
     "description": "Required entropy size for the selected mnemonic length.",
     "placeholders": {
       "length": {
@@ -163,20 +163,20 @@
       }
     }
   },
-  "accountCreationEntropyCounter": "{count}/{length}",
-  "@accountCreationEntropyCounter": {
+  "mnemonicAccountCreationEntropyCounter": "{count}/{length}",
+  "@mnemonicAccountCreationEntropyCounter": {
     "description": "Entered characters and required hexadecimal length in the custom entropy field.",
     "placeholders": {
       "count": { "type": "int" },
       "length": { "type": "int" }
     }
   },
-  "accountCreationEntropyInvalidHex": "Use only hexadecimal digits (0–9, A–F).",
-  "@accountCreationEntropyInvalidHex": {
+  "mnemonicAccountCreationEntropyInvalidHex": "Use only hexadecimal digits (0–9, A–F).",
+  "@mnemonicAccountCreationEntropyInvalidHex": {
     "description": "Validation error when entropy contains a non-hexadecimal character."
   },
-  "accountCreationEntropyInvalidLength": "Enter exactly {length} hexadecimal characters.",
-  "@accountCreationEntropyInvalidLength": {
+  "mnemonicAccountCreationEntropyInvalidLength": "Enter exactly {length} hexadecimal characters.",
+  "@mnemonicAccountCreationEntropyInvalidLength": {
     "description": "Validation error for custom entropy of incorrect length.",
     "placeholders": {
       "length": {
@@ -202,24 +202,44 @@
   "@accountDetailAddress": { "description": "Label for the Solana account address." },
   "accountDetailNotFound": "Account not found.",
   "@accountDetailNotFound": { "description": "Shown when the address has no saved account." },
-  "accountCreationPassphraseLabel": "Passphrase",
-  "@accountCreationPassphraseLabel": {
+  "mnemonicAccountCreationPassphraseLabel": "Passphrase",
+  "@mnemonicAccountCreationPassphraseLabel": {
     "description": "Label for the optional passphrase used in seed derivation."
   },
-  "accountCreationDerivationPathLabel": "Derivation path*",
-  "@accountCreationDerivationPathLabel": {
+  "mnemonicAccountCreationDerivationPathLabel": "Derivation path*",
+  "@mnemonicAccountCreationDerivationPathLabel": {
     "description": "Label for the absolute Solana derivation path."
   },
-  "accountCreationInvalidPath": "Enter an absolute derivation path.",
-  "@accountCreationInvalidPath": {
+  "mnemonicAccountCreationInvalidPath": "Enter an absolute derivation path.",
+  "@mnemonicAccountCreationInvalidPath": {
     "description": "Validation message for an invalid derivation path."
   },
-  "accountCreationSaveRetry": "Retry saving",
-  "@accountCreationSaveRetry": {
+  "mnemonicAccountCreationSaveRetry": "Retry saving",
+  "@mnemonicAccountCreationSaveRetry": {
     "description": "Retries the local account metadata write."
   },
-  "accountCreationSaveFailure": "Keys saved. Retry saving the account details.",
-  "@accountCreationSaveFailure": {
+  "mnemonicAccountCreationSaveFailure": "Keys saved. Retry saving the account details.",
+  "@mnemonicAccountCreationSaveFailure": {
     "description": "The Keychain write succeeded but the account metadata write failed."
+  },
+  "mnemonicAccountImportPhraseLabel": "Mnemonic*",
+  "@mnemonicAccountImportPhraseLabel": {
+    "description": "Required BIP-39 mnemonic input."
+  },
+  "mnemonicAccountImportInvalidPhrase": "Enter a valid BIP-39 mnemonic.",
+  "@mnemonicAccountImportInvalidPhrase": {
+    "description": "Validation error for an empty or invalid BIP-39 mnemonic."
+  },
+  "mnemonicAccountImportSubmitLabel": "Import",
+  "@mnemonicAccountImportSubmitLabel": {
+    "description": "Submits the mnemonic import form."
+  },
+  "mnemonicAccountImportSuccess": "Account imported.",
+  "@mnemonicAccountImportSuccess": {
+    "description": "Shown after the imported account is saved and selected."
+  },
+  "mnemonicAccountImportFailure": "Could not import the account.",
+  "@mnemonicAccountImportFailure": {
+    "description": "Shown when importing an account fails."
   }
 }
