@@ -54,7 +54,7 @@ final class RustAccountCreator implements AccountCreator {
     try {
       await _repository.transaction(() async {
         await _repository.save(account);
-        await _repository.selectAccount(account.address);
+        await _repository.select(account.address);
       });
     } on Exception catch (error) {
       throw AccountSaveException(account, error);

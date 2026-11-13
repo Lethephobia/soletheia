@@ -1,6 +1,7 @@
 # Rust
 
 Use for the wallet's application-specific Rust implementation and Flutter boundary.
+For trait methods and standalone bridge functions, see [method naming](structure.md#prefer-short-verbs-when-the-receiver-identifies-the-object).
 
 ### DO keep Rust behind the infrastructure package and a focused bridge facade
 

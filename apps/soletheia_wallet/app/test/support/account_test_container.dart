@@ -26,7 +26,7 @@ class TestAccountRepository implements AccountRepository {
   Future<T> transaction<T>(Future<T> Function() operation) => operation();
 
   @override
-  Future<({MnemonicId? unusedMnemonic, bool isEmpty})> deleteAccount(
+  Future<({MnemonicId? unusedMnemonic, bool isEmpty})> delete(
     AccountAddress address,
   ) async {
     final removed = _accounts.remove(address);
@@ -50,7 +50,7 @@ class TestAccountRepository implements AccountRepository {
   }
 
   @override
-  Future<void> selectAccount(AccountAddress address) async {
+  Future<void> select(AccountAddress address) async {
     if (!_accounts.containsKey(address)) {
       throw const AccountNotFoundException();
     }

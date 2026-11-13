@@ -1,6 +1,41 @@
 # Structure
 
-Use for Flutter module boundaries, public exports, file naming, provider definitions, and Dart application exceptions.
+Use for Flutter module boundaries, public exports, file naming, Dart and Rust method names, provider definitions, and Dart application exceptions.
+
+### PREFER short verbs when the receiver identifies the object
+
+For Dart and Rust services, stores, and repositories, read the method name with its
+receiver. Use verbs such as `generate`, `parse`, `derive`, `create`, `save`, `select`,
+and `delete` when the type already identifies the object. Keep qualifiers that
+distinguish operations or results, such as `watchAll` and `watchCurrentAddress`.
+For standalone Rust bridge functions, include the object so the name also reads
+clearly when imported directly.
+
+**Good**
+
+```rust
+mnemonic_parser.parse(phrase)
+mnemonic_store.save(&mnemonic)
+create_account(wordlist, source, passphrase, derivation_path)
+```
+
+```dart
+await accountRepository.select(address);
+final addresses = accountRepository.watchCurrentAddress();
+```
+
+**Bad**
+
+```rust
+mnemonic_parser.parse_mnemonic(phrase)
+mnemonic_store.save_mnemonic(&mnemonic)
+create(wordlist, source, passphrase, derivation_path)
+```
+
+```dart
+await accountRepository.selectAccount(address);
+final addresses = accountRepository.watch();
+```
 
 ### DO use adjacent, same-name barrel files
 

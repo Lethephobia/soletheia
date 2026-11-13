@@ -49,7 +49,7 @@ class SqliteAccountRepository implements AccountRepository {
   }
 
   @override
-  Future<({MnemonicId? unusedMnemonic, bool isEmpty})> deleteAccount(
+  Future<({MnemonicId? unusedMnemonic, bool isEmpty})> delete(
     AccountAddress address,
   ) {
     return _db.transaction(() async {
@@ -89,7 +89,7 @@ class SqliteAccountRepository implements AccountRepository {
   }
 
   @override
-  Future<void> selectAccount(AccountAddress address) {
+  Future<void> select(AccountAddress address) {
     return _db.transaction(() async {
       await (_db.update(_db.accounts)..where((row) => row.isCurrent)).write(
         const AccountsCompanion(isCurrent: Value(false)),

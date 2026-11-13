@@ -17,7 +17,7 @@ final class RustAccountDeleter implements AccountDeleter {
   @override
   Future<bool> delete(AccountAddress address) {
     return _repository.transaction(() async {
-      final result = await _repository.deleteAccount(address);
+      final result = await _repository.delete(address);
       await _deleteKeys(address, unusedMnemonic: result.unusedMnemonic);
       return result.isEmpty;
     });

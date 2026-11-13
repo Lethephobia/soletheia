@@ -16,7 +16,7 @@ class AccountSwitchViewModel extends _$AccountSwitchViewModel {
     if (state == AccountSwitchStatus.selecting) return;
     state = AccountSwitchStatus.selecting;
     try {
-      await ref.read(accountRepositoryProvider).selectAccount(address);
+      await ref.read(accountRepositoryProvider).select(address);
     } on Exception {
       if (ref.mounted) state = AccountSwitchStatus.failed;
       return;

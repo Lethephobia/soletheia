@@ -11,7 +11,7 @@ class _PendingRepository extends TestAccountRepository {
   final requests = <Completer<void>>[];
 
   @override
-  Future<void> selectAccount(AccountAddress address) {
+  Future<void> select(AccountAddress address) {
     final request = Completer<void>();
     requests.add(request);
     return request.future;

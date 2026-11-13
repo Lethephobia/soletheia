@@ -37,10 +37,10 @@ void main() {
         expect(await stream.moveNext(), isTrue);
         expect(stream.current, [updated]);
         await repo.save(other);
-        await repo.selectAccount(other.address);
+        await repo.select(other.address);
         expect(await repo.watchCurrentAddress().first, other.address);
         await expectLater(
-          repo.selectAccount(AccountAddress(Uint8List(32)..[0] = 2)),
+          repo.select(AccountAddress(Uint8List(32)..[0] = 2)),
           throwsA(isA<AccountNotFoundException>()),
         );
       } finally {
@@ -76,7 +76,7 @@ void main() {
       addTearDown(repo.close);
       await repo.save(first);
       await repo.save(second);
-      await repo.selectAccount(first.address);
+      await repo.select(first.address);
       await expectLater(deleter.delete(first.address), throwsException);
       expect(await repo.watchCurrentAddress().first, first.address);
       keys.fail = false;
@@ -111,7 +111,7 @@ void main() {
       final repo = SqliteAccountRepository(directory: root);
       addTearDown(repo.close);
       expect(await repo.watchCurrentAddress().first, address);
-      await repo.selectAccount(address);
+      await repo.select(address);
       expect(await repo.watchAll().first, [Account(address: address)]);
     },
   );
