@@ -55,6 +55,11 @@ class OnboardingView extends StatelessWidget {
                       icon: Icons.key_outlined,
                       title: l10n.onboardingImportPrivateKeyLabel,
                       subtitle: l10n.onboardingImportPrivateKeyDescription,
+                      onTap: () {
+                        const PrivateKeyAccountImportRoute().goRelative(
+                          context,
+                        );
+                      },
                       isLast: true,
                     ),
                     Align(

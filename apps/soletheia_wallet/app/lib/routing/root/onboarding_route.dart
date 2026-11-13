@@ -5,6 +5,7 @@ part of '../router.dart';
   routes: [
     _mnemonicAccountCreationRoute,
     _mnemonicAccountImportRoute,
+    _privateKeyAccountImportRoute,
     _licensesRoute,
   ],
 )

@@ -1,40 +1,36 @@
 use crate::application::{
     account::{AccountAddress, PrivateKeyAccountKeyImporter, PrivateKeyAccountKeyImporterError},
-    keypair::AccountKeypair,
+    keypair::KeypairParser,
     storage::KeypairStore,
 };
-use solana_keypair::{read_keypair, Keypair, Signer};
 
-pub struct SolanaPrivateKeyAccountKeyImporter<S> {
+pub struct DefaultPrivateKeyAccountKeyImporter<P, S> {
+    keypair_parser: P,
     keypair_store: S,
 }
 
-impl<S> SolanaPrivateKeyAccountKeyImporter<S> {
-    pub fn new(keypair_store: S) -> Self {
-        Self { keypair_store }
+impl<P, S> DefaultPrivateKeyAccountKeyImporter<P, S> {
+    pub fn new(keypair_parser: P, keypair_store: S) -> Self {
+        Self {
+            keypair_parser,
+            keypair_store,
+        }
     }
 }
 
-impl<S: KeypairStore> PrivateKeyAccountKeyImporter for SolanaPrivateKeyAccountKeyImporter<S> {
+impl<P: KeypairParser, S: KeypairStore> PrivateKeyAccountKeyImporter
+    for DefaultPrivateKeyAccountKeyImporter<P, S>
+{
     fn import(
         &self,
         private_key: &str,
     ) -> Result<AccountAddress, PrivateKeyAccountKeyImporterError> {
-        let input = private_key.trim();
-        let keypair = if input.starts_with('[') {
-            read_keypair(&mut input.as_bytes())
-                .map_err(|_| PrivateKeyAccountKeyImporterError::InvalidPrivateKey)?
-        } else {
-            Keypair::try_from_base58_string(input)
-                .map_err(|_| PrivateKeyAccountKeyImporterError::InvalidPrivateKey)?
-        };
-        let address = AccountAddress::new(keypair.pubkey().to_bytes());
-        self.keypair_store
-            .save(&AccountKeypair::from_derived_parts(
-                address,
-                *keypair.secret_bytes(),
-            ))?;
-        Ok(address)
+        let keypair = self
+            .keypair_parser
+            .parse(private_key)
+            .map_err(|_| PrivateKeyAccountKeyImporterError::InvalidPrivateKey)?;
+        self.keypair_store.save(&keypair)?;
+        Ok(keypair.address())
     }
 }
 
@@ -42,6 +38,10 @@ impl<S: KeypairStore> PrivateKeyAccountKeyImporter for SolanaPrivateKeyAccountKe
 mod tests {
     use super::*;
     use crate::application::storage::KeypairStoreError;
+    use crate::{
+        application::keypair::AccountKeypair, infrastructure::solana::SolanaKeypairParser,
+    };
+    use solana_keypair::{Keypair, Signer};
     use std::cell::Cell;
 
     #[derive(Default)]
@@ -55,7 +55,7 @@ mod tests {
                 return Err(KeypairStoreError::AlreadyExists);
             }
             assert_eq!(
-                Keypair::new_from_array(*keypair.secret_bytes())
+                Keypair::new_from_array(*keypair.private_key().value())
                     .pubkey()
                     .to_bytes(),
                 *keypair.address().value()
@@ -74,7 +74,8 @@ mod tests {
         let key = Keypair::new();
         let address = AccountAddress::new(key.pubkey().to_bytes());
         for input in [key.to_base58_string(), format!("{:?}", key.to_bytes())] {
-            let importer = SolanaPrivateKeyAccountKeyImporter::new(Store::default());
+            let importer =
+                DefaultPrivateKeyAccountKeyImporter::new(SolanaKeypairParser, Store::default());
             assert_eq!(importer.import(&input), Ok(address));
             assert_eq!(importer.keypair_store.address.get(), Some(address));
             assert_eq!(
@@ -86,7 +87,8 @@ mod tests {
 
     #[test]
     fn rejects_public_addresses_and_inconsistent_keypairs_before_saving() {
-        let importer = SolanaPrivateKeyAccountKeyImporter::new(Store::default());
+        let importer =
+            DefaultPrivateKeyAccountKeyImporter::new(SolanaKeypairParser, Store::default());
         let key = Keypair::new();
         let mut bytes = key.to_bytes();
         bytes[63] ^= 1;

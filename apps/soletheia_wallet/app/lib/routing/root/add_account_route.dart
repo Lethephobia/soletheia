@@ -17,6 +17,7 @@ const _addAccountRoute = TypedRelativeGoRoute<AddAccountRoute>(
   routes: [
     _mnemonicAccountCreationRoute,
     _mnemonicAccountImportRoute,
+    _privateKeyAccountImportRoute,
     _licensesRoute,
   ],
 );

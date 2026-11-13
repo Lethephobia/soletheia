@@ -8,12 +8,13 @@ pub fn import_private_key_account_keys(
     #[cfg(any(target_os = "ios", target_os = "macos"))]
     {
         use crate::{
-            application::account::PrivateKeyAccountKeyImporter,
-            infrastructure::{
-                keychain::KeychainKeypairStore, solana::SolanaPrivateKeyAccountKeyImporter,
+            application::account::{
+                DefaultPrivateKeyAccountKeyImporter, PrivateKeyAccountKeyImporter,
             },
+            infrastructure::{keychain::KeychainKeypairStore, solana::SolanaKeypairParser},
         };
-        SolanaPrivateKeyAccountKeyImporter::new(KeychainKeypairStore).import(&private_key)
+        DefaultPrivateKeyAccountKeyImporter::new(SolanaKeypairParser, KeychainKeypairStore)
+            .import(&private_key)
     }
     #[cfg(not(any(target_os = "ios", target_os = "macos")))]
     {

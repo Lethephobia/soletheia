@@ -38,7 +38,7 @@ void main() {
     final tiles = tester.widgetList<ListTile>(find.byType(ListTile)).toList();
     expect(tiles.first.enabled, isTrue);
     expect(tiles[1].enabled, isTrue);
-    expect(tiles[2].enabled, isFalse);
+    expect(tiles[2].enabled, isTrue);
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(320, 240);
     addTearDown(tester.view.resetDevicePixelRatio);

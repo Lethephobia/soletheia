@@ -36,3 +36,6 @@ pub(crate) mod private_key_account_key_importer_error;
 
 pub use private_key_account_key_importer::PrivateKeyAccountKeyImporter;
 pub use private_key_account_key_importer_error::PrivateKeyAccountKeyImporterError;
+
+mod default_private_key_account_key_importer;
+pub use default_private_key_account_key_importer::DefaultPrivateKeyAccountKeyImporter;

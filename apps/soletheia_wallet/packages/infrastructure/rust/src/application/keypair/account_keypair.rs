@@ -1,16 +1,16 @@
+use super::PrivateKey;
 use crate::application::account::AccountAddress;
-use zeroize::Zeroizing;
 
 pub struct AccountKeypair {
     address: AccountAddress,
-    secret: Zeroizing<[u8; 32]>,
+    private_key: PrivateKey,
 }
 
 impl AccountKeypair {
-    pub(crate) fn from_derived_parts(address: AccountAddress, secret: [u8; 32]) -> Self {
+    pub(crate) fn new(address: AccountAddress, private_key: PrivateKey) -> Self {
         Self {
             address,
-            secret: Zeroizing::new(secret),
+            private_key,
         }
     }
 
@@ -18,7 +18,7 @@ impl AccountKeypair {
         self.address
     }
 
-    pub fn secret_bytes(&self) -> &[u8; 32] {
-        &self.secret
+    pub fn private_key(&self) -> &PrivateKey {
+        &self.private_key
     }
 }

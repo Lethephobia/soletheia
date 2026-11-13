@@ -2,5 +2,5 @@ mod solana_keypair_deriver;
 
 pub use solana_keypair_deriver::SolanaKeypairDeriver;
 
-mod solana_private_key_account_key_importer;
-pub use solana_private_key_account_key_importer::SolanaPrivateKeyAccountKeyImporter;
+mod solana_keypair_parser;
+pub use solana_keypair_parser::SolanaKeypairParser;

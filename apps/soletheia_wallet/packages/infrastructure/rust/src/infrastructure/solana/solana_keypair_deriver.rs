@@ -1,6 +1,6 @@
 use crate::application::{
     account::AccountAddress,
-    keypair::{AccountKeypair, DerivationPath, KeypairDeriver, KeypairDeriverError},
+    keypair::{AccountKeypair, DerivationPath, KeypairDeriver, KeypairDeriverError, PrivateKey},
     mnemonic::{Mnemonic, MnemonicPassphrase},
 };
 use solana_keypair::{seed_derivable::keypair_from_seed_and_derivation_path, Signer};
@@ -35,9 +35,9 @@ impl KeypairDeriver for SolanaKeypairDeriver {
         let keypair = keypair_from_seed_and_derivation_path(seed.as_slice(), Some(path))
             .map_err(|_| KeypairDeriverError::DerivationFailed)?;
 
-        Ok(AccountKeypair::from_derived_parts(
+        Ok(AccountKeypair::new(
             AccountAddress::new(keypair.pubkey().to_bytes()),
-            *keypair.secret_bytes(),
+            PrivateKey::new(*keypair.secret_bytes()),
         ))
     }
 }

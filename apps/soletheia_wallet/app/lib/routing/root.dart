@@ -6,4 +6,5 @@ export 'router.dart'
         SettingsRoute,
         OnboardingRoute,
         MnemonicAccountCreationRoute,
-        MnemonicAccountImportRoute;
+        MnemonicAccountImportRoute,
+        PrivateKeyAccountImportRoute;

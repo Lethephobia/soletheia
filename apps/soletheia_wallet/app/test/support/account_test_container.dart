@@ -82,6 +82,7 @@ class TestAccountRepository implements AccountRepository {
 Future<ProviderContainer> accountTestContainer({
   MnemonicAccountCreator? creator,
   MnemonicAccountImporter? importer,
+  PrivateKeyAccountImporter? privateKeyImporter,
   TestAccountRepository? repository,
 }) async {
   final store = repository ?? TestAccountRepository();
@@ -101,6 +102,8 @@ Future<ProviderContainer> accountTestContainer({
       ),
       if (importer != null)
         mnemonicAccountImporterProvider.overrideWithValue(importer),
+      if (privateKeyImporter != null)
+        privateKeyAccountImporterProvider.overrideWithValue(privateKeyImporter),
       if (creator != null)
         mnemonicAccountCreatorProvider.overrideWithValue(creator),
     ],

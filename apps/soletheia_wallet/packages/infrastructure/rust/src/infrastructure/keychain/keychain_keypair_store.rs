@@ -13,9 +13,9 @@ impl KeychainKeypairStore {
 
     // v2: version followed by the 32 signing bytes.
     fn encode_keypair(keypair: &AccountKeypair) -> Zeroizing<Vec<u8>> {
-        let mut data = Zeroizing::new(Vec::with_capacity(1 + keypair.secret_bytes().len()));
+        let mut data = Zeroizing::new(Vec::with_capacity(1 + keypair.private_key().value().len()));
         data.push(2);
-        data.extend_from_slice(keypair.secret_bytes());
+        data.extend_from_slice(keypair.private_key().value());
         data
     }
 
@@ -47,15 +47,15 @@ impl KeypairStore for KeychainKeypairStore {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::application::account::AccountAddress;
+    use crate::application::{account::AccountAddress, keypair::PrivateKey};
     use solana_keypair::{Keypair, Signer};
 
     impl AccountKeypair {
         fn test_keypair() -> AccountKeypair {
             let key = Keypair::new();
-            AccountKeypair::from_derived_parts(
+            AccountKeypair::new(
                 AccountAddress::new(key.pubkey().to_bytes()),
-                *key.secret_bytes(),
+                PrivateKey::new(*key.secret_bytes()),
             )
         }
     }
@@ -66,7 +66,7 @@ mod tests {
         let record = KeychainKeypairStore::encode_keypair(&key);
 
         assert_eq!(record[0], 2);
-        assert!(&record[1..] == key.secret_bytes());
+        assert!(&record[1..] == key.private_key().value());
     }
 
     #[test]

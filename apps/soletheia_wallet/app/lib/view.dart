@@ -6,5 +6,6 @@ export 'view/scan.dart';
 export 'view/swap.dart';
 export 'view/token.dart';
 export 'view/mnemonic_account_import.dart';
+export 'view/private_key_account_import.dart';
 export 'view/onboarding.dart';
 export 'view/settings.dart';

@@ -241,5 +241,17 @@
   "mnemonicAccountImportFailure": "Could not import the account.",
   "@mnemonicAccountImportFailure": {
     "description": "Shown when importing an account fails."
+  },
+  "privateKeyAccountImportKeyLabel": "Private key *",
+  "@privateKeyAccountImportKeyLabel": {
+    "description": "Required private key field label."
+  },
+  "privateKeyAccountImportKeyHelper": "* Required. Base58 or Solana CLI keypair JSON.",
+  "@privateKeyAccountImportKeyHelper": {
+    "description": "Supported encodings for a 64-byte Solana keypair."
+  },
+  "privateKeyAccountImportInvalidKey": "Enter a valid Solana keypair.",
+  "@privateKeyAccountImportInvalidKey": {
+    "description": "Shown for an empty or invalid private key."
   }
 }
