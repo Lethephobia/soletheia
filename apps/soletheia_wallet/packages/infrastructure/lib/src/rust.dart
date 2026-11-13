@@ -21,3 +21,5 @@ export 'rust_bridge/application/storage/keypair_store_error.dart'
 export 'rust_bridge/application/storage/mnemonic_store_error.dart'
     show MnemonicStoreError;
 export 'rust_bridge/frb_generated.dart' show RustLib;
+export 'rust_bridge/application/account/private_key_account_key_importer_error.dart'
+    show PrivateKeyAccountKeyImporterError;

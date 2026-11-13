@@ -6,12 +6,14 @@
 import 'api/account/create_mnemonic_account_keys.dart';
 import 'api/account/delete_account_keys.dart';
 import 'api/account/import_mnemonic_account_keys.dart';
+import 'api/account/import_private_key_account_keys.dart';
 import 'application/account/account_address.dart';
 import 'application/account/account_key_deleter_error.dart';
 import 'application/account/mnemonic_account.dart';
 import 'application/account/mnemonic_account_key_creator_error.dart';
 import 'application/account/mnemonic_account_key_importer_error.dart';
 import 'application/account/mnemonic_account_key_writer_error.dart';
+import 'application/account/private_key_account_key_importer_error.dart';
 import 'application/keypair/derivation_path.dart';
 import 'application/keypair/keypair_deriver_error.dart';
 import 'application/mnemonic/mnemonic_entropy.dart';
@@ -185,6 +187,10 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   MnemonicId? dco_decode_opt_box_autoadd_mnemonic_id(dynamic raw);
 
   @protected
+  PrivateKeyAccountKeyImporterError
+  dco_decode_private_key_account_key_importer_error(dynamic raw);
+
+  @protected
   int dco_decode_u_8(dynamic raw);
 
   @protected
@@ -354,6 +360,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   MnemonicId? sse_decode_opt_box_autoadd_mnemonic_id(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  PrivateKeyAccountKeyImporterError
+  sse_decode_private_key_account_key_importer_error(
     SseDeserializer deserializer,
   );
 
@@ -570,6 +582,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_opt_box_autoadd_mnemonic_id(
     MnemonicId? self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_private_key_account_key_importer_error(
+    PrivateKeyAccountKeyImporterError self,
     SseSerializer serializer,
   );
 

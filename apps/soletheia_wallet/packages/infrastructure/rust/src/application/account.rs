@@ -30,3 +30,9 @@ pub use mnemonic_account_key_importer::MnemonicAccountKeyImporter;
 pub use mnemonic_account_key_importer_error::MnemonicAccountKeyImporterError;
 use mnemonic_account_key_writer::MnemonicAccountKeyWriter;
 pub use mnemonic_account_key_writer_error::MnemonicAccountKeyWriterError;
+
+mod private_key_account_key_importer;
+pub(crate) mod private_key_account_key_importer_error;
+
+pub use private_key_account_key_importer::PrivateKeyAccountKeyImporter;
+pub use private_key_account_key_importer_error::PrivateKeyAccountKeyImporterError;

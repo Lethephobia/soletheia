@@ -12,12 +12,12 @@ import 'mnemonic_derivation.dart';
 
 final class DefaultMnemonicAccountCreator implements MnemonicAccountCreator {
   const DefaultMnemonicAccountCreator(
-    this._keys,
+    this._keyCreator,
     this._repository,
     this._unitOfWorkFactory,
   );
 
-  final MnemonicAccountKeyCreator _keys;
+  final MnemonicAccountKeyCreator _keyCreator;
   final AccountRepository _repository;
   final UnitOfWorkFactory _unitOfWorkFactory;
 
@@ -29,7 +29,7 @@ final class DefaultMnemonicAccountCreator implements MnemonicAccountCreator {
     required MnemonicPassphrase passphrase,
     required DerivationPath derivationPath,
   }) async {
-    final keys = await _keys.create(
+    final keys = await _keyCreator.create(
       wordlist: wordlist,
       source: source,
       passphrase: passphrase,

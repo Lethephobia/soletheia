@@ -6,12 +6,12 @@ import 'account_repository.dart';
 
 final class DefaultAccountDeleter implements AccountDeleter {
   const DefaultAccountDeleter(
-    this._keys,
+    this._keyDeleter,
     this._repository,
     this._unitOfWorkFactory,
   );
 
-  final AccountKeyDeleter _keys;
+  final AccountKeyDeleter _keyDeleter;
   final AccountRepository _repository;
   final UnitOfWorkFactory _unitOfWorkFactory;
 
@@ -19,7 +19,7 @@ final class DefaultAccountDeleter implements AccountDeleter {
   Future<bool> delete(AccountAddress address) {
     return _unitOfWorkFactory.run((uow) async {
       final result = await _repository.delete(uow, address);
-      await _keys.delete(address, unusedMnemonic: result.unusedMnemonic);
+      await _keyDeleter.delete(address, unusedMnemonic: result.unusedMnemonic);
       return result.isEmpty;
     });
   }

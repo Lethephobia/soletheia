@@ -6,12 +6,14 @@
 import 'api/account/create_mnemonic_account_keys.dart';
 import 'api/account/delete_account_keys.dart';
 import 'api/account/import_mnemonic_account_keys.dart';
+import 'api/account/import_private_key_account_keys.dart';
 import 'application/account/account_address.dart';
 import 'application/account/account_key_deleter_error.dart';
 import 'application/account/mnemonic_account.dart';
 import 'application/account/mnemonic_account_key_creator_error.dart';
 import 'application/account/mnemonic_account_key_importer_error.dart';
 import 'application/account/mnemonic_account_key_writer_error.dart';
+import 'application/account/private_key_account_key_importer_error.dart';
 import 'application/keypair/derivation_path.dart';
 import 'application/keypair/keypair_deriver_error.dart';
 import 'application/mnemonic/mnemonic_entropy.dart';
@@ -90,7 +92,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.13.0';
 
   @override
-  int get rustContentHash => -1746458644;
+  int get rustContentHash => -298320604;
 
   static const kDefaultExternalLibraryLoaderConfig =
       ExternalLibraryLoaderConfig(
@@ -136,6 +138,11 @@ abstract class RustLibApi extends BaseApi {
     required String phrase,
     required MnemonicPassphrase passphrase,
     required DerivationPath derivationPath,
+  });
+
+  Future<AccountAddress>
+  crateApiAccountImportPrivateKeyAccountKeysImportPrivateKeyAccountKeys({
+    required String privateKey,
   });
 
   Future<void> crateApiInitInit();
@@ -435,6 +442,42 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       );
 
   @override
+  Future<AccountAddress>
+  crateApiAccountImportPrivateKeyAccountKeysImportPrivateKeyAccountKeys({
+    required String privateKey,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(privateKey, serializer);
+          pdeCallFfi(
+            generalizedFrbRustBinding,
+            serializer,
+            funcId: 8,
+            port: port_,
+          );
+        },
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_account_address,
+          decodeErrorData: sse_decode_private_key_account_key_importer_error,
+        ),
+        constMeta:
+            kCrateApiAccountImportPrivateKeyAccountKeysImportPrivateKeyAccountKeysConstMeta,
+        argValues: [privateKey],
+        apiImpl: this,
+      ),
+    );
+  }
+
+  TaskConstMeta
+  get kCrateApiAccountImportPrivateKeyAccountKeysImportPrivateKeyAccountKeysConstMeta =>
+      const TaskConstMeta(
+        debugName: "import_private_key_account_keys",
+        argNames: ["privateKey"],
+      );
+
+  @override
   Future<void> crateApiInitInit() {
     return handler.executeNormal(
       NormalTask(
@@ -443,7 +486,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 8,
+            funcId: 9,
             port: port_,
           );
         },
@@ -850,6 +893,24 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   MnemonicId? dco_decode_opt_box_autoadd_mnemonic_id(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw == null ? null : dco_decode_box_autoadd_mnemonic_id(raw);
+  }
+
+  @protected
+  PrivateKeyAccountKeyImporterError
+  dco_decode_private_key_account_key_importer_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return PrivateKeyAccountKeyImporterError_InvalidPrivateKey();
+      case 1:
+        return PrivateKeyAccountKeyImporterError_Store(
+          dco_decode_box_autoadd_keypair_store_error(raw[1]),
+        );
+      case 2:
+        return PrivateKeyAccountKeyImporterError_UnsupportedPlatform();
+      default:
+        throw Exception("unreachable");
+    }
   }
 
   @protected
@@ -1334,6 +1395,29 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  PrivateKeyAccountKeyImporterError
+  sse_decode_private_key_account_key_importer_error(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    var tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        return PrivateKeyAccountKeyImporterError_InvalidPrivateKey();
+      case 1:
+        var var_field0 = sse_decode_box_autoadd_keypair_store_error(
+          deserializer,
+        );
+        return PrivateKeyAccountKeyImporterError_Store(var_field0);
+      case 2:
+        return PrivateKeyAccountKeyImporterError_UnsupportedPlatform();
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
   int sse_decode_u_8(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return deserializer.buffer.getUint8();
@@ -1807,6 +1891,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_bool(self != null, serializer);
     if (self != null) {
       sse_encode_box_autoadd_mnemonic_id(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_private_key_account_key_importer_error(
+    PrivateKeyAccountKeyImporterError self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case PrivateKeyAccountKeyImporterError_InvalidPrivateKey():
+        sse_encode_i_32(0, serializer);
+      case PrivateKeyAccountKeyImporterError_Store(field0: final field0):
+        sse_encode_i_32(1, serializer);
+        sse_encode_box_autoadd_keypair_store_error(field0, serializer);
+      case PrivateKeyAccountKeyImporterError_UnsupportedPlatform():
+        sse_encode_i_32(2, serializer);
     }
   }
 

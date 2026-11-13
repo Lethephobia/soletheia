@@ -3,6 +3,7 @@ rust_input: >-
   crate::api::account::create_mnemonic_account_keys,
   crate::api::account::delete_account_keys,
   crate::api::account::import_mnemonic_account_keys,
+  crate::api::account::import_private_key_account_keys,
   crate::application::account::mnemonic_account,
   crate::application::account::account_address,
   crate::application::storage::mnemonic_id,

@@ -10,12 +10,12 @@ import 'mnemonic_derivation.dart';
 
 final class DefaultMnemonicAccountImporter implements MnemonicAccountImporter {
   const DefaultMnemonicAccountImporter(
-    this._keys,
+    this._keyImporter,
     this._repository,
     this._unitOfWorkFactory,
   );
 
-  final MnemonicAccountKeyImporter _keys;
+  final MnemonicAccountKeyImporter _keyImporter;
   final AccountRepository _repository;
   final UnitOfWorkFactory _unitOfWorkFactory;
 
@@ -26,7 +26,7 @@ final class DefaultMnemonicAccountImporter implements MnemonicAccountImporter {
     required MnemonicPassphrase passphrase,
     required DerivationPath derivationPath,
   }) async {
-    final keys = await _keys.import(
+    final keys = await _keyImporter.import(
       phrase: phrase,
       passphrase: passphrase,
       derivationPath: derivationPath,
