@@ -2,43 +2,39 @@ import 'dart:async';
 
 import 'package:application/unit_of_work.dart';
 
-import 'wallet_database.dart';
+import '../wallet_database.dart';
+import 'sqlite_unit_of_work.dart';
 
 final class SqliteUnitOfWorkFactory implements UnitOfWorkFactory {
   const SqliteUnitOfWorkFactory(this._db);
+
+  static final _zoneKey = Object();
 
   final WalletDatabase _db;
 
   @override
   Future<T> run<T>(Future<T> Function(UnitOfWork uow) operation) {
     return _db.transaction(() async {
-      final uow = _SqliteUnitOfWork(_db);
+      final uow = SqliteUnitOfWork(_db);
       try {
         return await runZoned(
           () => operation(uow),
-          zoneValues: {_SqliteUnitOfWork: uow},
+          zoneValues: {_zoneKey: uow},
         );
       } finally {
-        uow.active = false;
+        uow.close();
       }
     });
   }
 
   static void check(UnitOfWork uow, WalletDatabase db) {
-    if (uow is! _SqliteUnitOfWork ||
-        !uow.active ||
+    if (uow is! SqliteUnitOfWork ||
+        !uow.isActive ||
         !identical(uow.db, db) ||
-        !identical(Zone.current[_SqliteUnitOfWork], uow)) {
+        !identical(Zone.current[_zoneKey], uow)) {
       throw StateError(
         'Expected an active transaction for this wallet database.',
       );
     }
   }
-}
-
-final class _SqliteUnitOfWork implements UnitOfWork {
-  _SqliteUnitOfWork(this.db);
-
-  final WalletDatabase db;
-  bool active = true;
 }

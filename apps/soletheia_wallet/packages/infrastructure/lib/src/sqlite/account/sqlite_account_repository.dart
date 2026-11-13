@@ -1,7 +1,7 @@
 import 'package:application/application.dart';
 import 'package:drift/drift.dart';
 
-import '../sqlite_unit_of_work_factory.dart';
+import '../unit_of_work.dart';
 import '../wallet_database.dart';
 
 /// Stores account metadata in the local wallet database.
