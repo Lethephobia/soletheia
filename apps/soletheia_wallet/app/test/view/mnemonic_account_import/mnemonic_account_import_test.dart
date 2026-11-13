@@ -33,6 +33,42 @@ class _Importer implements MnemonicAccountImporter {
 }
 
 void main() {
+  testWidgets('wide dialog grows as mnemonic words wrap onto more lines', (
+    tester,
+  ) async {
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(1100, 900);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+    final container = await accountTestContainer();
+    await tester.pumpWalletWidget(
+      UncontrolledProviderScope(container: container, child: const App()),
+    );
+    await tester.tap(find.text('Import mnemonic'));
+    await tester.pumpAndSettle();
+
+    final surface = find
+        .descendant(of: find.byType(Dialog), matching: find.byType(Material))
+        .first;
+    final initialHeight = tester.getSize(surface).height;
+    final editor = find.descendant(
+      of: find.byType(MnemonicPhraseField),
+      matching: find.byType(TextField),
+    );
+    await tester.enterText(editor, List.filled(24, 'abandon').join(' '));
+    await tester.pumpAndSettle();
+    expect(tester.getSize(surface).height, greaterThan(initialHeight));
+
+    tester.view.physicalSize = const Size(1100, 400);
+    await tester.pumpAndSettle();
+    expect(tester.getSize(surface).height, lessThanOrEqualTo(400));
+    expect(
+      find.widgetWithText(TextButton, 'Import').hitTestable(),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('commits IME text and edits chips without changing word order', (
     tester,
   ) async {

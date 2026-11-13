@@ -14,7 +14,6 @@ class MnemonicAccountImportView extends ConsumerWidget {
   const MnemonicAccountImportView({super.key});
 
   static const double _maxContentWidth = 560;
-  static const double _maxDialogHeight = 620;
   static const double _contentPadding = 24;
   static const double _fieldSpacing = 12;
   static const double _sectionSpacing = 24;
@@ -63,96 +62,75 @@ class MnemonicAccountImportView extends ConsumerWidget {
             : l10n.mnemonicAccountImportSubmitLabel,
       ),
     );
-    final content = Scaffold(
+    final appBar = AppBar(
       backgroundColor: surface,
-      appBar: AppBar(
-        backgroundColor: surface,
-        automaticallyImplyLeading: false,
-        leading: isWide
-            ? null
-            : IconButton(
-                tooltip: material.closeButtonTooltip,
-                icon: const Icon(Icons.close),
-                onPressed: cancel,
-              ),
-        title: Text(l10n.onboardingImportMnemonicLabel),
-        titleSpacing: isWide ? _contentPadding : null,
-        actions: isWide ? null : [importButton],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(_progressHeight),
-          child: SizedBox(
-            width: double.infinity,
-            height: _progressHeight,
-            child: switch (form.status) {
-              MnemonicAccountImporting() ||
-              MnemonicAccountImportSaving() => const LinearProgressIndicator(),
-              _ => null,
-            },
+      automaticallyImplyLeading: false,
+      leading: isWide
+          ? null
+          : IconButton(
+              tooltip: material.closeButtonTooltip,
+              icon: const Icon(Icons.close),
+              onPressed: cancel,
+            ),
+      title: Text(l10n.onboardingImportMnemonicLabel),
+      titleSpacing: isWide ? _contentPadding : null,
+      actions: isWide ? null : [importButton],
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(_progressHeight),
+        child: SizedBox(
+          width: double.infinity,
+          height: _progressHeight,
+          child: switch (form.status) {
+            MnemonicAccountImporting() ||
+            MnemonicAccountImportSaving() => const LinearProgressIndicator(),
+            _ => null,
+          },
+        ),
+      ),
+    );
+    final fields = SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: _maxContentWidth),
+        child: Padding(
+          padding: const EdgeInsets.all(_contentPadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: _sectionSpacing,
+            children: [
+              if (!form.keysImported) ...[
+                MnemonicPhraseField(
+                  phrase: form.phrase,
+                  enabled: !form.isFormLocked,
+                  hasError: form.hasPhraseError,
+                  onChanged: ref
+                      .read(mnemonicAccountImportViewModelProvider.notifier)
+                      .setPhrase,
+                ),
+                const MnemonicAccountImportPassphraseField(),
+              ],
+              const MnemonicAccountImportDerivationPathField(),
+            ],
           ),
         ),
       ),
-      body: SafeArea(
-        top: false,
-        child: Column(
-          children: [
-            Expanded(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxWidth: _maxContentWidth,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(_contentPadding),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        spacing: _sectionSpacing,
-                        children: [
-                          if (!form.keysImported) ...[
-                            MnemonicPhraseField(
-                              phrase: form.phrase,
-                              enabled: !form.isFormLocked,
-                              hasError: form.hasPhraseError,
-                              onChanged: ref
-                                  .read(
-                                    mnemonicAccountImportViewModelProvider
-                                        .notifier,
-                                  )
-                                  .setPhrase,
-                            ),
-                            const MnemonicAccountImportPassphraseField(),
-                          ],
-                          const MnemonicAccountImportDerivationPathField(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            if (isWide)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  _contentPadding,
-                  0,
-                  _contentPadding,
-                  _contentPadding,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  spacing: _fieldSpacing,
-                  children: [
-                    TextButton(
-                      onPressed: cancel,
-                      child: Text(material.cancelButtonLabel),
-                    ),
-                    importButton,
-                  ],
-                ),
-              ),
-          ],
-        ),
+    );
+    final actions = Padding(
+      padding: const EdgeInsets.fromLTRB(
+        _contentPadding,
+        0,
+        _contentPadding,
+        _contentPadding,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        spacing: _fieldSpacing,
+        children: [
+          TextButton(
+            onPressed: cancel,
+            child: Text(material.cancelButtonLabel),
+          ),
+          importButton,
+        ],
       ),
     );
     return PopScope(
@@ -160,15 +138,43 @@ class MnemonicAccountImportView extends ConsumerWidget {
       child: isWide
           ? SafeArea(
               child: Dialog(
-                constraints: const BoxConstraints(
-                  maxWidth: _maxContentWidth,
-                  maxHeight: _maxDialogHeight,
-                ),
+                constraints: const BoxConstraints(maxWidth: _maxContentWidth),
                 clipBehavior: Clip.antiAlias,
-                child: content,
+                backgroundColor: surface,
+                child: Stack(
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(
+                          height: appBar.preferredSize.height,
+                          child: appBar,
+                        ),
+                        Flexible(child: fields),
+                        actions,
+                      ],
+                    ),
+                    // The dialog has its own messenger for status SnackBars.
+                    const Positioned.fill(
+                      child: IgnorePointer(
+                        child: Scaffold(backgroundColor: Colors.transparent),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             )
-          : Dialog.fullscreen(child: content),
+          : Dialog.fullscreen(
+              child: Scaffold(
+                backgroundColor: surface,
+                appBar: appBar,
+                body: SafeArea(
+                  top: false,
+                  child: Align(alignment: Alignment.topCenter, child: fields),
+                ),
+              ),
+            ),
     );
   }
 }

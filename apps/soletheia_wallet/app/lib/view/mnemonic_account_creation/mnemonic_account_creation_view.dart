@@ -16,7 +16,6 @@ class MnemonicAccountCreationView extends ConsumerWidget {
   const MnemonicAccountCreationView({super.key});
 
   static const double _maxContentWidth = 560;
-  static const double _maxDialogHeight = 620;
   static const double _contentPadding = 24;
   static const double _fieldSpacing = 12;
   static const double _sectionSpacing = 24;
@@ -68,95 +67,77 @@ class MnemonicAccountCreationView extends ConsumerWidget {
             : l10n.mnemonicAccountCreationSubmitLabel,
       ),
     );
-    final content = Scaffold(
+    final appBar = AppBar(
       backgroundColor: surface,
-      appBar: AppBar(
-        backgroundColor: surface,
-        automaticallyImplyLeading: false,
-        leading: isWide
-            ? null
-            : IconButton(
-                tooltip: material.closeButtonTooltip,
-                icon: const Icon(Icons.close),
-                onPressed: cancel,
+      automaticallyImplyLeading: false,
+      leading: isWide
+          ? null
+          : IconButton(
+              tooltip: material.closeButtonTooltip,
+              icon: const Icon(Icons.close),
+              onPressed: cancel,
+            ),
+      title: Text(l10n.mnemonicAccountCreationTitle),
+      titleSpacing: isWide ? _contentPadding : null,
+      actions: isWide ? null : [createButton],
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(_progressHeight),
+        child: SizedBox(
+          width: double.infinity,
+          height: _progressHeight,
+          child: switch (form.status) {
+            MnemonicAccountCreating() ||
+            MnemonicAccountSaving() => const LinearProgressIndicator(),
+            _ => null,
+          },
+        ),
+      ),
+    );
+    final fields = SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: _maxContentWidth),
+        child: const Padding(
+          padding: EdgeInsets.all(_contentPadding),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: _sectionSpacing,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: _fieldSpacing,
+                children: [
+                  Expanded(child: MnemonicWordlistField()),
+                  SizedBox(
+                    width: _wordCountWidth,
+                    child: MnemonicWordCountField(),
+                  ),
+                ],
               ),
-        title: Text(l10n.mnemonicAccountCreationTitle),
-        titleSpacing: isWide ? _contentPadding : null,
-        actions: isWide ? null : [createButton],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(_progressHeight),
-          child: SizedBox(
-            width: double.infinity,
-            height: _progressHeight,
-            child: switch (form.status) {
-              MnemonicAccountCreating() ||
-              MnemonicAccountSaving() => const LinearProgressIndicator(),
-              _ => null,
-            },
+              MnemonicCustomEntropyField(),
+              MnemonicPassphraseField(),
+              AccountDerivationPathField(),
+            ],
           ),
         ),
       ),
-      body: SafeArea(
-        top: false,
-        child: Column(
-          children: [
-            Expanded(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxWidth: _maxContentWidth,
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(_contentPadding),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        spacing: _sectionSpacing,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            spacing: _fieldSpacing,
-                            children: [
-                              Expanded(child: MnemonicWordlistField()),
-                              SizedBox(
-                                width: _wordCountWidth,
-                                child: MnemonicWordCountField(),
-                              ),
-                            ],
-                          ),
-                          MnemonicCustomEntropyField(),
-                          MnemonicPassphraseField(),
-                          AccountDerivationPathField(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            if (isWide)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  _contentPadding,
-                  0,
-                  _contentPadding,
-                  _contentPadding,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  spacing: _fieldSpacing,
-                  children: [
-                    TextButton(
-                      onPressed: cancel,
-                      child: Text(material.cancelButtonLabel),
-                    ),
-                    createButton,
-                  ],
-                ),
-              ),
-          ],
-        ),
+    );
+    final actions = Padding(
+      padding: const EdgeInsets.fromLTRB(
+        _contentPadding,
+        0,
+        _contentPadding,
+        _contentPadding,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        spacing: _fieldSpacing,
+        children: [
+          TextButton(
+            onPressed: cancel,
+            child: Text(material.cancelButtonLabel),
+          ),
+          createButton,
+        ],
       ),
     );
     return PopScope(
@@ -164,15 +145,43 @@ class MnemonicAccountCreationView extends ConsumerWidget {
       child: isWide
           ? SafeArea(
               child: Dialog(
-                constraints: const BoxConstraints(
-                  maxWidth: _maxContentWidth,
-                  maxHeight: _maxDialogHeight,
-                ),
+                constraints: const BoxConstraints(maxWidth: _maxContentWidth),
                 clipBehavior: Clip.antiAlias,
-                child: content,
+                backgroundColor: surface,
+                child: Stack(
+                  children: [
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(
+                          height: appBar.preferredSize.height,
+                          child: appBar,
+                        ),
+                        Flexible(child: fields),
+                        actions,
+                      ],
+                    ),
+                    // The dialog has its own messenger for status SnackBars.
+                    const Positioned.fill(
+                      child: IgnorePointer(
+                        child: Scaffold(backgroundColor: Colors.transparent),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             )
-          : Dialog.fullscreen(child: content),
+          : Dialog.fullscreen(
+              child: Scaffold(
+                backgroundColor: surface,
+                appBar: appBar,
+                body: SafeArea(
+                  top: false,
+                  child: Align(alignment: Alignment.topCenter, child: fields),
+                ),
+              ),
+            ),
     );
   }
 }
